@@ -108,27 +108,72 @@ angular.module('ladder',[])
             i+=7;
         }
         return memo[year+'/'+month]=res;
-    }
+    };
+    var eventCalendar=function(date){
+        var events=[];
+        var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
+        for(var i=0,i2=user.following.length;i<i2;i++){
+            events.push(getEvents(user.following[i],$scope.calendar.year,$scope.calendar.month));
+        }
+        events.push(getEvents('private',$scope.calendar.year,$scope.calendar.month));
+        for(var i=0,i2=events.length;i<i2;i++){
+            for(var j=0,j2=events[i].length;j<j2;j++){
+                if(!eventCalendar[events[i][j].date]){
+                    eventCalendar[events[i][j].date]=[];
+                }
+                eventCalendar[events[i][j].date].push(events[i][j].id+':'+events[i][j].group+':'+events[i][j].type);
+            }
+        }
+        if(eventCalendar[date]){
+            return eventCalendar[date];
+        }else{
+            return [];
+        }
+    };
     var today=new Date();
     var year=today.getFullYear();
     var month=today.getMonth();
     var date=today.getDate();
     return {
+        eventCalendar:eventCalendar,
+        selected:date,
         calendar:calendar,
         year:year,
         month:month,
         date:date
     };
 })
-.directive('calendar',function(){
+.directive('calendar',function(calendar){
     return {
-        scope:true,
+        scope:{},
+        controller:'calendar',
         restrict:'A',
         templateUrl:'calendar.html'
     };
 })
 .controller('calendar',['$scope','calendar',function($scope,calendar){
+    var disableHoverEvent=false;
+    $scope.select=function(date){
+        $scope.calendar.selected=date;
+        disableHoverEvent=true;
+    };
+    $scope.bookedClass=function(date){
+        return $scope.calendar.eventCalendar(date).length<5?'booked-'+$scope.calendar.eventCalendar(date).length:'booked-5'
+    };
+    $scope.mouseenter=function(date){
+        if(!disableHoverEvent){
+            if(date){
+                $scope.calendar.selected=date;
+            }
+        }
+    };
+    $scope.mouseleave=function(date){
+        if(!disableHoverEvent){
+            $scope.calendar.selected=null;
+        }
+    };
     $scope.calendar=calendar;
+    $scope.test='ok';
     $scope.nextMonth=function(){
         $scope.calendar.month++;
         if($scope.calendar.month+1>12){
@@ -147,7 +192,6 @@ angular.module('ladder',[])
     };
 }])
 .controller('mainController',['$scope','group','user','eventForm','calendar',function($scope,group,user,eventForm,calendar){
-    var disableHoverEvent=false;
     var selectClicked=false,otherClicked=false;
     $scope.group=group;
     $scope.user=user;
@@ -406,46 +450,7 @@ angular.module('ladder',[])
         }
         return [selectors,notSelectors];
     }
-    $scope.selected=$scope.date;
     $scope.search_keyword='';
-    $scope.eventCalendar=function(date){
-        var events=[];
-        var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
-        for(var i=0,i2=user.following.length;i<i2;i++){
-            events.push(getEvents(user.following[i],$scope.calendar.year,$scope.calendar.month));
-        }
-        events.push(getEvents('private',$scope.calendar.year,$scope.calendar.month));
-        for(var i=0,i2=events.length;i<i2;i++){
-            for(var j=0,j2=events[i].length;j<j2;j++){
-                if(!eventCalendar[events[i][j].date]){
-                    eventCalendar[events[i][j].date]=[];
-                }
-                eventCalendar[events[i][j].date].push(events[i][j].id+':'+events[i][j].group+':'+events[i][j].type);
-            }
-        }
-        if(eventCalendar[date]){
-            return eventCalendar[date];
-        }else{
-            return [];
-        }
-    };
-    $scope.mouseenter=function(date){
-        if(!disableHoverEvent){
-            if(date){
-                $scope.selected=date;
-            }
-        }
-    };
-    $scope.mouseleave=function(date){
-        if(!disableHoverEvent){
-            $scope.selected=null;
-        }
-    };
-    $scope.select=function(date){
-        $scope.selected=date;
-        disableHoverEvent=true;
-        selectClicked=true;
-    }
     $scope.follow=function(id){
         //フォロー処理。一応ソートかけておく
         $scope.user.following.push(id);
@@ -514,15 +519,12 @@ angular.module('ladder',[])
         }else{
             if(name=='body'&&!selectClicked&&!otherClicked){
                 disableHoverEvent=false;
-                $scope.selected=null;
+                $scope.calendar.selected=null;
                 $scope.eventForm.isEditMode=false;
             }
             selectClicked=false;
             otherClicked=false;
         }
-    };
-    $scope.bookedClass=function(date){
-        return $scope.eventCalendar(date).length<5?'booked-'+$scope.eventCalendar(date).length:'booked-5'
     };
     $scope.switchToEdit=function(){
         //event= eventのid:groupのid:eventのtype(event or habit)

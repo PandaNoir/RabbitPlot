@@ -16,8 +16,8 @@
     <div id="detail" ng-show="selected!==null" ng-click="click('detail')">
       <div>{{calendar.month+1}}/{{selected}}</div>
       <ul>
-        <li ng-show="eventCalendar(selected).length===0">予定なし</li>
-        <li ng-repeat="event in eventCalendar(selected) track by $index">
+        <li ng-show="calendar.eventCalendar(selected).length===0">予定なし</li>
+        <li ng-repeat="event in calendar.eventCalendar(selected) track by $index">
           <span ng-dblclick="switchToEdit(event)">{{format(event)}}</span><button ng-click="switchToEdit(event)">Edit</button>
         </li>
       </ul>

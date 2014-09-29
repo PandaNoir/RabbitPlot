@@ -4,7 +4,7 @@
 <div class="row" ng-repeat="row in calendar.calendar(calendar.year,calendar.month)">
   <span class="date"
     ng-repeat="date in row track by $index"
-    ng-class="[selected===date?'selected':'',bookedClass(date)]"
+    ng-class="[calendar.selected===date?'selected':'',bookedClass(date)]"
     ng-mouseenter="mouseenter(date)"
     ng-mouseleave="mouseleave(date)"
     ng-click="select(date)"
