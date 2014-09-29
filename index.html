@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="ladder">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js"></script>
+  <script src="underscore-min.js"></script>
+  <script src="calendar.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="calendar" ng-controller="calendar" ng-click="click('body')">
+    {{year}}/{{month+1}}
+    <button ng-click="lastMonth()">&lt;</button>
+    <button ng-click="nextMonth()">&gt;</button>
+    <div class="row" ng-repeat="row in calendar(year,month)">
+      <span class="date"
+        ng-repeat="date in row track by $index"
+        ng-class="[selected===date?'selected':'',bookedClass(date)]"
+        ng-mouseenter="mouseenter(date)"
+        ng-mouseleave="mouseleave(date)"
+        ng-click="select(date)"
+        >{{date}}</span>
+    </div>
+
+
+    <div id="detail" ng-show="selected!==null" ng-click="click('detail')">
+      <div>{{month+1}}/{{selected}}</div>
+      <ul>
+        <li ng-show="eventCalendar(selected).length===0">予定なし</li>
+        <li ng-repeat="event in eventCalendar(selected) track by $index">
+          <span ng-dblclick="switchToEdit(event)">{{format(event)}}</span><button ng-click="switchToEdit(event)">Edit</button>
+        </li>
+      </ul>
+
+      <button ng-click="switchToEdit(year,month,selected)">+</button>
+      <div ng-controller="eventEditor" id="event-editor" ng-show="eventForm.isEditMode">
+        {{eventForm.mode==='add'?'Add':'Edit'}} events:<br>
+
+        <input type="radio" ng-model="eventForm.type" value="event">
+          date:<input type="number" ng-model="eventForm.year" ng-disabled="eventForm.type!='event'"> /
+          <input type="number" ng-model="eventForm.month" ng-disabled="eventForm.type!='event'"> /
+          <input type="number" ng-model="eventForm.date" ng-disabled="eventForm.type!='event'"><br>
+
+        <input type="radio" ng-model="eventForm.type" value="habit">
+          rules:<input type="text" ng-model="eventForm.rule" ng-disabled="eventForm.type!='habit'"><br>
+
+        <span ng-show="eventForm.mode==='add'">
+          group:<select ng-model="eventForm.selectedGroup" ng-options="id as id!='private'?group[id].name:'private' for id in user.following.concat('private')">
+            <option value="">選択してください</option>
+          </select>
+          <span class="error-message" ng-show="eventForm.selectedGroup===undefined||eventForm.selectedGroup===null">必須</span><br>
+        </span>
+
+        Name:<input type="text" ng-model="eventForm.name"><span class="error-message" ng-show="eventForm.name===''">必須</span><br>
+        <button ng-click="addEvent()" ng-show="eventForm.mode==='add'">add</button>
+        <button ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">save</button>
+        <button ng-click="cancel()">cancel</button>
+      </div>
+    </div>
+
+
+    <div id="setting" ng-click="click('setting')">
+      <button ng-click="makeGroup()">Make group</button><br>
+      Following:
+      <ul ng-show="user.following.length>0">
+        <li ng-repeat="id in user.following">{{group[id].name}}<button ng-click="unfollow(id)">unfollow</button></li>
+      </ul>
+      <div ng-show="user.following.length==0">No following</div>
+
+
+      Search:<input type="text" ng-model="search_keyword">
+      <ul>
+        <li ng-repeat="id in search()">
+          <button ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">follow</button>
+          <span class="error-message" ng-show="followsParent(id)!==true">このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。{{group[followsParent(id)].name}}をフォローしてください。<button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</button></span></li>
+      </ul>
+
+
+      <div ng-controller="groupEditor" id="group-editor" ng-show="isGroupEditMode">
+        Add group:<br>
+        Name:<input type="text" ng-model="groupForm.name"><br>
+
+        Parent group:<select ng-repeat-start="selectedGroup in groupForm.selectedGroup track by $index" ng-model="groupForm.selectedGroup[$index]" ng-options="id as group[id].name for id in user.following">
+          <option value="">選択してください</option>
+        </select>
+        <button ng-click="groupForm.selectedGroup.splice($index,1)" ng-disabled="groupForm.selectedGroup.length<=1">x</button>
+        <br ng-repeat-end>
+
+        <button ng-click="groupForm.selectedGroup.push('')">add parent</button><br>
+        <button ng-click="addGroup()" ng-show="groupForm.mode==='add'">add</button>
+        <button ng-click="editGroup()" ng-show="groupForm.mode==='edit'">save</button>
+      </div>
+    </div>
+  </body>
+</html>
