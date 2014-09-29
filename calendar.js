@@ -70,54 +70,91 @@ angular.module('ladder',[])
         name:''
     };
 })
-.controller('calendar',['$scope','group','user','eventForm',function($scope,group,user,eventForm){
+.factory('calendar',function(){
+    var memo={};
+    var calendar=function(year,month){
+        if(memo[year+'/'+month]){
+            return memo[year+'/'+month];
+        }
+        var first=new Date(year,month,1);
+        var last;//来月の1日の1日前という算出方法をとる
+        if(month==11){
+            //12月の時は来月というのが来年の1月になる
+            last=new Date(year+1,0,1);
+        }else{
+            last=new Date(year,month+1,1);
+        }
+        last.setDate(last.getDate()-1);
+        var res=[];//カレンダー用配列
+        res.year=year;
+        res.month=month;
+        var i=0;
+        first=first.getDay();
+        last=last.getDate();
+        loop:while(true){
+            var row=[];
+            for(var j=1;j<=7;j++){
+                //i*7+j-first.getDay()でその部分の日付
+                if(i+j-first>0&&i+j-first<=last){
+                    //日付が正常範囲に収まっている
+                    row.push(i+j-first);
+                }else{
+                    //来月もしくは先月の範囲の部分
+                    row.push('');
+                }
+            }
+            res.push(row);
+            if(row[row.length-1]==='') break;
+            i+=7;
+        }
+        return memo[year+'/'+month]=res;
+    }
+    var today=new Date();
+    var year=today.getFullYear();
+    var month=today.getMonth();
+    var date=today.getDate();
+    return {
+        calendar:calendar,
+        year:year,
+        month:month,
+        date:date
+    };
+})
+.directive('calendar',function(){
+    return {
+        scope:true,
+        restrict:'A',
+        templateUrl:'calendar.html'
+    };
+})
+.controller('calendar',['$scope','calendar',function($scope,calendar){
+    $scope.calendar=calendar;
+    $scope.nextMonth=function(){
+        $scope.calendar.month++;
+        if($scope.calendar.month+1>12){
+            $scope.calendar.year+=1;
+            $scope.calendar.month-=12;
+        }
+        $scope.click('button');
+    };
+    $scope.lastMonth=function(){
+        $scope.calendar.month--;
+        if($scope.calendar.month+1<1){
+            $scope.calendar.month+=12;
+            $scope.calendar.year-=1;
+        }
+        $scope.click('button');
+    };
+}])
+.controller('mainController',['$scope','group','user','eventForm','calendar',function($scope,group,user,eventForm,calendar){
     var disableHoverEvent=false;
     var selectClicked=false,otherClicked=false;
     $scope.group=group;
     $scope.user=user;
     $scope.eventForm=eventForm;
+    $scope.calendar=calendar;
     $scope.eventForm.isEditMode=false;
     $scope.isGroupEditMode=false;
-    var calendar=(function(){
-        var memo={};
-        return function(year,month){
-            if(memo[year+'/'+month]){
-                return memo[year+'/'+month];
-            }
-            var first=new Date(year,month,1);
-            var last;//来月の1日の1日前という算出方法をとる
-            if(month==11){
-                //12月の時は来月というのが来年の1月になる
-                last=new Date(year+1,0,1);
-            }else{
-                last=new Date(year,month+1,1);
-            }
-            last.setDate(last.getDate()-1);
-            var res=[];//カレンダー用配列
-            res.year=year;
-            res.month=month;
-            var i=0;
-            first=first.getDay();
-            last=last.getDate();
-            loop:while(true){
-                var row=[];
-                for(var j=1;j<=7;j++){
-                    //i*7+j-first.getDay()でその部分の日付
-                    if(i+j-first>0&&i+j-first<=last){
-                        //日付が正常範囲に収まっている
-                        row.push(i+j-first);
-                    }else{
-                        //来月もしくは先月の範囲の部分
-                        row.push('');
-                    }
-                }
-                res.push(row);
-                if(row[row.length-1]==='') break;
-                i+=7;
-            }
-            return memo[year+'/'+month]=res;
-        }
-    })();
     function findGroup(name){
         for(var i=0;i<$scope.group.length;i++){
             if($scope.group[i].name==name) return i;
@@ -166,7 +203,7 @@ angular.module('ladder',[])
         //console.time('define');
         var all_res=[];
         var res=[];
-        var cal=calendar(year,month);
+        var cal=$scope.calendar.calendar(year,month);
         var day={
             'sunday':0,'sun':0,'日曜日':0,
             'monday':1,'mon':1,'月曜日':1,
@@ -260,22 +297,6 @@ angular.module('ladder',[])
         }
         return all_res;
     }
-    $scope.nextMonth=function(){
-        $scope.month++;
-        if($scope.month+1>12){
-            $scope.year+=1;
-            $scope.month-=12;
-        }
-        $scope.click('button');
-    };
-    $scope.lastMonth=function(){
-        $scope.month--;
-        if($scope.month+1<1){
-            $scope.month+=12;
-            $scope.year-=1;
-        }
-        $scope.click('button');
-    };
     $scope.format=function(event){
         event=event.split(':');
         if(event[2]==='event'){
@@ -292,21 +313,6 @@ angular.module('ladder',[])
             }
         }
     };
-    function formatCalendar(calendar){
-        var c=0;
-        var res=[],row=[];
-        res.push(calendar.year+'/'+(calendar.month+1));
-        res.push([' S',' M',' T',' W',' T',' F',' S'].join(' '));
-        for(var c=0;calendar[c];c++){
-            row=[];
-            for(var i=0,j=calendar[c].length;i<j;i++){
-                row.push(('  '+calendar[c][i]).slice(-2));
-            }
-            row=row.join(' ');
-            res.push(row);
-        }
-        return res.join('\n');
-    }
     function splitSelectors(selector){
         var startString=null;
         var before=0;
@@ -400,20 +406,15 @@ angular.module('ladder',[])
         }
         return [selectors,notSelectors];
     }
-    $scope.calendar=calendar;
-    var today=new Date();
-    $scope.year=today.getFullYear();
-    $scope.month=today.getMonth();
-    $scope.date=today.getDate();
     $scope.selected=$scope.date;
     $scope.search_keyword='';
     $scope.eventCalendar=function(date){
         var events=[];
         var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         for(var i=0,i2=user.following.length;i<i2;i++){
-            events.push(getEvents(user.following[i],$scope.year,$scope.month));
+            events.push(getEvents(user.following[i],$scope.calendar.year,$scope.calendar.month));
         }
-        events.push(getEvents('private',$scope.year,$scope.month));
+        events.push(getEvents('private',$scope.calendar.year,$scope.calendar.month));
         for(var i=0,i2=events.length;i<i2;i++){
             for(var j=0,j2=events[i].length;j<j2;j++){
                 if(!eventCalendar[events[i][j].date]){

@@ -9,23 +9,12 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="calendar" ng-controller="calendar" ng-click="click('body')">
-    {{year}}/{{month+1}}
-    <button ng-click="lastMonth()">&lt;</button>
-    <button ng-click="nextMonth()">&gt;</button>
-    <div class="row" ng-repeat="row in calendar(year,month)">
-      <span class="date"
-        ng-repeat="date in row track by $index"
-        ng-class="[selected===date?'selected':'',bookedClass(date)]"
-        ng-mouseenter="mouseenter(date)"
-        ng-mouseleave="mouseleave(date)"
-        ng-click="select(date)"
-        >{{date}}</span>
-    </div>
+  <div class="calendar" ng-controller="mainController" ng-click="click('body')">
+    <div calendar ng-controller="calendar"></div>
 
 
     <div id="detail" ng-show="selected!==null" ng-click="click('detail')">
-      <div>{{month+1}}/{{selected}}</div>
+      <div>{{calendar.month+1}}/{{selected}}</div>
       <ul>
         <li ng-show="eventCalendar(selected).length===0">予定なし</li>
         <li ng-repeat="event in eventCalendar(selected) track by $index">
@@ -33,7 +22,7 @@
         </li>
       </ul>
 
-      <button ng-click="switchToEdit(year,month,selected)">+</button>
+      <button ng-click="switchToEdit(calendar.year,calendar.month,selected)">+</button>
       <div ng-controller="eventEditor" id="event-editor" ng-show="eventForm.isEditMode">
         {{eventForm.mode==='add'?'Add':'Edit'}} events:<br>
 
