@@ -1,4 +1,22 @@
+/*chain case;*/
+html,body,.main{
+    height:100%;
+    font-family:times;
+    margin:0;
+}
+body{
+    height:calc(100% - 20px);
+    margin:10px;
+}
+.calendar{
+    width: 224px;
+    border: 1px solid #888;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius:3px;
+}
 .calendar .row{
+    width:224px;
 }
 .calendar .date{
     width:30px;
@@ -9,16 +27,19 @@
 .calendar .selected{
     border:1px solid #9cf;
 }
+.calendar-header{
+    text-align:center;
+}
+.calendar-header .left{
+    float:left;
+}
+.calendar-header .right{
+    float:right;
+}
 ul{
     list-style:none;
 }
-#detail{
-    float:left;
-}
-#setting{
-    float:right;
-}
-#detail,#setting{
+#detail,#setting,#how-to-write{
     display:inline-block;
     vertical-align:top;
     margin:30px 0;
@@ -29,8 +50,38 @@ ul{
     box-shadow:0 0 10px #ccc;
     border-radius:3px;
 }
+#detail{
+    float:left;
+}
+#setting{
+    float:right;
+}
+#how-to-write {
+    font-size: 15px;
+    clear:both;
+    width:1000px;
+    width:calc(100% - 20px);
+}
 .error-message{
     color:#c00;
+}
+.following:first-child{
+    border-top:1px solid #999;
+}
+.following {
+    padding:3px 10px;
+    border-bottom: 1px solid #999;
+    background: #E6E6E6;
+    vertical-align:top;
+}
+.following button{
+    float:right;
+    vertical-align:top;
+}
+.cf:after {
+    display:block;
+    clear:both;
+    content:"";
 }
 .booked-0{background:#fff}
 .booked-1{background:#fee}
@@ -43,4 +94,8 @@ input:disabled {
 }
 input[type="number"]{
     width:60px;
+}
+#group-editor{
+    padding:10px;
+    border-top:1px solid #ccc;
 }
