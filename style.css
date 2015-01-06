@@ -1,109 +1,27 @@
-/*chain case;*/
-.ng-cloak, .x-ng-cloak{
-  display: none !important;
-}
-[ng-cloak],[ng:cloak], [data-ng-cloak], [x-ng-cloak]{
-  display: none !important;
-}
-button{
-    display:inline-block;
-    background: #FFF;
-    border: 1px solid #ccc;
-    border-bottom:2px solid #888;
-    margin: 0 3px;
-    border-radius: 2px;
-    cursor:pointer;
-    outline:none;
-    -webkit-user-select:none;
-    user-select:none;
-}
-button:active {
-    border-bottom:1px solid #ccc;
-    position:relative;
-    top:1px;
-}
-html,body,.main{
-    background:#fcfcfc;
-    height:100%;
-    font-family:times;
-    margin:0;
-}
-body{
-    position:relative;
-    height:calc(100% - 20px);
-}
-.code{
-    display: inline-block;
-    height: 1em;
-    vertical-align: top;
-    background: #EEE;
-    border: 1px solid #CCC;
-    padding: 1px 7px;
-    margin:0 3px;
-}
-.calendar{
-    width: 315px;
-    padding: 10px;
-    margin: 0 auto;
-    border-radius:3px;
-    -webkit-user-select:none;
-    user-select:none;
-    font-size:0;
-}
 .calendar .row{
-    width: 315px;
 }
 .calendar .date{
-    width:43px;
-    height:16px;
-    position:relative;
-    padding:5px 0;
-    vertical-align:top;
+    width:30px;
     display:inline-block;
     text-align:center;
     border:1px solid transparent;
-    font-size:initial;
 }
-.calendar .date.today,.calendar .selected{
-    height:26px;
-    padding:0;
-}
-.calendar .date.today .inner{
-    display:inline-block;
-    width:16px;
-    height:16px;
-    padding:5px;
-    background:#f00;
-    color:#fff;
-    border-radius:50%;
-    margin:0 8px 0 9px;
-}
-.calendar .selected .inner{
-    display:inline-block;
-    width:16px;
-    height:16px;
-    padding:5px;
-    background:#c03;
-    color:#fff;
-    border-radius:50%;
-    margin:0 8px 0 9px;
-}
-.calendar-header{
-    text-align:center;
-    font-size:initial;
-}
-.calendar-header .left{
-    float:left;
-}
-.calendar-header .right{
-    float:right;
+.calendar .selected{
+    border:1px solid #9cf;
 }
 ul{
     list-style:none;
 }
-#detail,#setting,#how-to-write{
+#detail{
+    float:left;
+}
+#setting{
+    float:right;
+}
+#detail,#setting{
     display:inline-block;
     vertical-align:top;
+    margin:30px 0;
     width:500px;
     padding:10px;
     border:1px solid #ccc;
@@ -111,61 +29,10 @@ ul{
     box-shadow:0 0 10px #ccc;
     border-radius:3px;
 }
-#detail{
-    position: absolute;
-    bottom: 30px;
-    left:0;
-}
-#detail.hideSetting{
-    width: 90%;
-    margin-left: -45%;
-    left: 50%;
-}
-#setting{
-    position:absolute;
-    bottom:30px;
-    right:0;
-}
-#how-to-write {
-    position:absolute;
-    top:0;
-    left:0;
-    font-size: 15px;
-    clear:both;
-    width:1000px;
-    width:calc(100% - 20px);
-    margin-bottom:30px;
-}
 .error-message{
     color:#c00;
 }
-.search-list,.following-list{
-    overflow-y:scroll;
-    height:101px;
-}
-.following:first-child {
-    border-top:1px solid #999;
-}
-.following {
-    padding:3px 10px;
-    border-bottom: 1px solid #999;
-    vertical-align:top;
-}
-.following.hidden-group{
-    background: #E6E6E6;
-}
-.following.visible-group{
-    background: #f0f0f0;
-}
-.following button{
-    float:right;
-    vertical-align:top;
-}
-.cf:after {
-    display:block;
-    clear:both;
-    content:"";
-}
+.booked-0{background:#fff}
 .booked-1{background:#fee}
 .booked-2{background:#fdd}
 .booked-3{background:#fbb}
@@ -176,68 +43,4 @@ input:disabled {
 }
 input[type="number"]{
     width:60px;
-}
-#event-editor [name='rules']{
-    width:200px;
-}
-#group-editor{
-    padding:10px;
-    border-top:1px solid #ccc;
-}
-.dialog{
-    position:fixed;
-    left:50%;
-    top:50%;
-    width:300px;
-    border:1px solid #ccc;
-    background:#fff;
-    opacity:0.9;
-    padding:30px;
-    margin-left:-180px;
-    margin-top:-30px;
-}
-.dialog.animate-show-hide.ng-hide-add.ng-hide-add-active,
-.dialog.animate-show-hide.ng-hide-remove {
-    opacity:0;
-    display:block!important;
-}
-.dialog.animate-show-hide.ng-hide-remove.ng-hide-remove-active,
-.dialog.animate-show-hide.ng-hide-add {
-    opacity:0.9;
-    display:block!important;
-}
-.dialog.animate-show-hide.ng-hide-add.ng-hide-add-active{
-    -webkit-transition:opacity 0.3s linear 0;
-    -moz-transition:opacity 0.3s linear 0;
-    -o-transition:opacity 0.3s linear 0;
-    transition:opacity 0.3s linear 0;
-}
-
-@media screen and (max-device-width: 480px) {
-    #detail,#detail.hideSetting,#setting{
-        position:initial;
-        bottom:initial;
-        left:initial;
-        right:initial;
-        width:280px;
-        margin:20px auto;
-    }
-    button{
-        min-height: 30px;
-        min-width: 49px;
-    }
-    .calendar-header button {
-        height: 24px;
-        width:40px;
-        min-height:initial;
-        min-width:initial;
-    }
-    html,body,.main{
-        height:auto;
-    }
-    body {
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        -moz-tap-highlight-color: rgba(0, 0, 0, 0);
-        tap-highlight-color: rgba(0, 0, 0, 0);
-    }
 }

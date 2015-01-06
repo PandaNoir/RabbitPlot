@@ -1,0 +1,12 @@
+{{calendar.year}}/{{calendar.month+1}}
+<button ng-click="lastMonth()">&lt;</button>
+<button ng-click="nextMonth()">&gt;</button>
+<div class="row" ng-repeat="row in calendar.calendar(calendar.year,calendar.month)">
+  <span class="date"
+    ng-repeat="date in row track by $index"
+    ng-class="[calendar.selected===date?'selected':'',bookedClass(date)]"
+    ng-mouseenter="mouseenter(date)"
+    ng-mouseleave="mouseleave(date)"
+    ng-click="select(date)"
+    >{{date}}</span>
+</div>
