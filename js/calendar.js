@@ -1,0 +1,32 @@
+angular.module(appName)
+.controller('calendar',['$scope','calF','eventForm',function($scope,calendar,eventForm){
+    $scope.calF=calendar;
+    $scope.nextMonth=function(){//{{{
+        $scope.calF.month++;
+        $scope.calF.selected=null;
+        if($scope.calF.month+1>12){
+            $scope.calF.year+=1;
+            $scope.calF.month-=12;
+        }
+        eventForm.isEditMode=false;
+    };//}}}
+    $scope.lastMonth=function(){//{{{
+        $scope.calF.month--;
+        $scope.calF.selected=null;
+        if($scope.calF.month+1<1){
+            $scope.calF.month+=12;
+            $scope.calF.year-=1;
+        }
+        eventForm.isEditMode=false;
+    };//}}}
+    $scope.nextYear=function(){//{{{
+        $scope.calF.year++;
+        $scope.calF.selected=null;
+        eventForm.isEditMode=false;
+    };//}}}
+    $scope.lastYear=function(){//{{{
+        $scope.calF.year--;
+        $scope.calF.selected=null;
+        eventForm.isEditMode=false;
+    };//}}}
+}]);
