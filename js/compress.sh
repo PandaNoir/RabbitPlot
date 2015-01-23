@@ -12,6 +12,8 @@ else
     echo 'compressed eventCal.js'
     java -jar ~/Desktop/trash/compiler-latest/compiler.jar eventEditor.js --js_output_file min/eventEditor.js
     echo 'compressed eventEditor.js'
+    java -jar ~/Desktop/trash/compiler-latest/compiler.jar eventList.js --js_output_file min/eventList.js
+    echo 'compressed eventList.js'
     java -jar ~/Desktop/trash/compiler-latest/compiler.jar factory.js --js_output_file min/factory.js
     echo 'compressed factory.js'
     java -jar ~/Desktop/trash/compiler-latest/compiler.jar groupEditor.js --js_output_file min/groupEditor.js
@@ -25,8 +27,10 @@ else
     gzip -c9 min/detail.js>min/detail.js.gz
     gzip -c9 min/eventCal.js>min/eventCal.js.gz
     gzip -c9 min/eventEditor.js>min/eventEditor.js.gz
+    gzip -c9 min/eventList.js>min/eventList.js.gz
     gzip -c9 min/factory.js>min/factory.js.gz
     gzip -c9 min/groupEditor.js>min/groupEditor.js.gz
     gzip -c9 min/mainController.js>min/mainController.js.gz
     gzip -c9 min/setting.js>min/setting.js.gz
+
 fi
