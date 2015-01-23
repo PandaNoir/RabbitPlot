@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('setting',['$scope','group','user','db',function($scope,group,user,db){//{{{
+.controller('setting',['$scope','group','user','db','eventListToEdit',function($scope,group,user,db,eventListToEdit){//{{{
     function sortByNumber(a,b){
         return a-b;
     }
@@ -8,16 +8,16 @@ angular.module(appName)
     $scope.user=user;
     $scope.search_keyword='';
     $scope.searchResult=[];
-    $scope.hide=function(id){
+    $scope.hide=function(id){//{{{
         user.hiddenGroup[user.hiddenGroup.length]=id;
         user.hiddenGroup.sort(sortByNumber);
         user.save();
-    };
-    $scope.show=function(id){
+    };//}}}
+    $scope.show=function(id){//{{{
         user.hiddenGroup=_.without($scope.user.hiddenGroup,id);
         user.save();
-    };
-    $scope.followsParent=function followsParent(groupID){
+    };//}}}
+    $scope.followsParent=function followsParent(groupID){//{{{
         var parents=parentsList(groupID);
         for(var i=0,j=parents.length;i<j;i++){
             if(!follows(parents[i])){
@@ -25,19 +25,17 @@ angular.module(appName)
             }
         }
         return true;
-    };
-    function follows(id){
-        return $scope.user.following.indexOf(id)!==-1;
-    };
+    };//}}}
+    function follows(id){return $scope.user.following.indexOf(id)!==-1;};
     $scope.follows=follows;
-    $scope.follow=function(id){
+    $scope.follow=function(id){//{{{
         //フォロー処理。一応ソートかけておく
         $scope.user.following[$scope.user.following.length]=id;
         $scope.user.following.sort(sortByNumber);
         user.save();
         $scope.dialog(group[id].name+'をフォローしました');
-    };
-    $scope.unfollow=function(id){
+    };//}}}
+    $scope.unfollow=function(id){//{{{
         //フォロー解除する。親グループが解除されそうになったら、確認取る。確認取れたら子グループも解除する。確認取れなかったら親の解除もキャンセル
         var unfollowList=[];
         unfollowList[unfollowList.length]=$scope.user.following.indexOf(id);
@@ -59,6 +57,9 @@ angular.module(appName)
             $scope.user.following.splice(unfollowList[i],1);
         }
         user.save();
+    };//}}}
+    $scope.showEventList=function(id){
+        eventListToEdit.id=id;
     };
     function parentsList(groupID){
         if(!group[groupID].parents) return [];
@@ -68,13 +69,9 @@ angular.module(appName)
         }
         return res;
     }
-    $scope.makeAGroup=function(){
-        $scope.isGroupEditMode=true;
-    };
-    $scope.endMakingAGroup=function(){
-        $scope.isGroupEditMode=false;
-    };
-    $scope.search=function(){
+    $scope.makeAGroup=function(){$scope.isGroupEditMode=true;};
+    $scope.finishMakingAGroup=function(){$scope.isGroupEditMode=false;};
+    $scope.search=function(){//{{{
         //キーワードで検索する。例えば「新潟」で新潟高校がでるみたいな
         var res=[];
         if($scope.search_keyword==''){
@@ -87,8 +84,8 @@ angular.module(appName)
             }
         }
         $scope.searchResult=res;
-    };
-    $scope.randomSearch=function(){
+    };//}}}
+    $scope.randomSearch=function(){//{{{
         //ランダム検索
         var res=[];
         if(group.length<5){
@@ -102,19 +99,19 @@ angular.module(appName)
             }
         }
         $scope.searchResult=res;
-    };
-    $scope.hideAll=function(){
+    };//}}}
+    $scope.hideAll=function(){//{{{
         user.hiddenGroup.length=0;
         user.hiddenGroup=_.clone(user.following);
         user.hiddenGroup[user.hiddenGroup.length]=-1;//privateのidが-1
         user.hiddenGroup.sort(sortByNumber);
         user.save();
-    };
-    $scope.showAll=function(){
+    };//}}}
+    $scope.showAll=function(){//{{{
         user.hiddenGroup=[];
         user.save();
-    };
-    $scope.importSetting=function(){
+    };//}}}
+    $scope.importSetting=function(){//{{{
         $scope.dialog({
             mes:'エクスポートしたデータを入力してください。',
             val:'',
@@ -133,7 +130,7 @@ angular.module(appName)
                 };
             })($scope)
         });
-    };
+    };//}}}
     $scope.exportSetting=function(){
         $scope.dialog({mes:'これをコピーして移行先で貼り付けてください',val:user,showsInputDialog:true,time:true,focus:true,locked:true});
     };
