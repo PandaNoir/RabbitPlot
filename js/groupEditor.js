@@ -19,7 +19,8 @@ angular.module(appName)
             ele.parents=parentGroup;
         }
         group[group.length]=ele;
-        db.post(ele,$scope.group.length-1,'insert').success(function(){$scope.endMakingAGroup()});
+        db.post(ele,$scope.group.length-1,'insert').success(function(){$scope.finishMakingAGroup()});
         $scope.dialog('グループ '+$scope.groupForm.name+' を作成しました');
+        $scope.groupForm.name='';
     }
 }]);
