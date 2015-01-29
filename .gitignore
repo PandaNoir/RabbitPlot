@@ -1,5 +1,6 @@
-/node_modules/
-/jasmine/
+node_modules
+jasmine
+.DS_Store
 dist
 .tmp
 .sass-cache
