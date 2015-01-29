@@ -44,6 +44,7 @@ angular.module(appName)
 })//}}}
 .factory('groupForm',function(){//{{{
     return {
+        isEditMode:false,
         name:''
     };
 })//}}}
@@ -218,11 +219,13 @@ angular.module(appName)
         });
     };
     function list(){
+        //データベースから指定idのデータを取得する
         return $http.post(database,{type:'list',groupID:user.following.join(',')}).success(function(data){return data}).error(function(mes){
             console.log(mes);
         });
     };
     function getNameList(){
+        //データベースからグループ一覧を取得する
         return $http.post(database,{type:'namelist'}).success(function(data){return data});
     };
     return {
