@@ -1,5 +1,5 @@
-node_modules
-jasmine
+/node_modules/
+/jasmine/
 dist
 .tmp
 .sass-cache
