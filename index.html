@@ -7,29 +7,33 @@
     <meta name="description" content="RabbitPlotは予定管理する必要がなくなるカレンダーアプリです。">
     <meta name="keywords" content="Rabbit plot,カレンダー,calendar,楽">
     <script src="https://cdn.jsdelivr.net/hammerjs/2.0.4/hammer.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-aria.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-messages.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.6.1/angular-material.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-touch.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-aria.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-messages.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.0/angular-material.min.js" defer></script>
     <script src="js/lodash.min.js" defer></script>
-    <script src="js/min/mainController.js" defer></script>
-    <script src="js/min/calendar.js" defer></script>
-    <script src="js/min/eventCal.js" defer></script>
-    <script src="js/min/eventEditor.js" defer></script>
-    <script src="js/min/groupEditor.js" defer></script>
-    <script src="js/min/detail.js" defer></script>
-    <script src="js/min/setting.js" defer></script>
-    <script src="js/min/eventList.js" defer></script>
-    <script src="js/min/factory.js" defer></script>
+    <!--
+    <script src="js/mainController.js" defer></script>
+    <script src="js/calendar.js" defer></script>
+    <script src="js/eventCal.js" defer></script>
+    <script src="js/eventEditor.js" defer></script>
+    <script src="js/groupEditor.js" defer></script>
+    <script src="js/detail.js" defer></script>
+    <script src="js/setting.js" defer></script>
+    <script src="js/eventList.js" defer></script>
+    <script src="js/factory.js" defer></script>-->
+    <script src="js/main.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.6.1/angular-material.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.0/angular-material.min.css">
   </head>
   <body>
     <div class="main ng-cloak" ng-controller="mainController" ng-cloak>
       <md-button href="how-to-use.html">使い方</md-button>
-      <md-button class="md-raised md-primary" ng-click="showsSetting=!showsSetting">設定</md-button>
+      <md-button class="md-fab" md-theme="cyan"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+      <md-button class="md-fab" md-theme="cyan" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+
       <div class="calendar" ng-controller="calendar"><!--{{{-->
 
         <div class="calendar-header cf">
@@ -43,7 +47,7 @@
         <div class="cal-row" ng-repeat="row in calF.calendar(calF.year,calF.month)"><span app-date="0" app-row="row"><span class="inner">{{row[0]!==0&&row[0]!==32?row[0]:''}}</span></span><span app-date="1" app-row="row"><span class="inner">{{row[1]!==0&&row[1]!==32?row[1]:''}}</span></span><span app-date="2" app-row="row"><span class="inner">{{row[2]!==0&&row[2]!==32?row[2]:''}}</span></span><span app-date="3" app-row="row"><span class="inner">{{row[3]!==0&&row[3]!==32?row[3]:''}}</span></span><span app-date="4" app-row="row"><span class="inner">{{row[4]!==0&&row[4]!==32?row[4]:''}}</span></span><span app-date="5" app-row="row"><span class="inner">{{row[5]!==0&&row[5]!==32?row[5]:''}}</span></span><span app-date="6" app-row="row"><span class="inner">{{row[6]!==0&&row[6]!==32?row[6]:''}}</span></span></div>
 
       </div><!--}}}-->
-      <div id="detail" ng-controller="detail" ng-class="{hideSetting:!showsSetting}"><!--{{{-->
+      <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="center center" ng-controller="detail" ng-class="{hideSetting:!showsSetting}"><!--{{{-->
         <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="calF.selected===calF.today.date&&calF.month===calF.today.month&&calF.year===calF.today.year"> - 今日</span></div>
         <div ng-show="calF.selected===null"><br></div>
         <ul>
@@ -55,8 +59,8 @@
 
         <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
         <br ng-if="calF.selected===null">
-      </div><!--}}}-->
-      <div id="event-editor" ng-controller="eventEditor" ng-if="eventForm.isEditMode"><!--{{{-->
+      </md-whiteframe><!--}}}-->
+      <md-whiteframe class="md-whiteframe-z4" layout layout-align="center center" ng-controller="eventEditor" ng-if="eventForm.isEditMode"><!--{{{-->
         <form name="eventEditor" class="md-padding">
           {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
@@ -161,8 +165,25 @@
           <md-button class="md-raised md-primary" ng-click="goFase('selector',' or ')">または (or)</md-button>
           <md-button class="md-raised md-primary" ng-click="finishWritingRule()">決定</md-button>
         </div><!--}}}-->
+      </md-whiteframe><!--}}}-->
+      <div id="group-editor" ng-controller="groupEditor" ng-show="groupForm.isEditMode"><!--{{{-->
+        グループを追加します<br>
+        名称:<input type="text" ng-model="groupForm.name"><br>
+
+        親グループ:
+        <select ng-repeat-start="parentGroup in groupForm.parentGroup track by $index" ng-model="groupForm.parentGroup[$index]" ng-options="id as group[id].name for id in user.following">
+          <option value="">選択してください</option>
+        </select>
+        <md-button ng-click="groupForm.parentGroup.splice($index,1)" ng-disabled="groupForm.parentGroup.length<=1">x</md-button>
+        <br ng-repeat-end>
+
+        <md-button class="md-raised md-primary" ng-click="groupForm.parentGroup.push('')">親グループを増やす</md-button><br>
+        <md-button class="md-raised md-primary" ng-click="addGroup()" ng-show="groupForm.mode==='add'">グループを追加</md-button>
+        <md-button class="md-raised md-primary" ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</md-button>
       </div><!--}}}-->
-      <div id="setting" ng-controller="setting" ng-if="showsSetting"><!--{{{-->
+      <md-sidenav md-component-id="left"><!--{{{-->
+      <div id="setting" ng-controller="setting" ng-if="eventListToEdit.id===''"><!--{{{-->
+        <md-button ng-click="toggleNav()">Close</md-button>
         <md-button ng-click="exportSetting()">設定を保存</md-button><md-button ng-click="importSetting()">設定を読み込み</md-button><br>
         フォローしているグループ:
         <ul ng-if="user.following.length>0" class="following-list">
@@ -197,21 +218,6 @@
           </li>
         </ul>
         <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
-        <div ng-controller="groupEditor" id="group-editor" ng-if="isGroupEditMode"><!--{{{-->
-          グループを追加します<br>
-          名称:<input type="text" ng-model="groupForm.name"><br>
-
-          親グループ:
-          <select ng-repeat-start="parentGroup in groupForm.parentGroup track by $index" ng-model="groupForm.parentGroup[$index]" ng-options="id as group[id].name for id in user.following">
-            <option value="">選択してください</option>
-          </select>
-          <md-button ng-click="groupForm.parentGroup.splice($index,1)" ng-disabled="groupForm.parentGroup.length<=1">x</md-button>
-          <br ng-repeat-end>
-
-          <md-button ng-click="groupForm.parentGroup.push('')">親グループを増やす</md-button><br>
-          <md-button ng-click="addGroup()" ng-show="groupForm.mode==='add'">グループを追加</md-button>
-          <md-button ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</md-button>
-        </div><!--}}}-->
       </div><!--}}}-->
       <div id="event-list" ng-controller="eventList" ng-if="eventListToEdit.id!==''"><!--{{{-->
         <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
@@ -221,6 +227,7 @@
         </ul>
         <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
       </div><!--}}}-->
+      </md-sidenav><!--}}}-->
       <div class="dialog animate-show-hide" ng-if="showsDialog">{{dialogMessage}}<br ng-if="showsDialogButton"><md-button class="md-raised md-primary" ng-click="hideDialog()" ng-if="showsDialogButton">OK</md-button></div>
       <div class="dialog animate-show-hide" ng-if="showsInputDialog">{{dialogMessage}}<input type="text" ng-model="$parent.dialogInputValue" auto-focus focus="focus" showsDialog="showsDialog"><br><md-button class="md-raised md-primary" ng-click="hideDialog()" ng-if="showsDialogButton">OK</md-button>
       </div>

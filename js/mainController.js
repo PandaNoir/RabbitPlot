@@ -3,99 +3,23 @@ var MEMO_LIMIT=1950;//メモを高速化するために添字から引く値。2
 var QUOTATION=0;
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
-.controller('mainController',['$scope','eventForm','calF','eventCal','eventListToEdit','$timeout','$filter','$sce',function($scope,eventForm,calendar,eventCal,eventListToEdit,$timeout,$filter,$sce){//{{{
+.controller('mainController',['$scope','eventForm','calF','eventCal','eventListToEdit','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,$timeout,$filter,$sce,$mdSidenav){//{{{
     $scope._=_;
     $scope.eventForm=eventForm;
     $scope.calF=calendar;
     $scope.eventListToEdit=eventListToEdit;
     $scope.eventForm.isEditMode=false;
     $scope.showsHowToWrite=false;
-    $scope.showsSetting=false;
-    $scope.showsDialog=false;
-    $scope.showsDialogButton=false;
-    $scope.showsInputDialog=false;
-    $scope.dialogMessage='';
-    $scope.dialogInputValue='';
     $scope.showHowToWrite=function(){
         $scope.showsHowToWrite=!$scope.showsHowToWrite;
-    }
+    };
     $scope.splitSelector=eventCal.splitSelector;
+    $scope.openNav=function(){
+        $mdSidenav('left').toggle();
+    };
     var today=new Date();
-    var dialogCallback=angular.noop;
     $scope.calF.selected=$scope.calF.date;
     $scope.eventCalendar=eventCal.eventCalendar;
-    $scope.dialog=function(){//{{{
-        var arg=Array.prototype.slice.call(arguments);
-        var mes,val,showsDialog,showsInputDialog,time,focus,locked;
-        if($scope.locked) return;
-        if(arg.length===1){
-            if(angular.isString(arg[0])){
-                mes=arg[0];
-            }else{
-                mes=arg[0]['mes'];
-                val=arg[0]['val']||'';
-
-                if(angular.isUndefined(arg[0]['showsDialog'])) showsDialog=false;
-                else showsDialog=arg[0]['showsDialog'];
-
-                if(angular.isUndefined(arg[0]['showsInputDialog'])) showsInputDialog=false;
-                else showsInputDialog=arg[0]['showsInputDialog'];
-
-                if(showsDialog===false && showsInputDialog===false){
-                    showsDialog=true;
-                }
-                if(!angular.isUndefined(arg[0]['dialogType'])){
-                    //showsDialogよりshowsInputDialogより優先
-                    if(arg[0]['dialogType']==='dialog'){
-                        showsDialog=true;
-                        showsInputDialog=false;
-                    }else if(arg[0]['dialogType']==='input'){
-                        showsDialog=false;
-                        showsInputDialog=true;
-                    }
-                }
-                locked=arg[0]['locked']||false;
-                focus=arg[0]['focus'];
-                time=arg[0]['time'];
-                dialogCallback=arg[0]['callback']||angular.noop;
-            }
-        }else if(arg.length===2){
-            mes=arg[0];
-            time=arg[1];
-        }
-        $scope.showsDialog=showsDialog;
-        $scope.showsInputDialog=showsInputDialog;
-        $scope.focus=focus;
-        $scope.locked=locked;
-        if(angular.isString(mes)){
-            $scope.dialogMessage=mes;
-        }else{
-            $scope.dialogMessage=angular.toJson(mes);
-        }
-
-        if(angular.isString(val)){
-            $scope.dialogInputValue=val;
-        }else{
-            $scope.dialogInputValue=angular.toJson(val);
-        }
-        if(time!==true){
-            $scope.showsDialogButton=false;
-            $timeout(function(){
-                $scope.showsDialog=false;
-                $scope.showsInputDialog=false;
-                $scope.locked=false;
-            },time||800);
-        }else{
-            $scope.showsDialogButton=true;
-        }
-        console.log($scope);
-    };//}}}
-    $scope.hideDialog=function(){
-        dialogCallback($scope.dialogInputValue);
-        $scope.showsDialog=false;
-        $scope.showsInputDialog=false;
-        $scope.locked=false;
-    };
 }])//}}}
 .config(['$httpProvider',function ($httpProvider) {//{{{
     $httpProvider.defaults.transformRequest = function(data){

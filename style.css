@@ -1,4 +1,9 @@
 /*chain case;*/
+
+md-whiteframe {
+  background: #fff;
+  margin: 20px;
+  padding: 20px; }
 .ng-cloak, .x-ng-cloak{
   display: none !important;
 }
@@ -7,7 +12,6 @@
 }
 html,body,.main{
     background:#fcfcfc;
-    height:100%;
     font-family:monospace;
     margin:0;
 }
@@ -84,7 +88,11 @@ body{
 ul{
     list-style:none;
 }
-#detail,#setting,#how-to-write,#event-list,#event-editor{
+#setting{
+    background:#f3f3f3;
+    padding-top:30px;
+}
+#detail,#how-to-write,#event-list{
     display:inline-block;
     vertical-align:top;
     width:500px;
@@ -96,17 +104,10 @@ ul{
     position:absolute;
 }
 #detail{
-    bottom: 30px;
-    left:0;
-}
-#detail.hideSetting{
     width: 90%;
     margin-left: -45%;
+    bottom: 30px;
     left: 50%;
-}
-#setting{
-    bottom:30px;
-    right:0;
 }
 #how-to-write {
     top:0;
@@ -121,8 +122,7 @@ ul{
     color:#c00;
 }
 .search-list,.following-list{
-    overflow-y:scroll;
-    height:101px;
+    padding:0;
 }
 .following:first-child {/*{{{*/
     border-top:1px solid #999;
@@ -198,7 +198,7 @@ input:disabled {
 }
 /*}}}*/
 @media screen and (max-device-width: 480px) {/*{{{*/
-    #detail,#detail.hideSetting,#setting,#how-to-write,#event-list,#event-editor{
+    #detail,#setting,#how-to-write,#event-list{
         display:block;
         position:initial;
         bottom:initial;

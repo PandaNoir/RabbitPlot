@@ -5,20 +5,6 @@
 [ng-cloak],[ng:cloak], [data-ng-cloak], [x-ng-cloak]{
   display: none !important;
 }
-button{
-    display:inline-block;
-    background: #FFF;
-    border: 1px solid #ccc;
-    height: 21px;
-    text-shadow:-1px -1px 0 rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    min-width: 51px;
-    margin: 0 3px;
-    cursor:pointer;
-    outline:none;
-    -webkit-user-select:none;
-    user-select:none;
-}
 html,body,.main{
     background:#fcfcfc;
     height:100%;
@@ -47,13 +33,13 @@ body{
     user-select:none;
     font-size:0;
 }
-.calendar .row{
+.calendar .cal-row{
     width: 315px;
 }
 .calendar .date{
     cursor:pointer;
     width:43px;
-    height:16px;
+    height:30px;
     position:relative;
     padding:5px 0;
     vertical-align:top;
@@ -63,14 +49,12 @@ body{
     font-size:initial;
 }
 .calendar .date.today,.calendar .selected{
-    height:26px;
-    padding:0;
+    height:30px;
 }
 .calendar .date.today .inner{
     display:inline-block;
-    width:16px;
-    height:16px;
-    padding:5px;
+    width:18px;
+    height:18px;
     background:#f00;
     color:#fff;
     border-radius:50%;
@@ -78,9 +62,8 @@ body{
 }
 .calendar .selected .inner{
     display:inline-block;
-    width:16px;
-    height:16px;
-    padding:5px;
+    width:18px;
+    height:18px;
     background:#c03;
     color:#fff;
     border-radius:50%;
@@ -140,6 +123,7 @@ ul{
 .search-list,.following-list{
     overflow-y:scroll;
     height:101px;
+    padding:0;
 }
 .following:first-child {/*{{{*/
     border-top:1px solid #999;
@@ -178,9 +162,6 @@ ul{
 input:disabled {
     color:#999;
 }
-input[type="number"]{
-    width:60px;
-}
 #event-editor [name='rules']{
     width:200px;
 }
@@ -218,23 +199,14 @@ input[type="number"]{
 }
 /*}}}*/
 @media screen and (max-device-width: 480px) {/*{{{*/
-    #detail,#detail.hideSetting,#setting{
+    #detail,#detail.hideSetting,#setting,#how-to-write,#event-list,#event-editor{
+        display:block;
         position:initial;
         bottom:initial;
         left:initial;
         right:initial;
-        width:280px;
+        width:300px;
         margin:20px auto;
-    }
-    button{
-        min-height: 30px;
-        min-width: 49px;
-    }
-    .calendar-header button {
-        height: 24px;
-        width:40px;
-        min-height:initial;
-        min-width:initial;
     }
     html,body,.main{
         height:auto;
@@ -243,5 +215,9 @@ input[type="number"]{
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         -moz-tap-highlight-color: rgba(0, 0, 0, 0);
         tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+    .search-list, .following-list{
+        overflow-y:auto;
+        height:auto;
     }
 }/*}}}*/

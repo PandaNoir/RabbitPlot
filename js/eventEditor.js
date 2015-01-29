@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('eventEditor',['$scope','group','user','eventForm','calF','db',function($scope,group,user,eventForm,calF,db){
+.controller('eventEditor',['$scope','group','user','eventForm','calF','db','$mdToast',function($scope,group,user,eventForm,calF,db,$mdToast){
     var today=new Date();
     var faseHistory=[];
     var rule=[];
@@ -47,7 +47,8 @@ angular.module(appName)
             $scope.group[eventForm.selectedGroup].updated=true;
         }
 
-        $scope.dialog('added an event');
+        $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right'));
+
         eventForm.isEditMode=false;
         save(eventForm.selectedGroup);
     };
@@ -74,7 +75,6 @@ angular.module(appName)
             group.month=eventForm.month-1;
             group.date=eventForm.date;
             group.name=eventForm.name;
-
         }else if(type=='habit'){
             group.selector=eventForm.rule;
             group.name=eventForm.name;
@@ -82,7 +82,7 @@ angular.module(appName)
         eventForm.isEditMode=false;
         save(eventForm.selectedGroup);
     };
-    $scope.cancel=function(){
+    $scope.cancel=function(){//{{{
         eventForm.isEditMode=false;
     };
     $scope.goFase=function(fase,opt){
@@ -90,12 +90,12 @@ angular.module(appName)
         rule[rule.length]=opt||fase;
         $scope.ruleWriterFase=fase;
         eventForm.rule=rule.join('');
-    }
+    };
     $scope.cancelFase=function(){
         $scope.ruleWriterFase=faseHistory.pop();
         rule.pop();
         eventForm.rule=rule.join('');
-    }
+    };
     $scope.finishWritingRule=function(){
         $scope.ruleWriterFase='';
         faseHistory=[];
@@ -106,7 +106,7 @@ angular.module(appName)
         $scope.ruleWriterFase='selector';
         faseHistory=[];
         rule=[];
-    }
+    };//}}}
     function save(groupID){
         if(groupID==='private'){
             user.save();

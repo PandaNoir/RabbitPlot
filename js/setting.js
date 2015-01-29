@@ -1,11 +1,11 @@
 angular.module(appName)
-.controller('setting',['$scope','group','user','db','eventListToEdit',function($scope,group,user,db,eventListToEdit){//{{{
+.controller('setting',['$scope','group','user','db','eventListToEdit','groupForm','$mdSidenav','$mdToast','$mdDialog',function($scope,group,user,db,eventListToEdit,groupForm,$mdSidenav,$mdToast,$mdDialog){//{{{
     function sortByNumber(a,b){
         return a-b;
-    }
-    $scope.isGroupEditMode=false;
+    };
     $scope.group=group;
     $scope.user=user;
+    $scope.groupForm=groupForm;
     $scope.search_keyword='';
     $scope.searchResult=[];
     $scope.hide=function(id){//{{{
@@ -26,6 +26,11 @@ angular.module(appName)
         }
         return true;
     };//}}}
+
+    $scope.toggleNav=function(){
+        console.log('called');
+        $mdSidenav('left').close();
+    };
     function follows(id){return $scope.user.following.indexOf(id)!==-1;};
     $scope.follows=follows;
     $scope.follow=function(id){//{{{
@@ -33,7 +38,9 @@ angular.module(appName)
         $scope.user.following[$scope.user.following.length]=id;
         $scope.user.following.sort(sortByNumber);
         user.save();
-        $scope.dialog(group[id].name+'をフォローしました');
+        $mdToast.show($mdToast.simple().content(group[id].name+'をフォローしました').position('top right'));
+
+
     };//}}}
     $scope.unfollow=function(id){//{{{
         //フォロー解除する。親グループが解除されそうになったら、確認取る。確認取れたら子グループも解除する。確認取れなかったら親の解除もキャンセル
@@ -69,8 +76,10 @@ angular.module(appName)
         }
         return res;
     }
-    $scope.makeAGroup=function(){$scope.isGroupEditMode=true;};
-    $scope.finishMakingAGroup=function(){$scope.isGroupEditMode=false;};
+    $scope.makeAGroup=function(){
+        groupForm.isEditMode=true;
+        $mdSidenav('left').close();
+    };
     $scope.search=function(){//{{{
         //キーワードで検索する。例えば「新潟」で新潟高校がでるみたいな
         var res=[];
@@ -112,27 +121,24 @@ angular.module(appName)
         user.save();
     };//}}}
     $scope.importSetting=function(){//{{{
-        $scope.dialog({
-            mes:'エクスポートしたデータを入力してください。',
-            val:'',
-            showsInputDialog:true,
-            time:true,
-            focus:true,
-            locked:true,
-            callback:(function($scope){
-                return function(value){
-                    value=JSON.parse(value);
-                    console.log(user,value);
-                    for(var key in value){
-                        user[key]=value[key];
-                    }
-                    user.save();
-                };
-            })($scope)
-        });
+       $mdDialog.show({
+           controller:function($scope,$mdDialog){
+               $scope.text='';
+               $scope.answer=function(answer){
+                   $mdDialog.hide(answer);
+               };
+           },
+           template:'<md-dialog><md-content>コピーしたデータを貼り付けてください。<br><input ng-model="text"><md-button ng-click="answer(text)">ok</md-button></md-content></md-dialog>'
+       }).then(function(value){
+           value=JSON.parse(value);
+           for(var key in value){
+               user[key]=value[key];
+           }
+           user.save();
+       });
     };//}}}
     $scope.exportSetting=function(){
-        $scope.dialog({mes:'これをコピーして移行先で貼り付けてください',val:user,showsInputDialog:true,time:true,focus:true,locked:true});
+        $mdDialog.show($mdDialog.alert().title('').content('これをコピーして移行先で貼り付けてください。'+angular.toJson(user)).ok('ok'))
     };
 }])//}}}
 .directive('autoFocus',function(){//{{{
