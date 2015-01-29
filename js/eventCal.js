@@ -13,11 +13,26 @@ angular.module(appName)
     };
     var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
+    var ECMemo=[];//eventCalendarMemo;
+    var yearInEC=-1,monthInEC=-1;
     function eventCalendar(date){//{{{
         var error={'split':'split error!'};
         var events=[];
         var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         var groups=_.difference(user.following,user.hiddenGroup);
+        if(calF.year!==yearInEC||calF.month!==monthInEC){
+            yearInEC=calF.year;
+            monthInEC=calF.month;
+            ECMemo=[];
+        }else{
+            if(_.any(groups,function(item){return item.updated===true;})||user.updated){
+                //どれか1つでもupdateされたものがあったらメモを使用しない
+                ECMemo=[];
+            }else{
+                //条件が変わっていないからそのまま使用
+                return ECMemo[date]||[];
+            }
+        }
         for(var i=0,i2=groups.length;i<i2;i++){
             events[events.length]=getEvents(groups[i],calF.year,calF.month);
         }
@@ -33,7 +48,8 @@ angular.module(appName)
                 eventCalendar[events[i][j].date][eventCalendar[events[i][j].date].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
             }
         }
-        return eventCalendar[date]||[];
+        ECMemo=_.clone(eventCalendar);
+        return ECMemo[date]||[];
     };//}}}
     function getEvents(groupID,y,m){//{{{
         //habitとeventと合わせて、それを配列にして返す
