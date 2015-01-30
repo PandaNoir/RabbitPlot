@@ -11,7 +11,7 @@
 #
 #fi
 
-java -jar ~/Desktop/trash/compiler-latest/compiler.jar mainController.js calendar.js eventCal.js eventEditor.js groupEditor.js detail.js setting.js eventList.js factory.js --js_output_file main.js
+java -jar ~/Desktop/trash/compiler-latest/compiler.jar mainCtrl.js calendarCtrl.js eventEditorCtrl.js groupEditorCtrl.js detailCtrl.js settingCtrl.js eventListCtrl.js factory.js eventCal.js --js_output_file main.js
 
 #java -jar ~/Desktop/trash/compiler-latest/compiler.jar calendar.js detail.js eventCal.js eventEditor.js eventList.js factory.js groupEditor.js mainController.js setting.js --js_output_file main.js
 gzip -c9 main.js>main.js.gz
