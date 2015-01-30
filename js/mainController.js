@@ -2,8 +2,9 @@ var appName='rabbit';
 var MEMO_LIMIT=1950;//メモを高速化するために添字から引く値。2015よりも65を添え字としたほうが高速。
 var QUOTATION=0;
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
+
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
-.controller('mainController',['$scope','eventForm','calF','eventCal','eventListToEdit','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,$timeout,$filter,$sce,$mdSidenav){//{{{
+.controller('mainCtrl',['$scope','eventForm','calF','eventCal','eventListToEdit','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,$timeout,$filter,$sce,$mdSidenav){//{{{
     $scope._=_;
     $scope.eventForm=eventForm;
     $scope.calF=calendar;

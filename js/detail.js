@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('detail',['$scope','eventForm','user','group',function($scope,eventForm,user,group){
+.controller('detailCtrl',['$scope','eventForm','user','group',function($scope,eventForm,user,group){
     $scope.switchToEdit=function(){//{{{
         //event= eventのid:groupのid:eventのtype(event or habit)
         arguments=Array.prototype.slice.call(arguments);

@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('calendar',['$scope','calF','eventForm',function($scope,calendar,eventForm){
+.controller('calendarCtrl',['$scope','calF','eventForm',function($scope,calendar,eventForm){
     $scope.calF=calendar;
     $scope.nextMonth=function(){//{{{
         $scope.calF.month++;

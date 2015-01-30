@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('groupEditor',['$scope','group','groupForm','db','$mdToast',function($scope,group,groupForm,db,$mdToast){
+.controller('groupEditorCtrl',['$scope','group','groupForm','db','$mdToast',function($scope,group,groupForm,db,$mdToast){
     $scope.groupForm=groupForm;
     $scope.groupForm.parentGroup=[null];
     $scope.groupForm.mode='add';
