@@ -1,5 +1,5 @@
 angular.module(appName)
-.factory('eventCal',['group','user','calF','$mdToast',function(group,user,calF,$mdToast){
+.factory('eventCal',['group','user','calF','error',function(group,user,calF,myError){
     var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
     var OPERATOR=0;
     var OTHERS=1;
@@ -8,16 +8,11 @@ angular.module(appName)
     function sortByNumber(a,b){return a-b;};
     function last(arr){return arr[arr.length-1];};
     function toInt(n){return parseInt(n,10)};
-    function error(mes){
-        $mdToast.show($mdToast.simple().content(mes).position('top right'));
-        console&&console.error&&console.error(mes);
-    };
     var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;
     var yearInEC=-1,monthInEC=-1;
     function eventCalendar(date){//{{{
-        var error={'split':'split error!'};
         var events=[];
         var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         var groups=_.difference(user.following,user.hiddenGroup);
@@ -118,7 +113,9 @@ angular.module(appName)
                         stack.push(_.intersection(stack.pop(),stack.pop()));//!!!stack.pop()しているため、stack.pushを直してはいけない
                     else if(nowSelector[0]==='||')
                         stack.push(_.union(stack.pop(),stack.pop()));//同上
-                    else error('undefined operator '+nowSelector[0]);
+                    else{
+                        throw myError('undefined operator '+nowSelector[0]);
+                    }
                 }
             });//}}}
             function execSelector(nowSelector,year,month){//{{{
@@ -319,13 +316,12 @@ angular.module(appName)
                                     return n<=nowTo.getDate();//toより前であることが条件
                                 });
                             }else to_res=all_days();
-                            console.log(from.toLocaleDateString(),nowTo.toLocaleDateString(),_.intersection(from_res,to_res));
                             if(!_.isEmpty(_.intersection(from_res,to_res))){
                                 tmp_res=_.intersection(from_res,to_res);
                             }
                         });//}}}
                     }else{//{{{
-                        error('invalid selector "'+key+':'+val+'" in '+group[groupID].name+'.');
+                        throw myError('invalid selector "'+key+':'+val+'" in '+group[groupID].name+'.');
                     }//}}}//}}}
                 }else if(key==='date'){//{{{
                     tmp_res[tmp_res.length]=toInt(val);//}}}
@@ -364,7 +360,9 @@ angular.module(appName)
                     }else if(toInt(val)!==year){
                         tmp_res=[];//違う年
                     }else tmp_res=all_days();//}}}
-                }else error('undefined key "'+key+'".');
+                }else{
+                    throw myError('undefined key "'+key+'".');
+                }
                 if(key==='day'){
                     //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
                     GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
@@ -372,8 +370,7 @@ angular.module(appName)
                 return tmp_res;
             }//}}}
             if(stack.length!=1){
-                console.log(stack);
-                error('unexpected error in execSelectors().');
+                throw myError('unexpected error in execSelectors().');
             }
             return stack.pop();
         }//}}}
@@ -463,7 +460,7 @@ angular.module(appName)
                 while(last(stack)[1]!=LPARENTHESES){
                     output[output.length]=stack.pop();
                     if(stack.length===0){
-                        error('found mismatched parentheses');
+                        throw myError('found mismatched parentheses');
                     }
                 }
                 stack.pop();//左括弧を捨てる
@@ -472,7 +469,7 @@ angular.module(appName)
         while(stack.length>0){
             //反転させて挿入しても速度に大差はでなかった
             if(last(stack)[1]===LPARENTHESES){
-                error('found mismatched parentheses.');
+                throw myError('found mismatched parentheses.');
             }
             output[output.length]=stack.pop();
         }

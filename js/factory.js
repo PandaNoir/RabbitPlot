@@ -175,6 +175,13 @@ angular.module(appName)
         id:''
     };
 })//}}}
+.factory('error',['$mdToast',function($mdToast){//{{{
+    var ErrorConstructor = ErrorConstructor || Error;
+    return function(mes){
+        $mdToast.show($mdToast.simple().content(mes).position('top right').hideDelay(3000));
+        return new ErrorConstructor(mes);
+    };
+}])//}}}
 .run(['$timeout',function($timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);

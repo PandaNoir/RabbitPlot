@@ -38,7 +38,7 @@ angular.module(appName)
         $scope.user.following[$scope.user.following.length]=id;
         $scope.user.following.sort(sortByNumber);
         user.save();
-        $mdToast.show($mdToast.simple().content(group[id].name+'をフォローしました').position('top right'));
+        $mdToast.show($mdToast.simple().content(group[id].name+'をフォローしました').position('top right').hideDelay(3000));
 
 
     };//}}}

@@ -21,7 +21,7 @@ angular.module(appName)
         }
         group[group.length]=ele;
         db.post(ele,$scope.group.length-1,'insert').success($scope.finishMakingAGroup);
-        $mdToast.show($mdToast.simple().content('グループ '+$scope.groupForm.name+' を作成しました').position('top right'));
+        $mdToast.show($mdToast.simple().content('グループ '+$scope.groupForm.name+' を作成しました').position('top right').hideDelay(3000));
 
         $scope.groupForm.name='';
     }

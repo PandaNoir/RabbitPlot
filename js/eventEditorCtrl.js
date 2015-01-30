@@ -47,7 +47,7 @@ angular.module(appName)
             $scope.group[eventForm.selectedGroup].updated=true;
         }
 
-        $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right'));
+        $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
 
         eventForm.isEditMode=false;
         save(eventForm.selectedGroup);
