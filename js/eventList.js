@@ -1,7 +1,10 @@
 angular.module(appName)
-.controller('eventList',['$scope','group','user','eventListToEdit','eventForm',function($scope,group,user,eventListToEdit,eventForm){//{{{
-    $scope.eventList=eventListToEdit;
+.controller('eventListCtrl',['$scope','group','user','eventListToEdit','eventForm',function($scope,group,user,eventListToEdit,eventForm){//{{{
+    $scope.eventListToEdit=eventListToEdit;
     $scope.group=group;
+    $scope.user=user;
+    $scope.habitList= eventListToEdit.id!=='private' ? group[eventListToEdit.id].habit : user['private'].habit;
+    $scope.eventList= eventListToEdit.id!=='private' ? group[eventListToEdit.id].event : user['private'].event;
     $scope.switchToEdit=function(){//{{{
         //event= eventのid:groupのid:eventのtype(event or habit)
         arguments=Array.prototype.slice.call(arguments);
