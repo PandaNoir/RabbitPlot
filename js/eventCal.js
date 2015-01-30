@@ -7,6 +7,7 @@ angular.module(appName)
     var RPARENTHESES=3;
     function sortByNumber(a,b){return a-b;};
     function last(arr){return arr[arr.length-1];};
+    function toInt(n){return parseInt(n,10)};
     function error(mes){
         $mdToast.show($mdToast.simple().content(mes).position('top right'));
         console&&console.error&&console.error(mes);
@@ -107,9 +108,6 @@ angular.module(appName)
             //year,monthはexecSelectorをメモ化するため
             var stack=[];
             var ALL_DAYS=_.flatten(calF.calendar(year,month));
-            var from=null;
-            var to=null;
-            var setTo=null;//setToは、toをセッティングするという意味。set toという意味ではない。fromが設定されていないのにfromが必要な時に呼び出す
             _.each(selectors,function(nowSelector){//{{{
                 if(nowSelector[1]===OTHERS){
                     //セレクタの時
@@ -166,7 +164,7 @@ angular.module(appName)
                 var key=nowSelector.split(':')[0];
                 var val=nowSelector.split(':').slice(1).join(':');
                 var tmp_res=[];
-                if(key==='not'){
+                if(key==='not'){//{{{
                     tmp_res=all_days();
                     if(val==='public-holiday'||val==='祝日'){
                         //祝日を除くフィルタ
@@ -189,11 +187,11 @@ angular.module(appName)
                                 tmp_res=_.without(tmp_res,resItem.date);
                             }
                         });
-                    }
-                }else if(key==='range'){
-                    if(val.slice(0,2)==='..'){
+                    }//}}}
+                }else if(key==='range'){//{{{
+                    if(val.slice(0,2)==='..'){//{{{
                         //..20xx/xx/xxという形式、つまりtoのみ指定
-                        //必ずyear/month/date という形。year,month,dateはいづれも省略不可
+                        //必ずyear/month/date という形。year,month,dateはいづれも省略不可。month/dateとはとれない
                         if(val.slice(0,3)==='...'){
                             val=val.slice(3);//...をカット
                         }else{
@@ -203,7 +201,8 @@ angular.module(appName)
                         // 2014/1/1 のように区切れている
                         //こっちはfromの設定とあまり関係ない
                         val=val.split('/');
-                        to=new Date(parseInt(val[0],10),parseInt(val[1],10)-1,parseInt(val[2],10));//これでtoが生成できる
+                        val=_.map(val,toInt);
+                        to=new Date(val[0],val[1]-1,val[2]);//これでtoが生成できる
                         if(to.getFullYear()<year || to.getFullYear()==year && to.getMonth()<month){
                             //明らかにto以降だからtmp_resは空
                             tmp_res=[];
@@ -213,18 +212,19 @@ angular.module(appName)
                             tmp_res=_.filter(tmp_res,function(n){
                                 return n<=to.getDate();//toより前であることが条件
                             });
-                        }else tmp_res=all_days();
-                    }else if(val.slice(-2)==='..'){
+                        }else tmp_res=all_days();//}}}
+                    }else if(val.slice(-2)==='..'){//{{{
                         //20xx/xx/xx..という形式、つまりfromのみ指定
-                        //必ずyear/month/date という形。year,month,dateはいづれも省略不可
+                        //必ずyear/month/date という形。year,month,dateはいづれも省略不可。month/dateとはとれない
                         if(val.slice(-3)==='...'){
                             val=val.slice(0,-3);//...をカット
                         }else{
                             val=val.slice(0,-2);//..をカット
                         }
                         val=val.split('/');
-                        from=new Date(parseInt(val[0],10),parseInt(val[1],10)-1,parseInt(val[2],10));
-                        if(from.getFullYear()>year||from.getFullYear()==year&&from.getMonth()>month){
+                        val=_.map(val,toInt);
+                        from=new Date(val[0],val[1]-1,val[2]);
+                        if(from.getFullYear()>year || from.getFullYear()==year && from.getMonth()>month){
                             //fromよりも明らかに以前
                             tmp_res=[];
                         }else if(from.getFullYear()==year&&from.getMonth()==month){
@@ -233,80 +233,112 @@ angular.module(appName)
                             tmp_res=_.filter(tmp_res,function(n){
                                 return n>=from.getDate();
                             });
-                        }else tmp_res=all_days();
-                    }else if(val.indexOf('..')!==-1){
+                        }else tmp_res=all_days();//}}}
+                    }else if(val.indexOf('..')!==-1){//{{{
                         //20xx/xx/xx..20xx/xx/xxという形式
-                        tmp_res=all_days();
-                        val=val.split('...');
+                        //month/date..month/dateも可能(例:12/29..1/3)
+                        tmp_res=[];
+                        val=val.split('...');//下で..の時の処理もしてる
                         if(val.length===1){
                             //...がなかった = ..があった
                             val=val[0].split('..');
                         }
                         var from_res=[],to_res=[];
+                        var from_reses=[];
                         var from=val[0];
                         var to=val[1];
                         var top4=to.substr(to.length-4,4);//最後の4文字を取り出す。理由はto:4weekのようになっているから
                         var top5=to.substr(to.length-5,5);//最後の4文字を取り出す。理由はto:4weekのようになっているから
+                        var froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                         //from処理
                         from=from.split('/');
-                        from=new Date(parseInt(from[0],10),parseInt(from[1],10)-1,parseInt(from[2],10));
-                        if(from.getFullYear()>year||from.getFullYear()==year&&from.getMonth()>month){
-                            //fromよりも明らかに以前
-                            from_res=[];
-                        }else if(from.getFullYear()==year&&from.getMonth()==month){
-                            //fromの境目あたり。
-                            from_res=all_days();
-                            from_res=_.filter(from_res,function(n){
-                                return n>=from.getDate();
-                            });
-                        }else from_res=all_days();
-                        //to処理
-                        if(top4==='date'||top4==='week'||top4==='year'||top5==='dates'||top5==='weeks'||top5==='years'){
-                            var times;
-                            if(top4==='date'||top4==='week'||top4==='year'){
-                                times=parseInt(to.substring(0,to.length-4),10);//to:4weekの4の部分
-                            }else{
-                                times=parseInt(to.substring(0,to.length-5),10);//to:4weeksの4の部分
-                            }
-                            to=new Date(from.getTime());
-                            if(top4==='date'||top5==='dates')
-                                to.setDate(to.getDate()+times);
-                            else if(top4==='week'||top5==='weeks')
-                                to.setDate(to.getDate()+7*times);
-                            else if(top4==='year'||top5==='years')
-                                to.setFullYear(to.getFullYear()+times);
-                        }else{
-                            to=to.split('/');
-                            to=new Date(parseInt(to[0],10),parseInt(to[1],10)-1,parseInt(to[2],10));//これでtoが生成できる
+                        from=_.map(from,toInt);
+                        if(from.length===3){
+                            // year/month/dateと記述されている
+                            var from1=new Date(from[0],from[1]-1,from[2]);
+                            froms.push(from1);
+                        }else if(from.length===2){
+                            // month/date yearがないから、すべてのyearに当てはまる。ただし、去年及び今年のもの以外は重要でない
+                            var from1=new Date(year-1,from[0]-1,from[1]);
+                            var from2=new Date(year,from[0]-1,from[1]);
+                            froms.push(from1,from2);
                         }
-                        if(to.getFullYear()<year || to.getFullYear()==year && to.getMonth()<month){
-                            //明らかにto以降だからto_resは空
-                            to_res=[];
-                        }else if(to.getFullYear()==year && to.getMonth()==month){
-                            //toがかぶっているであろう時
-                            to_res=all_days();
-                            to_res=_.filter(to_res,function(n){
-                                return n<=to.getDate();//toより前であることが条件
-                            });
-                        }else to_res=all_days();
-                        tmp_res=_.intersection(from_res,to_res);
-                    }else{
-                        error('invalid selector.');
-                    }
-                }else if(key==='from'){
-                }else if(key==='to'){
-                }else if(key==='date'){
-                    tmp_res[tmp_res.length]=parseInt(val,10);
-                }else if(key==='month'){
-                    if(!monthDic[val] && parseInt(val,10)!=month+1 || monthDic[val] && monthDic[val]!=month)
+                        _.each(froms,function(fromItem){
+                            if(fromItem.getFullYear()>year||fromItem.getFullYear()==year&&fromItem.getMonth()>month){
+                                //fromよりも明らかに以前
+                                from_res=[];
+                            }else if(fromItem.getFullYear()==year&&fromItem.getMonth()==month){
+                                //fromの境目あたり。
+                                from_res=all_days();
+                                from_res=_.filter(from_res,function(n){
+                                    return n>=fromItem.getDate();
+                                });
+                            }else from_res=all_days();
+                            from_reses.push(from_res);
+                        });
+                        froms=_.zip(froms,from_reses);// [[from,from_res],[from,from_res], ...]
+                        _.each(froms,function(item){
+                            var from=item[0];
+                            var from_res=item[1];
+                            var nowTo;
+                            //to処理
+                            if(top4==='date'||top4==='week'||top4==='year'||top5==='dates'||top5==='weeks'||top5==='years'){
+                                var times;
+                                if(top4==='date'||top4==='week'||top4==='year'){
+                                    times=toInt(to.substring(0,to.length-4));//to:4weekの4の部分
+                                }else{
+                                    times=toInt(to.substring(0,to.length-5));//to:4weeksの4の部分
+                                }
+                                nowTo=new Date(from.getTime());
+                                if(top4==='date'||top5==='dates')
+                                    nowTo.setDate(nowTo.getDate()+times);
+                                else if(top4==='week'||top5==='weeks')
+                                    nowTo.setDate(nowTo.getDate()+7*times);
+                                else if(top4==='year'||top5==='years')
+                                    nowTo.setFullYear(nowTo.getFullYear()+times);
+                            }else{
+                                nowTo=to.split('/');
+                                nowTo=_.map(nowTo,toInt);
+                                if(nowTo.length===3){
+                                    nowTo=new Date(nowTo[0],nowTo[1]-1,nowTo[2]);//これでnowToが生成できる
+                                }else{
+                                    nowTo=new Date(from.getFullYear(),nowTo[0]-1,nowTo[1]);
+                                    if(nowTo.getTime()<from.getTime()){
+                                        // 12/29..1/3というとき、fromよりも前にtoがきてしまっている
+                                        nowTo.setFullYear(nowTo.getFullYear()+1);
+                                    }
+                                }
+                            }
+                            if(nowTo.getFullYear()<year || nowTo.getFullYear()==year && nowTo.getMonth()<month){
+                                //明らかにto以降だからto_resは空
+                                to_res=[];
+                            }else if(nowTo.getFullYear()==year && nowTo.getMonth()==month){
+                                //toがかぶっているであろう時
+                                to_res=all_days();
+                                to_res=_.filter(to_res,function(n){
+                                    return n<=nowTo.getDate();//toより前であることが条件
+                                });
+                            }else to_res=all_days();
+                            console.log(from.toLocaleDateString(),nowTo.toLocaleDateString(),_.intersection(from_res,to_res));
+                            if(!_.isEmpty(_.intersection(from_res,to_res))){
+                                tmp_res=_.intersection(from_res,to_res);
+                            }
+                        });//}}}
+                    }else{//{{{
+                        error('invalid selector "'+key+':'+val+'" in '+group[groupID].name+'.');
+                    }//}}}//}}}
+                }else if(key==='date'){//{{{
+                    tmp_res[tmp_res.length]=toInt(val);//}}}
+                }else if(key==='month'){//{{{
+                    if(!monthDic[val] && toInt(val)!=month+1 || monthDic[val] && monthDic[val]!=month)
                         tmp_res=[];//違う月の時
-                    else if(!monthDic[val] && parseInt(val,10)==month+1 || monthDic[val] && monthDic[val]==month)
-                        tmp_res=all_days();//同じ月の時
-                }else if(key==='day'){
+                    else if(!monthDic[val] && toInt(val)==month+1 || monthDic[val] && monthDic[val]==month)
+                        tmp_res=all_days();//同じ月の時//}}}
+                }else if(key==='day'){//{{{
                     if(val.match(/^\d/)){
                         //valが1st-wedといった具合になっている
                         val=val.match(/^(\d+)(?:st|nd|rd|th)-?(.+)$/);
-                        var ordinalNum=parseInt(val[1],10);
+                        var ordinalNum=toInt(val[1]);
                         var valDay=day[val[2]];
                         var dayCount=0;
                         var index=0;
@@ -321,18 +353,17 @@ angular.module(appName)
                                 tmp_res[tmp_res.length]=week[valDay];
                             }
                         });
-                    }
-                }else if(key==='year'){
+                    }//}}}
+                }else if(key==='year'){//{{{
                     if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
-                        console.log('leap year');
                         if(year%400===0||year%4===0&&year%100!==0){
                             tmp_res=all_days();
                         }else{
                             tmp_res=[];
                         }
-                    }else if(parseInt(val,10)!==year){
+                    }else if(toInt(val)!==year){
                         tmp_res=[];//違う年
-                    }else tmp_res=all_days();
+                    }else tmp_res=all_days();//}}}
                 }else error('undefined key "'+key+'".');
                 if(key==='day'){
                     //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
