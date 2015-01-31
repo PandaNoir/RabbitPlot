@@ -161,6 +161,10 @@ angular.module(appName)
                 var key=nowSelector.split(':')[0];
                 var val=nowSelector.split(':').slice(1).join(':');
                 var tmp_res=[];
+                var from_res=[],to_res=[];
+                var from_reses=[];
+                var from,to;
+                var top4,top5,froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                 if(key==='not'){//{{{
                     tmp_res=all_days();
                     if(val==='public-holiday'||val==='祝日'){
@@ -240,13 +244,14 @@ angular.module(appName)
                             //...がなかった = ..があった
                             val=val[0].split('..');
                         }
-                        var from_res=[],to_res=[];
-                        var from_reses=[];
-                        var from=val[0];
-                        var to=val[1];
-                        var top4=to.substr(to.length-4,4);//最後の4文字を取り出す。理由はto:4weekのようになっているから
-                        var top5=to.substr(to.length-5,5);//最後の4文字を取り出す。理由はto:4weekのようになっているから
-                        var froms=[];//month/dateを処理するときにfromが2つでてくるから使用
+                        from_res=[];
+                        to_res=[];
+                        from_reses=[];
+                        from=val[0];
+                        to=val[1];
+                        top4=to.substr(to.length-4,4);//最後の4文字を取り出す。理由はto:4weekのようになっているから
+                        top5=to.substr(to.length-5,5);//最後の4文字を取り出す。理由はto:4weekのようになっているから
+                        froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                         //from処理
                         from=from.split('/');
                         from=_.map(from,toInt);

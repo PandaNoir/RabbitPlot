@@ -182,7 +182,7 @@ angular.module(appName)
         return new ErrorConstructor(mes);
     };
 }])//}}}
-.run(['$timeout',function($timeout){//{{{
+.run(['calF','$timeout',function(calF,$timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);
     tomorrow.setHours(0);
@@ -197,9 +197,9 @@ angular.module(appName)
         tomorrow.setSeconds(0);
         tomorrow.setMilliseconds(0);
         var today=new Date();
-        $scope.calF.today.year=today.getFullYear();
-        $scope.calF.today.month=today.getMonth();
-        $scope.calF.today.date=today.getDate();
+        calF.today.year=today.getFullYear();
+        calF.today.month=today.getMonth();
+        calF.today.date=today.getDate();
         $timeout(setTomorrow,tomorrow-(new Date()));
     }
     $timeout(setTomorrow,tomorrow-(new Date()));
