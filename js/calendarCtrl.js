@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('calendarCtrl',['$scope','calF','eventForm',function($scope,calendar,eventForm){
+.controller('calendarCtrl',['$scope','calF','mode',function($scope,calendar,mode){
     $scope.calF=calendar;
     $scope.nextMonth=function(){//{{{
         $scope.calF.month++;
@@ -8,7 +8,7 @@ angular.module(appName)
             $scope.calF.year+=1;
             $scope.calF.month-=12;
         }
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
     };//}}}
     $scope.lastMonth=function(){//{{{
         $scope.calF.month--;
@@ -24,12 +24,12 @@ angular.module(appName)
                 $scope.calF.year-=1;
             }
         }
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
     };//}}}
     $scope.nextYear=function(){//{{{
         $scope.calF.year++;
         $scope.calF.selected=null;
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
     };//}}}
     $scope.lastYear=function(){//{{{
         if($scope.calF.year-1<MEMO_LIMIT){
@@ -38,6 +38,6 @@ angular.module(appName)
             $scope.calF.year--;
             $scope.calF.selected=null;
         }
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
     };//}}}
 }]);

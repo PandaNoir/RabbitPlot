@@ -32,8 +32,8 @@
   <body>
     <div class="main ng-cloak" ng-controller="mainCtrl" ng-cloak>
       <md-button href="how-to-use.html">使い方</md-button>
-      <md-button class="md-fab" md-theme="cyan"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
-      <md-button class="md-fab" md-theme="cyan" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+      <md-button class="md-fab"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+      <md-button class="md-fab" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
 
       <div class="calendar" ng-controller="calendarCtrl"><!--{{{-->
 
@@ -48,20 +48,20 @@
         <div class="cal-row" ng-repeat="row in calF.calendar(calF.year,calF.month)"><span app-date="0" app-row="row"><span class="inner">{{row[0]!==0&&row[0]!==32?row[0]:''}}</span></span><span app-date="1" app-row="row"><span class="inner">{{row[1]!==0&&row[1]!==32?row[1]:''}}</span></span><span app-date="2" app-row="row"><span class="inner">{{row[2]!==0&&row[2]!==32?row[2]:''}}</span></span><span app-date="3" app-row="row"><span class="inner">{{row[3]!==0&&row[3]!==32?row[3]:''}}</span></span><span app-date="4" app-row="row"><span class="inner">{{row[4]!==0&&row[4]!==32?row[4]:''}}</span></span><span app-date="5" app-row="row"><span class="inner">{{row[5]!==0&&row[5]!==32?row[5]:''}}</span></span><span app-date="6" app-row="row"><span class="inner">{{row[6]!==0&&row[6]!==32?row[6]:''}}</span></span></div>
 
       </div><!--}}}-->
-      <md-whiteframe class="md-whiteframe-z2" layout="column" layout-align="center center" ng-controller="detailCtrl" ng-class="{hideSetting:!showsSetting}"><!--{{{-->
+      <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}"><!--{{{-->
         <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="calF.selected===calF.today.date&&calF.month===calF.today.month&&calF.year===calF.today.year"> - 今日</span></div>
         <div ng-show="calF.selected===null"><br></div>
         <ul>
           <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
           <li ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
-            <span ng-dblclick="switchToEdit(event)">{{event|format}}</span><span class="right"><md-button ng-click="switchToEdit(event)">編集</md-button><md-button ng-click="switchToEdit(event,true)">コピー</md-button></span>
+            <span ng-dblclick="mode.switchToEdit(event)">{{event|format}}</span><span class="right"><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button></span>
           </li>
         </ul>
 
-        <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
+        <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="mode.switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
         <br ng-if="calF.selected===null">
       </md-whiteframe><!--}}}-->
-      <md-whiteframe class="md-whiteframe-z4" layout layout-align="center center" ng-controller="eventEditorCtrl" ng-if="eventForm.isEditMode"><!--{{{-->
+      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm"><!--{{{-->
         <form name="eventEditor" class="md-padding">
           {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
@@ -167,7 +167,7 @@
           <md-button class="md-raised md-primary" ng-click="finishWritingRule()">決定</md-button>
         </div><!--}}}-->
       </md-whiteframe><!--}}}-->
-      <md-whiteframe class="md-whiteframe-z4" layout layout-align="center center" ng-controller="groupEditorCtrl" ng-show="groupForm.isEditMode"><!--{{{-->
+      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-show="mode.editsGroupForm"><!--{{{-->
       <form>
         グループを追加します<br>
         <md-input-container>
@@ -189,7 +189,8 @@
       <md-sidenav md-component-id="left"><!--{{{-->
       <div id="setting" ng-controller="settingCtrl" ng-if="eventListToEdit.id===''"><!--{{{-->
         <md-button ng-click="toggleNav()">Close</md-button>
-        <md-button ng-click="exportSetting()">設定を保存</md-button><md-button ng-click="importSetting()">設定を読み込み</md-button><br>
+        <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
+        <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
         フォローしているグループ:
         <ul ng-if="user.following.length>0" class="following-list">
           <li class="following cf" ng-class="user.isHiddenGroup(-1)?'hidden-group':'visible-group'">
@@ -228,15 +229,12 @@
       <div id="event-list" ng-controller="eventListCtrl" ng-if="eventListToEdit.id!==''"><!--{{{-->
         <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
         <ul>
-          <li ng-repeat="item in habitList track by $index">{{item.name}}<md-button ng-click="switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button></li>
-          <li ng-repeat="item in eventList track by $index">{{item.name}}<md-button ng-click="switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button></li>
+          <li ng-repeat="item in habitList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button></li>
+          <li ng-repeat="item in eventList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button></li>
         </ul>
         <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
       </div><!--}}}-->
       </md-sidenav><!--}}}-->
-      <div class="dialog animate-show-hide" ng-if="showsDialog">{{dialogMessage}}<br ng-if="showsDialogButton"><md-button class="md-raised md-primary" ng-click="hideDialog()" ng-if="showsDialogButton">OK</md-button></div>
-      <div class="dialog animate-show-hide" ng-if="showsInputDialog">{{dialogMessage}}<input type="text" ng-model="$parent.dialogInputValue" auto-focus focus="focus" showsDialog="showsDialog"><br><md-button class="md-raised md-primary" ng-click="hideDialog()" ng-if="showsDialogButton">OK</md-button>
-      </div>
     </div>
   </body>
 </html>

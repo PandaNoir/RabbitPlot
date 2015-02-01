@@ -4,15 +4,17 @@ var QUOTATION=0;
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
 
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
-.controller('mainCtrl',['$scope','eventForm','calF','eventCal','eventListToEdit','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,$timeout,$filter,$sce,$mdSidenav){//{{{
+.controller('mainCtrl',['$scope','eventForm','calF','eventCal','eventListToEdit','mode','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,mode,$timeout,$filter,$sce,$mdSidenav){//{{{
     $scope._=_;
     $scope.eventForm=eventForm;
     $scope.calF=calendar;
     $scope.eventListToEdit=eventListToEdit;
-    $scope.eventForm.isEditMode=false;
-    $scope.showsHowToWrite=false;
+    $scope.mode=mode;
+    mode.editsEventForm=false;
+    mode.editsGroupForm=false;
+    mode.showsHowToWrite=false;
     $scope.showHowToWrite=function(){
-        $scope.showsHowToWrite=!$scope.showsHowToWrite;
+        mode.showsHowToWrite=!mode.showsHowToWrite;
     };
     $scope.splitSelector=eventCal.splitSelector;
     $scope.openNav=function(){
@@ -233,4 +235,5 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
             }
         }
     };
-}]);//}}}
+}])//}}}
+;

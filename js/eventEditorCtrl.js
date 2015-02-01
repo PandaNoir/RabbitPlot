@@ -1,8 +1,9 @@
 angular.module(appName)
-.controller('eventEditorCtrl',['$scope','group','user','eventForm','calF','db','$mdToast',function($scope,group,user,eventForm,calF,db,$mdToast){
+.controller('eventEditorCtrl',['$scope','group','user','eventForm','calF','db','$mdToast','mode',function($scope,group,user,eventForm,calF,db,$mdToast,mode){
     var today=new Date();
     var faseHistory=[];
     var rule=[];
+    $scope.mode=mode;
     $scope.group=group;
     $scope.user=user;
     $scope.eventForm=eventForm;
@@ -49,7 +50,7 @@ angular.module(appName)
 
         $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
 
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
         save(eventForm.selectedGroup);
     };
     $scope.saveEvent=function(){
@@ -79,11 +80,11 @@ angular.module(appName)
             group.selector=eventForm.rule;
             group.name=eventForm.name;
         }
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
         save(eventForm.selectedGroup);
     };
     $scope.cancel=function(){//{{{
-        eventForm.isEditMode=false;
+        mode.editsEventForm=false;
     };
     $scope.goFase=function(fase,opt){
         faseHistory[faseHistory.length]=$scope.ruleWriterFase;

@@ -1,10 +1,10 @@
 angular.module(appName)
-.controller('groupEditorCtrl',['$scope','group','groupForm','db','$mdToast',function($scope,group,groupForm,db,$mdToast){
+.controller('groupEditorCtrl',['$scope','group','groupForm','db','$mdToast','mode',function($scope,group,groupForm,db,$mdToast,mode){
     $scope.groupForm=groupForm;
     $scope.groupForm.parentGroup=[null];
     $scope.groupForm.mode='add';
     $scope.group=group;
-    $scope.finishMakingAGroup=function(){groupForm.isEditMode=false;};
+    $scope.finishMakingAGroup=function(){mode.editsGroupForm=false;};
     $scope.addGroup=function(){
         var parentGroup=$scope.groupForm.parentGroup.reduce(function(a,b){
             if(a.indexOf(b)===-1) a[a.length]=angular.isNumber(b)?parseInt(b,10):'';

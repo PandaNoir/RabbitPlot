@@ -89,7 +89,6 @@ ul{
     list-style:none;
 }
 #setting{
-    background:#f3f3f3;
     padding-top:30px;
 }
 #detail,#how-to-write,#event-list{
@@ -134,9 +133,6 @@ ul{
 }
 .following.hidden-group{
     background: #E6E6E6;
-}
-.following.visible-group{
-    background: #f0f0f0;
 }
 .following button{
     float:right;

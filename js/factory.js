@@ -33,7 +33,6 @@ angular.module(appName)
 }])//}}}
 .factory('eventForm',function(){//{{{
     return {
-        isEditMode:false,
         name:'',
         year:(new Date()).getFullYear(),
         month:(new Date()).getMonth()+1,
@@ -44,7 +43,6 @@ angular.module(appName)
 })//}}}
 .factory('groupForm',function(){//{{{
     return {
-        isEditMode:false,
         name:''
     };
 })//}}}
@@ -182,6 +180,51 @@ angular.module(appName)
         return new ErrorConstructor(mes);
     };
 }])//}}}
+.factory('mode',['eventForm',function(eventForm){
+    return {
+        editsEventForm:false,
+        editsGroupForm:false,
+        switchToEdit:function(){//{{{
+            //event= eventのid:groupのid:eventのtype(event or habit)
+            arguments=Array.prototype.slice.call(arguments);
+            if(arguments.length===1||arguments.length===2&&arguments[1]===true){//{{{
+                //switchToEdit(event)の場合
+                var event=arguments[0];
+                eventForm.mode=arguments.length===1?'edit':'add';
+                event=event.split(':');
+
+                _.extend(eventForm,{type: event[2], id: arguments.length===1? event[0]: 0});
+                if(event[1]!=='private'){
+                    eventForm.selectedGroup=parseInt(event[1],10);
+                }else{
+                    eventForm.selectedGroup=event[1];
+                }
+                if(event[2]==='event'){
+                    _.map(['year','month','date','name'],function(key){
+                        if(event[1]==='private'){
+                            eventForm[key]=user['private'].event[event[0]][key];
+                        }else{
+                            eventForm[key]=group[event[1]].event[event[0]][key];
+                        }
+                    });
+                    eventForm.month+=1;
+                }else if(event[2]==='habit'){
+                    if(event[1]==='private'){
+                        eventForm.rule=user['private'].habit[event[0]].selector;
+                        eventForm.name=user['private'].habit[event[0]].name;
+                    }else{
+                        eventForm.rule=group[event[1]].habit[event[0]].selector;
+                        eventForm.name=group[event[1]].habit[event[0]].name;
+                    }
+                }//}}}
+            }else if(arguments.length===3){//{{{
+                //switchToEdit(year,month,date)の場合
+                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: arguments[0], month: arguments[1]+1, date: arguments[2]});
+            }//}}}
+            this.editsEventForm=true;
+        }//}}}
+    };
+}])
 .run(['calF','$timeout',function(calF,$timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);

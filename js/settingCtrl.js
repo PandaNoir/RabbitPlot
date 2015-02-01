@@ -122,12 +122,12 @@ angular.module(appName)
     };//}}}
     $scope.importSetting=function(){//{{{
        $mdDialog.show({
-           controller:function($scope,$mdDialog){
+           controller:['$scope','$mdDialog',function($scope,$mdDialog){
                $scope.text='';
                $scope.answer=function(answer){
                    $mdDialog.hide(answer);
                };
-           },
+           }],
            template:'<md-dialog><md-content>コピーしたデータを貼り付けてください。<br><input ng-model="text"><md-button ng-click="answer(text)">ok</md-button></md-content></md-dialog>'
        }).then(function(value){
            value=JSON.parse(value);
