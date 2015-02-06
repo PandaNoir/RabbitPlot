@@ -1,9 +1,0 @@
-node_modules
-jasmine
-.DS_Store
-dist
-.tmp
-.sass-cache
-app/components
-*.swp
-*.gz
