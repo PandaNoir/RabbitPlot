@@ -7,7 +7,7 @@ angular.module(appName)
     $scope.finishMakingAGroup=function(){mode.editsGroupForm=false;};
     $scope.addGroup=function(){
         var parentGroup=$scope.groupForm.parentGroup.reduce(function(a,b){
-            if(a.indexOf(b)===-1) a[a.length]=angular.isNumber(b)?parseInt(b,10):'';
+            if(a.indexOf(b)===-1) a[a.length]=angular.isNumber(b)?toInt(b):'';
             return a;
         },[]);
         var ele={

@@ -5,9 +5,7 @@ angular.module(appName)
     var OTHERS=1;
     var LPARENTHESES=2;
     var RPARENTHESES=3;
-    function sortByNumber(a,b){return a-b;};
     function last(arr){return arr[arr.length-1];};
-    function toInt(n){return parseInt(n,10)};
     var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;

@@ -21,7 +21,7 @@ angular.module(appName)
             return;
         }
         var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
-        if(testDate.getFullYear()!==parseInt(eventForm.year,10)||testDate.getMonth()!==parseInt(eventForm.month,10)-1||testDate.getDate()!==parseInt(eventForm.date,10)){
+        if(testDate.getFullYear()!==toInt(eventForm.year)||testDate.getMonth()!==toInt(eventForm.month)-1||testDate.getDate()!==toInt(eventForm.date)){
             //正常範囲に入っていない
             return;
         }
@@ -61,7 +61,7 @@ angular.module(appName)
             return;
         }
         var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
-        if(testDate.getFullYear()!==parseInt(eventForm.year,10)||testDate.getMonth()!==parseInt(eventForm.month,10)-1||testDate.getDate()!==parseInt(eventForm.date,10)){
+        if(testDate.getFullYear()!==toInt(eventForm.year)||testDate.getMonth()!==toInt(eventForm.month)-1||testDate.getDate()!==toInt(eventForm.date)){
             //正常範囲に入っていない
             return;
         }

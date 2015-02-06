@@ -1,7 +1,12 @@
 var appName='rabbit';
 var MEMO_LIMIT=1950;//メモを高速化するために添字から引く値。2015よりも65を添え字としたほうが高速。
-var QUOTATION=0;
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
+function sortByNumber(a,b){
+    return a-b;
+};
+function toInt(n){
+    return parseInt(n,10);
+};
 
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
 .controller('mainCtrl',['$scope','_','calF','eventCal','mode','$mdSidenav',function($scope,_,calF,eventCal,mode,$mdSidenav){//{{{
@@ -132,11 +137,11 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
         }],
         link:function(scope,elm,attrs){
             var date=scope.row[attrs['appDate']];
+            function updateClass(){
+                elm.removeClass('selected booked-0 booked-1 booked-2 booked-3 booked-4 booked-5 today');
+                elm.addClass(scope.dateClass(date).join(' '));
+            };
             if(date!==''&&date!==undefined){
-                function updateClass(){
-                    elm.removeClass('selected booked-0 booked-1 booked-2 booked-3 booked-4 booked-5 today');
-                    elm.addClass(scope.dateClass(date).join(' '));
-                };
                 scope.$on('updated',updateClass);
                 updateClass();
                 elm.on('mouseenter',function(){

@@ -1,8 +1,5 @@
 angular.module(appName)
 .controller('settingCtrl',['$scope','group','user','db','eventListToEdit','groupForm','mode','$mdSidenav','$mdToast','$mdDialog',function($scope,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
-    function sortByNumber(a,b){
-        return a-b;
-    };
     $scope.group=group;
     $scope.user=user;
     $scope.groupForm=groupForm;
