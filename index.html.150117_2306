@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="rabbit">
+  <head>
+    <meta charset="UTF-8">
+    <title>Rabbit Plot</title>
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="RabbitPlotは予定管理する必要がなくなるカレンダーアプリです。">
+    <meta name="keywords" content="Rabbit plot,カレンダー,calendar,楽">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-touch.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.min.js" defer></script>
+    <script src="js/lodash.min.js" defer></script>
+    <script src="js/min/mainController.js" defer></script>
+    <script src="js/min/calendar.js" defer></script>
+    <script src="js/min/eventCal.js" defer></script>
+    <script src="js/min/eventEditor.js" defer></script>
+    <script src="js/min/groupEditor.js" defer></script>
+    <script src="js/min/detail.js" defer></script>
+    <script src="js/min/setting.js" defer></script>
+    <script src="js/min/eventList.js" defer></script>
+    <script src="js/min/factory.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="main ng-cloak" ng-controller="mainController" ng-cloak>
+      <a href="how-to-use.html">使い方</a>
+      <button ng-click="showsSetting=!showsSetting">設定</button>
+      <div class="calendar" ng-controller="calendar"><!--{{{-->
+
+        <div class="calendar-header cf">
+          <button ng-click="lastYear()" class="left">&lt;&lt;</button>
+          <button ng-click="lastMonth()" class="left">&lt;</button>
+          {{calF.year}}/{{calF.month+1}}
+          <button ng-click="nextYear()" class="right">&gt;&gt;</button>
+          <button ng-click="nextMonth()" class="right">&gt;</button>
+        </div>
+        <div class="row"><span class="date">日</span><span class="date">月</span><span class="date">火</span><span class="date">水</span><span class="date">木</span><span class="date">金</span><span class="date">土</span></div>
+        <div class="row" ng-repeat="row in calF.calendar(calF.year,calF.month)">
+<span app-date="0" app-row="row"><span class="inner">{{row[0]!==0&&row[0]!==32?row[0]:''}}</span></span>
+<span app-date="1" app-row="row"><span class="inner">{{row[1]!==0&&row[1]!==32?row[1]:''}}</span></span>
+<span app-date="2" app-row="row"><span class="inner">{{row[2]!==0&&row[2]!==32?row[2]:''}}</span></span>
+<span app-date="3" app-row="row"><span class="inner">{{row[3]!==0&&row[3]!==32?row[3]:''}}</span></span>
+<span app-date="4" app-row="row"><span class="inner">{{row[4]!==0&&row[4]!==32?row[4]:''}}</span></span>
+<span app-date="5" app-row="row"><span class="inner">{{row[5]!==0&&row[5]!==32?row[5]:''}}</span></span>
+<span app-date="6" app-row="row"><span class="inner">{{row[6]!==0&&row[6]!==32?row[6]:''}}</span></span>
+        </div>
+
+      </div><!--}}}-->
+      <div id="detail" ng-controller="detail" ng-class="{hideSetting:!showsSetting}"><!--{{{-->
+        <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="calF.selected===calF.today.date&&calF.month===calF.today.month&&calF.year===calF.today.year"> - 今日</span></div>
+        <div ng-show="calF.selected===null"><br></div>
+        <ul>
+          <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
+          <li ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
+            <span ng-dblclick="switchToEdit(event)">{{event|format}}</span><span class="right"><button ng-click="switchToEdit(event)">編集</button><button ng-click="switchToEdit(event,true)">コピー</button></span>
+          </li>
+        </ul>
+
+        <button ng-show="calF.selected!==null" ng-click="switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</button>
+        <br ng-if="calF.selected===null">
+      </div><!--}}}-->
+      <div id="event-editor" ng-controller="eventEditor" ng-if="eventForm.isEditMode"><!--{{{-->
+        <form name="eventEditor">
+          {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
+
+          <input type="radio" ng-model="eventForm.type" value="event">
+          日付:<input type="number" ng-model="eventForm.year" ng-disabled="eventForm.type!='event'"> /
+          <input type="number" ng-model="eventForm.month" ng-disabled="eventForm.type!='event'"> /
+          <input type="number" ng-model="eventForm.date" ng-disabled="eventForm.type!='event'"><br>
+
+          <input type="radio" ng-model="eventForm.type" value="habit">
+          ルール:<input type="text" ng-model="eventForm.rule" ng-disabled="eventForm.type!='habit'" name="rules"><button ng-click="startWritingRule()">ガイド</button><br>
+
+          <span ng-show="eventForm.mode==='add'">
+            グループ:<select ng-model="eventForm.selectedGroup" ng-options="id as id!='private'?group[id].name:'private' for id in user.following.concat('private')" name="selectedGroup" required>
+              <option value="">選択してください</option>
+            </select>
+            <span class="error-message" ng-show="eventEditor.selectedGroup.$error.required">必須</span><br>
+          </span>
+
+          イベント名:<input type="text" ng-model="eventForm.name" name="name" required>
+          <span class="error-message" ng-show="eventEditor.name.$error.required">必須</span><br>
+          <button ng-click="addEvent()" ng-show="eventForm.mode==='add'" ng-disabled="eventEditor.$error.required">イベントを追加</button>
+          <button ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">保存</button>
+          <button ng-click="cancel()">キャンセル</button>
+        </form>
+        <hr>
+        <div ng-if="ruleWriterFase==='selector'"><!--{{{-->
+          <button ng-if="eventForm.rule!==''" ng-click="cancelFase()">キャンセル</button>
+          <button ng-click="goFase('month')">何月</button>
+          <button ng-click="goFase('date')">何日</button>
+          <button ng-click="goFase('day')">何曜日</button>
+          <button ng-click="goFase('not')">除く</button>
+          <button ng-click="goFase('from')">いつから</button>
+          <button ng-click="goFase('to')">いつまで</button>
+        </div>
+        <div ng-if="ruleWriterFase==='month'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <button ng-click="goFase('operator',':1')">1月</button>
+          <button ng-click="goFase('operator',':2')">2月</button>
+          <button ng-click="goFase('operator',':3')">3月</button>
+          <button ng-click="goFase('operator',':4')">4月</button>
+          <button ng-click="goFase('operator',':5')">5月</button>
+          <button ng-click="goFase('operator',':6')">6月</button>
+          <button ng-click="goFase('operator',':7')">7月</button>
+          <button ng-click="goFase('operator',':8')">8月</button>
+          <button ng-click="goFase('operator',':9')">9月</button>
+          <button ng-click="goFase('operator',':10')">10月</button>
+          <button ng-click="goFase('operator',':11')">11月</button>
+          <button ng-click="goFase('operator',':12')">12月</button>
+        </div>
+        <div ng-if="ruleWriterFase==='date'">
+          <button ng-click="cancelFase()">キャンセル</button><input ng-model="ruleInput">日<button ng-click="goFase('operator',':'+ruleInput)">決定</button>
+        </div>
+        <div ng-if="ruleWriterFase==='day'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <button ng-click="goFase('operator',':sun')">日曜日</button>
+          <button ng-click="goFase('operator',':mon')">月曜日</button>
+          <button ng-click="goFase('operator',':tue')">火曜日</button>
+          <button ng-click="goFase('operator',':wed')">水曜日</button>
+          <button ng-click="goFase('operator',':thu')">木曜日</button>
+          <button ng-click="goFase('operator',':fri')">金曜日</button>
+          <button ng-click="goFase('operator',':sat')">土曜日</button>
+        </div>
+        <div ng-if="ruleWriterFase==='not'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <button>祝日</button>
+          <input ng-model="ruleInput">
+          <button ng-click="goFase('operator',':'+ruleInput)">決定</button>
+        </div>
+        <div ng-if="ruleWriterFase==='from'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <input ng-model="ruleInput">
+          <button ng-click="goFase('operator',':'+ruleInput)">決定</button><br>
+          <small>年/月/日という形で指定してください(年は西暦で書いてください。略した書き方では対応できません)</small>
+        </div>
+        <div ng-if="ruleWriterFase==='to'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <input ng-model="ruleInput">
+          <button ng-click="goFase('operator',':'+ruleInput)">決定</button><br>
+          <small>年/月/日という形もしくは、10date、10week、10yearのように期間で指定してください(年は西暦で書いてください。略した書き方では対応できません)</small>
+        </div>
+        <div ng-if="ruleWriterFase==='operator'">
+          <button ng-click="cancelFase()">キャンセル</button>
+          <button ng-click="goFase('selector',' and ')">かつ (and)</button>
+          <button ng-click="goFase('selector',' or ')">または (or)</button>
+          <button ng-click="finishWritingRule()">決定</button>
+        </div><!--}}}-->
+      </div><!--}}}-->
+      <div id="setting" ng-controller="setting" ng-if="showsSetting"><!--{{{-->
+        <button ng-click="exportSetting()">設定を保存</button><button ng-click="importSetting()">設定を読み込み</button><br>
+        フォローしているグループ:
+        <ul ng-if="user.following.length>0" class="following-list">
+          <li class="following cf" ng-class="user.isHiddenGroup(-1)?'hidden-group':'visible-group'">
+            プライベート
+            <button ng-click="user.isHiddenGroup(-1)?show(-1):hide(-1)">{{user.isHiddenGroup(-1)?'表示する':'非表示にする'}}</button>
+          </li>
+          <li ng-repeat="id in user.following" class="following cf" ng-if="group[id]" ng-class="user.isHiddenGroup(id)?'hidden-group':'visible-group'">
+            {{group[id].name}}
+            <button ng-click="user.isHiddenGroup(id)?show(id):hide(id)">{{user.isHiddenGroup(id)?'表示する':'非表示にする'}}</button>
+            <button ng-click="unfollow(id)">フォロー解除</button>
+            <button ng-click="showEventList(id)">イベント一覧</button>
+          </li>
+        </ul>
+        <div ng-show="user.following.length==0">フォローしていません</div>
+        <button ng-click="hideAll()">すべて非表示にする</button>
+        <button ng-click="showAll()">すべて表示する</button><br>
+
+
+        <input type="text" ng-model="search_keyword">
+        <button ng-click="search()">検索</button>
+        <button ng-click="randomSearch()">ランダム</button>
+        <ul class="search-list">
+          <li ng-repeat="id in searchResult">
+            {{group[id].name}}
+            <button ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</button>
+            <span class="error-message" ng-if="followsParent(id)!==true">
+              このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。
+              {{group[followsParent(id)].name}}をフォローしてください。
+              <button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</button>
+            </span>
+          </li>
+        </ul>
+        <button ng-click="makeAGroup()">グループを作る</button><br>
+        <div ng-controller="groupEditor" id="group-editor" ng-if="isGroupEditMode"><!--{{{-->
+          グループを追加します<br>
+          名称:<input type="text" ng-model="groupForm.name"><br>
+
+          親グループ:
+          <select ng-repeat-start="parentGroup in groupForm.parentGroup track by $index" ng-model="groupForm.parentGroup[$index]" ng-options="id as group[id].name for id in user.following">
+            <option value="">選択してください</option>
+          </select>
+          <button ng-click="groupForm.parentGroup.splice($index,1)" ng-disabled="groupForm.parentGroup.length<=1">x</button>
+          <br ng-repeat-end>
+
+          <button ng-click="groupForm.parentGroup.push('')">親グループを増やす</button><br>
+          <button ng-click="addGroup()" ng-show="groupForm.mode==='add'">グループを追加</button>
+          <button ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</button>
+        </div><!--}}}-->
+      </div><!--}}}-->
+      <div id="event-list" ng-controller="eventList" ng-if="eventListToEdit.id!==''"><!--{{{-->
+        <button ng-click="eventListToEdit.id=''">閉じる</button>
+        <ul>
+          <li ng-repeat="item in group[eventList.id].habit track by $index">{{item.name}}<button ng-click="switchToEdit($index+':'+eventList.id+':habit')">編集</button></li>
+          <li ng-repeat="item in group[eventList.id].event track by $index">{{item.name}}<button ng-click="switchToEdit($index+':'+eventList.id+':event')">編集</button></li>
+        </ul>
+        <button ng-click="eventListToEdit.id=''">閉じる</button>
+      </div><!--}}}-->
+      <div class="dialog animate-show-hide" ng-if="showsDialog">{{dialogMessage}}<br ng-if="showsDialogButton"><button ng-click="hideDialog()" ng-if="showsDialogButton">OK</button></div>
+      <div class="dialog animate-show-hide" ng-if="showsInputDialog">{{dialogMessage}}<input type="text" ng-model="$parent.dialogInputValue" auto-focus focus="focus" showsDialog="showsDialog"><br><button ng-click="hideDialog()" ng-if="showsDialogButton">OK</button>
+      </div>
+    </div>
+  </body>
+</html>
