@@ -1,132 +1,237 @@
 <!DOCTYPE html>
-<html lang="ja" ng-app="ladder">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js"></script>
-  <script src="underscore-min.js"></script>
-  <script src="mainController.js"></script>
-  <script src="calendar.js"></script>
-  <script src="eventEditor.js"></script>
-  <script src="groupEditor.js"></script>
-  <script src="factory.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="main" ng-controller="mainController" ng-click="click('body')">
-    <div class="calendar">
-      <div class="calendar-header cf">
-        <button ng-click="lastYear()" class="left">&lt;&lt;</button>
-        <button ng-click="lastMonth()" class="left">&lt;</button>
-        {{year}}/{{month+1}}
-        <button ng-click="nextYear()" class="right">&gt;&gt;</button>
-        <button ng-click="nextMonth()" class="right">&gt;</button>
-      </div>
-      <div class="row"><span class="date" ng-repeat="day in 'SMTWTFS'.split('') track by $index">{{day}}</span></div>
-      <div class="row" ng-repeat="row in calendar(year,month)">
-        <span class="date"
-          ng-repeat="date in row track by $index"
-          ng-class="[selected===date?'selected':'',bookedClass(date)]"
-          ng-mouseenter="mouseenter(date)"
-          ng-mouseleave="mouseleave(date)"
-          ng-click="select(date)"
-          >{{date}}</span>
-      </div>
-    </div>
+<html lang="ja" ng-app="rabbit">
+  <head>
+    <meta charset="UTF-8">
+    <title>Rabbit Plot</title>
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, maximum-scale=1">
+    <meta name="description" content="RabbitPlotは予定管理する必要がなくなるカレンダーアプリです。">
+    <meta name="keywords" content="Rabbit plot,カレンダー,calendar,楽">
+    <script src="https://cdn.jsdelivr.net/hammerjs/2.0.4/hammer.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-touch.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-animate.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-aria.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-messages.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.js" defer></script>
+    <script src="js/lodash.min.js" defer></script>
 
+    <!-- <script src="js/mainCtrl.js" defer></script> -->
+    <!-- <script src="js/calendarCtrl.js" defer></script> -->
+    <!-- <script src="js/eventEditorCtrl.js" defer></script> -->
+    <!-- <script src="js/groupEditorCtrl.js" defer></script> -->
+    <!-- <script src="js/detailCtrl.js" defer></script> -->
+    <!-- <script src="js/settingCtrl.js" defer></script> -->
+    <!-- <script src="js/eventListCtrl.js" defer></script> -->
+    <!-- <script src="js/factory.js" defer></script> -->
+    <!-- <script src="js/eventCal.js" defer></script> -->
 
-    <div id="detail" ng-click="click('detail')">
-      <div ng-show="selected!==null">{{month+1}}/{{selected}}</div>
-      <ul>
-        <li ng-show="eventCalendar(selected).length===0">予定なし</li>
-        <li ng-repeat="event in eventCalendar(selected) track by $index">
-          <span ng-dblclick="switchToEdit(event)">{{format(event)}}</span><button ng-click="switchToEdit(event)">Edit</button>
-        </li>
-      </ul>
+    <script src="js/main.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
+  </head>
+  <body>
+    <div class="main ng-cloak" ng-controller="mainCtrl" ng-cloak>
+      <md-button href="how-to-use.html">使い方</md-button>
+      <md-button class="md-fab"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+      <md-button class="md-fab" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
 
-      <button ng-show="selected!==null" ng-click="switchToEdit(year,month,selected)">+</button>
-      <div ng-controller="eventEditor" id="event-editor" ng-show="eventForm.isEditMode">
-        {{eventForm.mode==='add'?'Add':'Edit'}} events:<br>
+      <div class="calendar" ng-controller="calendarCtrl"><!--{{{-->
 
-        <input type="radio" ng-model="eventForm.type" value="event">
-          date:<input type="number" ng-model="eventForm.year" ng-disabled="eventForm.type!='event'"> /
-          <input type="number" ng-model="eventForm.month" ng-disabled="eventForm.type!='event'"> /
-          <input type="number" ng-model="eventForm.date" ng-disabled="eventForm.type!='event'"><br>
+        <div class="calendar-header cf">
+          <md-button ng-click="lastYear()" class="left">&lt;&lt;</md-button>
+          <md-button ng-click="lastMonth()" class="left">&lt;</md-button>
+          {{calF.year}}/{{calF.month+1}}
+          <md-button ng-click="nextYear()" class="right">&gt;&gt;</md-button>
+          <md-button ng-click="nextMonth()" class="right">&gt;</md-button>
+        </div>
+        <div class="cal-row"><span class="date">日</span><span class="date">月</span><span class="date">火</span><span class="date">水</span><span class="date">木</span><span class="date">金</span><span class="date">土</span></div>
+        <div class="cal-row" ng-repeat="row in calF.calendar(calF.year,calF.month)"><span app-date="0" app-row="row"><span class="inner">{{row[0]!==0&&row[0]!==32?row[0]:''}}</span></span><span app-date="1" app-row="row"><span class="inner">{{row[1]!==0&&row[1]!==32?row[1]:''}}</span></span><span app-date="2" app-row="row"><span class="inner">{{row[2]!==0&&row[2]!==32?row[2]:''}}</span></span><span app-date="3" app-row="row"><span class="inner">{{row[3]!==0&&row[3]!==32?row[3]:''}}</span></span><span app-date="4" app-row="row"><span class="inner">{{row[4]!==0&&row[4]!==32?row[4]:''}}</span></span><span app-date="5" app-row="row"><span class="inner">{{row[5]!==0&&row[5]!==32?row[5]:''}}</span></span><span app-date="6" app-row="row"><span class="inner">{{row[6]!==0&&row[6]!==32?row[6]:''}}</span></span></div>
 
-        <input type="radio" ng-model="eventForm.type" value="habit">
-        rules:<input type="text" ng-model="eventForm.rule" ng-disabled="eventForm.type!='habit'"><button ng-click="showHowToWrite()">書き方</button><br>
+      </div><!--}}}-->
+      <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}"><!--{{{-->
+        <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="calF.selected===calF.today.date&&calF.month===calF.today.month&&calF.year===calF.today.year"> - 今日</span></div>
+        <div ng-show="calF.selected===null"><br></div>
+        <ul>
+          <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
+          <li ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
+            <span ng-dblclick="mode.switchToEdit(event)">{{event|format}}</span><span class="right"><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button></span>
+          </li>
+        </ul>
 
-        <span ng-show="eventForm.mode==='add'">
-          group:<select ng-model="eventForm.selectedGroup" ng-options="id as id!='private'?group[id].name:'private' for id in user.following.concat('private')">
-            <option value="">選択してください</option>
-          </select>
-          <span class="error-message" ng-show="eventForm.selectedGroup===undefined||eventForm.selectedGroup===null">必須</span><br>
-        </span>
+        <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="mode.switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
+        <br ng-if="calF.selected===null">
+      </md-whiteframe><!--}}}-->
+      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm"><!--{{{-->
+        <form name="eventEditor" class="md-padding">
+          {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
-        Name:<input type="text" ng-model="eventForm.name"><span class="error-message" ng-show="eventForm.name===''">必須</span><br>
-        <button ng-click="addEvent()" ng-show="eventForm.mode==='add'">add</button>
-        <button ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">save</button>
-        <button ng-click="cancel()">cancel</button>
-      </div>
-    </div>
+          <md-radio-group ng-model="eventForm.type">
+          <md-radio-button value="event">event</md-radio-button>
+          <md-radio-button  value="habit">habit</md-radio-button>
+          </md-radio-group>
+          <div ng-if="eventForm.type=='event'" layout layout-sm="column">
+            <md-input-container flex>
+            <label>年</label>
+            <input type="number" ng-model="eventForm.year">
+            </md-input-container>
+            <md-input-container flex>
+            <label>月</label>
+            <input type="number" ng-model="eventForm.month">
+            </md-input-container>
+            <md-input-container flex>
+            <label>日</label>
+            <input type="number" ng-model="eventForm.date">
+            </md-input-container>
+          </div>
 
-    <div id="setting" ng-click="click('setting')">
-      <button ng-click="makeAGroup()">Make a group</button><br>
-      Following:
-      <ul ng-show="user.following.length>0">
-        <li ng-repeat="id in user.following" class="following cf">{{group[id].name}}<button ng-click="unfollow(id)">unfollow</button></li>
-      </ul>
-      <div ng-show="user.following.length==0">No following</div>
+          <div ng-if="eventForm.type=='habit'">
+            <md-input-container>
+            <label>ルール</label>
+            <input type="text" ng-model="eventForm.rule" name="rules">
+            <md-button class="md-raised md-primary" ng-click="startWritingRule()">ガイド</md-button>
+            </md-input-container>
+          </div>
 
-
-      Search:<input type="text" ng-model="search_keyword">
-      <ul>
-        <li ng-repeat="id in search()">
-          {{group[id].name}}
-          <button ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">follow</button>
-          <span class="error-message" ng-show="followsParent(id)!==true">
-            このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。
-            {{group[followsParent(id)].name}}をフォローしてください。
-            <button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</button>
+          <span ng-show="eventForm.mode==='add'">
+            グループ:<select ng-model="eventForm.selectedGroup" ng-options="id as id!='private'?group[id].name:'private' for id in user.following.concat('private')" name="selectedGroup" required>
+              <option value="">選択してください</option>
+            </select>
+            <span class="error-message" ng-show="eventEditor.selectedGroup.$error.required">必須</span><br>
           </span>
-        </li>
-      </ul>
 
+          <md-input-container>
+          <label>イベント名</label>
+          <input type="text" ng-model="eventForm.name" name="name" required>
+          <span class="error-message" ng-show="eventEditor.name.$error.required">必須</span><br>
+          </md-input-container>
+          <md-button class="md-raised md-primary" ng-click="addEvent()" ng-show="eventForm.mode==='add'" ng-disabled="eventEditor.$error.required">イベントを追加</md-button>
+          <md-button class="md-raised md-primary" ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">保存</md-button>
+          <md-button class="md-raised md-warn" ng-click="cancel()">キャンセル</md-button>
+        </form>
+        <hr>
+        <div ng-if="ruleWriterFase==='selector'"><!--{{{-->
+          <md-button class="md-raised md-primary" ng-if="eventForm.rule!==''" ng-click="cancelFase()">キャンセル</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('month')">何月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('date')">何日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('day')">何曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('not')">除く</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('range')">範囲</md-button>
+        </div>
+        <div ng-if="ruleWriterFase==='month'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':1')">1月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':2')">2月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':3')">3月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':4')">4月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':5')">5月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':6')">6月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':7')">7月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':8')">8月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':9')">9月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':10')">10月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':11')">11月</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':12')">12月</md-button>
+        </div>
+        <div ng-if="ruleWriterFase==='date'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button><input ng-model="ruleInput">日<md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
+        </div>
+        <div ng-if="ruleWriterFase==='day'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':sun')">日曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':mon')">月曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':tue')">火曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':wed')">水曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':thu')">木曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':fri')">金曜日</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':sat')">土曜日</md-button>
+        </div>
+        <div ng-if="ruleWriterFase==='not'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+          <md-button class="md-raised md-primary">祝日</md-button>
+          <input ng-model="ruleInput">
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
+        </div>
+        <div ng-if="ruleWriterFase==='range'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+          <input ng-model="ruleInput">
+          <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button><br>
+          <small>年/月/日...年/月/日という形で指定してください。年は西暦限定です。始まりはあるけど終わりはないという場合は年/月/日...として終わりの方を省略してください。</small>
+        </div>
+        <div ng-if="ruleWriterFase==='operator'">
+          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('selector',' and ')">かつ (and)</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('selector',' or ')">または (or)</md-button>
+          <md-button class="md-raised md-primary" ng-click="finishWritingRule()">決定</md-button>
+        </div><!--}}}-->
+      </md-whiteframe><!--}}}-->
+      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-show="mode.editsGroupForm"><!--{{{-->
+      <form>
+        グループを追加します<br>
+        <md-input-container>
+        <label>名称</label><input type="text" ng-model="groupForm.name">
+        </md-input-container>
 
-      <div ng-controller="groupEditor" id="group-editor" ng-show="isGroupEditMode">
-        Add group:<br>
-        Name:<input type="text" ng-model="groupForm.name"><br>
-
-        Parent group:<select ng-repeat-start="selectedGroup in groupForm.selectedGroup track by $index" ng-model="groupForm.selectedGroup[$index]" ng-options="id as group[id].name for id in user.following">
+        親グループ:
+        <select ng-repeat-start="parentGroup in groupForm.parentGroup track by $index" ng-model="groupForm.parentGroup[$index]" ng-options="id as group[id].name for id in user.following">
           <option value="">選択してください</option>
         </select>
-        <button ng-click="groupForm.selectedGroup.splice($index,1)" ng-disabled="groupForm.selectedGroup.length<=1">x</button>
+        <md-button ng-click="groupForm.parentGroup.splice($index,1)" ng-disabled="groupForm.parentGroup.length<=1">x</md-button>
         <br ng-repeat-end>
 
-        <button ng-click="groupForm.selectedGroup.push('')">add parent</button><br>
-        <button ng-click="addGroup()" ng-show="groupForm.mode==='add'">add</button>
-        <button ng-click="editGroup()" ng-show="groupForm.mode==='edit'">save</button>
-      </div>
-    </div>
+        <md-button class="md-raised md-primary" ng-click="groupForm.parentGroup.push('')">親グループを増やす</md-button><br>
+        <md-button class="md-raised md-primary" ng-click="addGroup()" ng-show="groupForm.mode==='add'">グループを追加</md-button>
+        <md-button class="md-raised md-primary" ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</md-button>
+      </form>
+      </md-whiteframe><!--}}}-->
+      <md-sidenav md-component-id="left"><!--{{{-->
+      <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
+        <md-button ng-click="toggleNav()">Close</md-button>
+        <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
+        <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
+        フォローしているグループ:
+        <ul ng-if="user.following.length>0" class="following-list">
+          <li class="following cf" ng-class="user.isHiddenGroup(-1)?'hidden-group':'visible-group'">
+            プライベート
+            <md-button ng-click="user.isHiddenGroup(-1)?show(-1):hide(-1)">{{user.isHiddenGroup(-1)?'表示する':'非表示にする'}}</md-button>
+            <md-button ng-click="showEventList('private')">イベント一覧</md-button>
+          </li>
+          <li ng-repeat="id in user.following" class="following cf" ng-if="group[id]" ng-class="user.isHiddenGroup(id)?'hidden-group':'visible-group'">
+            {{group[id].name}}
+            <md-button ng-click="user.isHiddenGroup(id)?show(id):hide(id)">{{user.isHiddenGroup(id)?'表示する':'非表示にする'}}</md-button>
+            <md-button ng-click="unfollow(id)">フォロー解除</md-button>
+            <md-button ng-click="showEventList(id)">イベント一覧</md-button>
+          </li>
+        </ul>
+        <div ng-show="user.following.length==0">フォローしていません</div>
+        <md-button class="md-raised md-primary" ng-click="hideAll()">すべて非表示にする</md-button>
+        <md-button class="md-raised md-primary" ng-click="showAll()">すべて表示する</md-button><br>
 
 
-    <div id="how-to-write" ng-show="showsHowToWrite" ng-click="click('how-to-write')">
-      <button ng-click="showHowToWrite()">hide</button><br>
-      <p>
-        rulesには指定したい日にちを指定するルールを書きます。
-      </p>
-      <p>
-        書き方は「セレクタ:値」という基本形を','と' 'でつなげるというものです。','はAND=「かつ」=論理積を表し、' 'はOR=「または」=論理和を表します。例えば13日の金曜日を表現する時は「date:13,day:friday」となります(他にもday:fri,date:13など様々に書き表せます)。
-      </p>
-      <p>
-        セレクタは順序を問いません。セレクタ一覧は以下のとおりです
-      </p>
-      <dl>
-        <dt>date</dt><dd>例:date:13<br>日付を指定します。序数詞はつけてもつけなくてもかまいません。</dd>
-        <dt>month</dt><dd>例:month:1,date:1<br>月を指定します。数値の他に、英語名での指定も可能です(例:April、Apr)。ただし、英語名では、頭は大文字で他は小文字でなくてはなりません。ちなみに睦月など和名も使えます。</dd>
-        <dt>day</dt><dd>例:day:2nd-wednesday<br>曜日の指定です。ただ単に曜日を指定した場合、毎週何曜日という指定になります。序数詞をつけた場合、第何何曜日というように指定されます。序数詞と曜日の間はハイフンで区切るか、区切らずに並べてください。曜日の指定は、英語名(全小文字)、英語名短縮バージョン(全小文字、3文字)、日本語(曜日までつける)のいずれかとなります。</dd>
-        <dt>not</dt><dd>例:not:public-holiday not:name="元旦"否定セレクタです。記法は次の2通りです(いまのところ)。not:public-holidayとすると祝日の日は除き、not:name="event"とすると"event"という名前のイベントがある日を除きます。</dd>
-      </dl>
+        <input type="text" ng-model="search_keyword">
+        <md-button class="md-raised md-primary" ng-click="search()">検索</md-button>
+        <md-button class="md-raised md-primary" ng-click="randomSearch()">ランダム</md-button>
+        <ul class="search-list">
+          <li ng-repeat="id in searchResult">
+            {{group[id].name}}
+            <md-button class="md-raised md-primary" ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</md-button>
+            <span class="error-message" ng-if="followsParent(id)!==true">
+              このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。
+              {{group[followsParent(id)].name}}をフォローしてください。
+              <md-button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</md-button>
+            </span>
+          </li>
+        </ul>
+        <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
+      </div><!--}}}-->
+      <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
+        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
+        <ul>
+          <li ng-repeat="item in habitList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button></li>
+          <li ng-repeat="item in eventList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button></li>
+        </ul>
+        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
+      </div><!--}}}-->
+      </md-sidenav><!--}}}-->
     </div>
   </body>
 </html>

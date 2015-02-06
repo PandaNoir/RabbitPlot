@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+  </head>
+  <body>
+
+    <div id="how-to-write" ng-show="showsHowToWrite===true"><!--{{{-->
+      <button ng-click="showHowToWrite()">hide</button><br>
+      <h2>例</h2>
+      <ul>
+        <li><span class="code">date:13 and day:friday</span>13日かつ金曜日の日を指定しています</li>
+        <li><span class="code">date:1 and month:1</span>1月かつ1日の日を指定しています</li>
+        <li><span class="code">day:monday or day:wednesday or day:friday</span>月曜日、もしくは水曜日、もしくは金曜日の日を指定しています</li>
+      </ul>
+      <h2>書き方</h2>
+      <p>
+        rulesには指定したい日にちを指定するルールを書きます。
+      </p>
+      <p>
+        書き方は<span class="code">セレクタ:値</span>という基本形をいくつかつくり、それらを<span class="code">and</span> , <span class="code">or</span> , <span class="code">かつ</span> , <span class="code">または</span> , <span class="code">&amp;&amp;</span> , <span class="code">||</span> , <span class="code"> </span>(半角スペース) , <span class="code">,</span>(コンマ)でつなぐというものです。
+      </p>
+      <p>
+        コンマと半角スペース以外は前後にスペースが必要です。プログラマには馴染み深い<span class="code">&amp;&amp;</span>と<span class="code">||</span>も前後にスペースが必要です。
+      </p>
+      <p>
+        <span class="code">,</span>=<span class="code">and</span>=<span class="code">かつ</span>=<span class="code">&amp;&amp;</span>=論理積、<span class="code"> </span>は<span class="code">or</span>=<span class="code">または</span>=<span class="code">||</span>=論理和を表します。
+        例えば13日の金曜日を表現する時は<span class="code">date:13,day:friday</span>となります(他にも<span class="code">day:fri,date:13</span>や<span class="code">day:fri and date:13</span>など様々に書き表せます)。
+      </p>
+      <h2>セレクタ一覧</h2>
+      <p>
+        セレクタは順序を問いません。セレクタ一覧は以下のとおりです
+      </p>
+      <dl>
+        <dt>date</dt>
+        <dd>
+        例:<span class="code">date:13th</span><br>日付を指定します。序数詞はつけてもつけなくてもかまいません。
+        </dd>
+        <dt>month</dt>
+        <dd>
+        例:<span class="code">month:1,date:1</span><br>月を指定します。数値の他に、英語名での指定も可能です(例:April、Apr)。ただし、英語名では、頭は大文字で他は小文字でなくてはなりません。ちなみに睦月など和名も使えます。
+        </dd>
+        <dt>day</dt>
+        <dd>
+        例:<span class="code">day:2nd-wednesday</span><br>曜日の指定です。ただ単に曜日を指定した場合、毎週何曜日という指定になります。序数詞をつけた場合、第何何曜日というように指定されます。序数詞と曜日の間はハイフンで区切るか、区切らずに並べてください。曜日の指定は、英語名(全小文字)、英語名短縮バージョン(全小文字、3文字)、日本語(曜日までつける)のいずれかとなります。
+        </dd>
+        <dt>not</dt>
+        <dd>
+        例:<span class="code">not:public-holiday or not:name="元旦"</span><br>否定セレクタです。記法は次の2通りです(いまのところ)。not:public-holidayとすると祝日の日は除き、not:name="event"とすると"event"という名前のイベントがある日を除きます。
+        </dd>
+        <dt>from</dd>
+        <dd>
+        例:<span class="code">from:0/1/1</span><br>「ある日にちから」という指定ができます。例えば、2000年1月1日生まれの人の誕生日を登録する時、<span class="code">date:1 and month:1</span>とセレクタを書きます。しかし、これだと1999年1月1日もその人の誕生日として登録されてしまいます。そんなときsinceを使えば正しく登録できます。
+        </dd>
+        <dt>to</dd>
+        <dd>
+        例:<span class="code">from:2011/7/8 and to:2011/9/30</span><br>「ある日にちまで」という指定ができます。ちなみに例のセレクタで指しているのは近畿広域圏で輪るピングドラムが放送されていた時期です。
+        </dd>
+      </dl>
+    </div><!--}}}-->
+  </body>
+</html>
