@@ -1,4 +1,24 @@
 /*chain case;*/
+<<<<<<< HEAD
+html,body,.main{
+    height:100%;
+    font-family:times;
+    margin:0;
+}
+body{
+    height:calc(100% - 20px);
+    margin:10px;
+}
+.calendar{
+    width: 224px;
+    border: 1px solid #888;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius:3px;
+}
+.calendar .row{
+    width:224px;
+=======
 
 md-whiteframe {
   background: #fff;
@@ -39,6 +59,7 @@ body{
 }
 .calendar .cal-row{
     width: 315px;
+>>>>>>> directive
 }
 .calendar .date{
     cursor:pointer;
@@ -55,6 +76,11 @@ body{
 .calendar .date.today,.calendar .selected{
     height:30px;
 }
+<<<<<<< HEAD
+.calendar-header{
+    text-align:center;
+}
+=======
 .calendar .date.today .inner{
     display:inline-block;
     width:18px;
@@ -77,6 +103,7 @@ body{
     text-align:center;
     font-size:initial;
 }
+>>>>>>> directive
 .calendar-header .left{
     float:left;
     width:40px;
@@ -91,7 +118,14 @@ ul{
 #setting{
     padding-top:30px;
 }
+<<<<<<< HEAD
+ul{
+    list-style:none;
+}
+#detail,#setting,#how-to-write{
+=======
 #detail,#how-to-write,#event-list{
+>>>>>>> directive
     display:inline-block;
     vertical-align:top;
     width:500px;
@@ -132,15 +166,28 @@ ul{
 .error-message{
     color:#c00;
 }
+<<<<<<< HEAD
+.following:first-child{
+=======
 .search-list,.following-list{
     padding:0;
 }
 .following:first-child {/*{{{*/
+>>>>>>> directive
     border-top:1px solid #999;
 }
 .following {
     padding:3px 10px;
     border-bottom: 1px solid #999;
+<<<<<<< HEAD
+    background: #E6E6E6;
+    vertical-align:top;
+}
+.following button{
+    float:right;
+    vertical-align:top;
+}
+=======
     vertical-align:top;
 }
 .following.hidden-group{
@@ -150,17 +197,22 @@ ul{
     float:right;
     vertical-align:top;
 }/*}}}*/
+>>>>>>> directive
 .cf:after {
     display:block;
     clear:both;
     content:"";
 }
+<<<<<<< HEAD
+.booked-0{background:#fff}
+=======
 .left{
     float:left;
 }
 .right{
     float:right;
 }
+>>>>>>> directive
 .booked-1{background:#fee}
 .booked-2{background:#fdd}
 .booked-3{background:#fbb}
@@ -200,6 +252,12 @@ input:disabled {
     -o-transition:opacity 0.3s linear 0;
     transition:opacity 0.3s linear 0;
 }
+<<<<<<< HEAD
+#group-editor{
+    padding:10px;
+    border-top:1px solid #ccc;
+}
+=======
 /*}}}*/
 @media screen and (max-device-width: 480px) {/*{{{*/
     #detail,#setting,#how-to-write,#event-list{
@@ -224,3 +282,4 @@ input:disabled {
         height:auto;
     }
 }/*}}}*/
+>>>>>>> directive

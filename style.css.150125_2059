@@ -1,9 +1,4 @@
 /*chain case;*/
-
-md-whiteframe {
-  background: #fff;
-  margin: 20px;
-  padding: 20px; }
 .ng-cloak, .x-ng-cloak{
   display: none !important;
 }
@@ -12,6 +7,7 @@ md-whiteframe {
 }
 html,body,.main{
     background:#fcfcfc;
+    height:100%;
     font-family:monospace;
     margin:0;
 }
@@ -88,10 +84,7 @@ body{
 ul{
     list-style:none;
 }
-#setting{
-    padding-top:30px;
-}
-#detail,#how-to-write,#event-list{
+#detail,#setting,#how-to-write,#event-list,#event-editor{
     display:inline-block;
     vertical-align:top;
     width:500px;
@@ -103,10 +96,17 @@ ul{
     position:absolute;
 }
 #detail{
+    bottom: 30px;
+    left:0;
+}
+#detail.hideSetting{
     width: 90%;
     margin-left: -45%;
-    bottom: 30px;
     left: 50%;
+}
+#setting{
+    bottom:30px;
+    right:0;
 }
 #how-to-write {
     top:0;
@@ -117,22 +117,12 @@ ul{
     width:calc(100% - 20px);
     margin-bottom:30px;
 }
-#detail{
-    float:left;
-}
-#setting{
-    float:right;
-}
-#how-to-write {
-    font-size: 15px;
-    clear:both;
-    width:1000px;
-    width:calc(100% - 20px);
-}
 .error-message{
     color:#c00;
 }
 .search-list,.following-list{
+    overflow-y:scroll;
+    height:101px;
     padding:0;
 }
 .following:first-child {/*{{{*/
@@ -145,6 +135,9 @@ ul{
 }
 .following.hidden-group{
     background: #E6E6E6;
+}
+.following.visible-group{
+    background: #f0f0f0;
 }
 .following button{
     float:right;
@@ -171,6 +164,10 @@ input:disabled {
 }
 #event-editor [name='rules']{
     width:200px;
+}
+#group-editor{
+    padding:10px;
+    border-top:1px solid #ccc;
 }
 .dialog{/*{{{*/
     position:fixed;
@@ -202,7 +199,7 @@ input:disabled {
 }
 /*}}}*/
 @media screen and (max-device-width: 480px) {/*{{{*/
-    #detail,#setting,#how-to-write,#event-list{
+    #detail,#detail.hideSetting,#setting,#how-to-write,#event-list,#event-editor{
         display:block;
         position:initial;
         bottom:initial;

@@ -117,18 +117,6 @@ ul{
     width:calc(100% - 20px);
     margin-bottom:30px;
 }
-#detail{
-    float:left;
-}
-#setting{
-    float:right;
-}
-#how-to-write {
-    font-size: 15px;
-    clear:both;
-    width:1000px;
-    width:calc(100% - 20px);
-}
 .error-message{
     color:#c00;
 }
