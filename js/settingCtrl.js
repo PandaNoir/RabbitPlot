@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('settingCtrl',['$scope','group','user','db','eventListToEdit','groupForm','$mdSidenav','$mdToast','$mdDialog',function($scope,group,user,db,eventListToEdit,groupForm,$mdSidenav,$mdToast,$mdDialog){//{{{
+.controller('settingCtrl',['$scope','group','user','db','eventListToEdit','groupForm','mode','$mdSidenav','$mdToast','$mdDialog',function($scope,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
     function sortByNumber(a,b){
         return a-b;
     };
@@ -67,6 +67,7 @@ angular.module(appName)
     };//}}}
     $scope.showEventList=function(id){
         eventListToEdit.id=id;
+        mode.showsEventList=true;
     };
     function parentsList(groupID){
         if(!group[groupID].parents) return [];

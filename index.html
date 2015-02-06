@@ -7,12 +7,12 @@
     <meta name="description" content="RabbitPlotは予定管理する必要がなくなるカレンダーアプリです。">
     <meta name="keywords" content="Rabbit plot,カレンダー,calendar,楽">
     <script src="https://cdn.jsdelivr.net/hammerjs/2.0.4/hammer.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-touch.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-animate.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-aria.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular-messages.min.js" defer></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.0/angular-material.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-touch.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-animate.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-aria.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-messages.min.js" defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.js" defer></script>
     <script src="js/lodash.min.js" defer></script>
 
     <!-- <script src="js/mainCtrl.js" defer></script> -->
@@ -27,7 +27,7 @@
 
     <script src="js/main.js" defer></script>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.0/angular-material.min.css">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
   </head>
   <body>
     <div class="main ng-cloak" ng-controller="mainCtrl" ng-cloak>
@@ -71,21 +71,24 @@
           </md-radio-group>
           <div ng-if="eventForm.type=='event'" layout layout-sm="column">
             <md-input-container flex>
-            <label>年</label><input type="number" ng-model="eventForm.year" ng-disabled="eventForm.type!='event'">
+            <label>年</label>
+            <input type="number" ng-model="eventForm.year">
             </md-input-container>
             <md-input-container flex>
             <label>月</label>
-            <input type="number" ng-model="eventForm.month" ng-disabled="eventForm.type!='event'">
+            <input type="number" ng-model="eventForm.month">
             </md-input-container>
             <md-input-container flex>
             <label>日</label>
-            <input type="number" ng-model="eventForm.date" ng-disabled="eventForm.type!='event'">
+            <input type="number" ng-model="eventForm.date">
             </md-input-container>
           </div>
 
           <div ng-if="eventForm.type=='habit'">
             <md-input-container>
-            <label>ルール</label><input type="text" ng-model="eventForm.rule" ng-disabled="eventForm.type!='habit'" name="rules"><md-button class="md-raised md-primary" ng-click="startWritingRule()">ガイド</md-button>
+            <label>ルール</label>
+            <input type="text" ng-model="eventForm.rule" name="rules">
+            <md-button class="md-raised md-primary" ng-click="startWritingRule()">ガイド</md-button>
             </md-input-container>
           </div>
 
@@ -97,7 +100,8 @@
           </span>
 
           <md-input-container>
-          <label>イベント名</label><input type="text" ng-model="eventForm.name" name="name" required>
+          <label>イベント名</label>
+          <input type="text" ng-model="eventForm.name" name="name" required>
           <span class="error-message" ng-show="eventEditor.name.$error.required">必須</span><br>
           </md-input-container>
           <md-button class="md-raised md-primary" ng-click="addEvent()" ng-show="eventForm.mode==='add'" ng-disabled="eventEditor.$error.required">イベントを追加</md-button>
@@ -111,8 +115,7 @@
           <md-button class="md-raised md-primary" ng-click="goFase('date')">何日</md-button>
           <md-button class="md-raised md-primary" ng-click="goFase('day')">何曜日</md-button>
           <md-button class="md-raised md-primary" ng-click="goFase('not')">除く</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('from')">いつから</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('to')">いつまで</md-button>
+          <md-button class="md-raised md-primary" ng-click="goFase('range')">範囲</md-button>
         </div>
         <div ng-if="ruleWriterFase==='month'">
           <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
@@ -148,17 +151,11 @@
           <input ng-model="ruleInput">
           <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
         </div>
-        <div ng-if="ruleWriterFase==='from'">
+        <div ng-if="ruleWriterFase==='range'">
           <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
           <input ng-model="ruleInput">
           <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button><br>
-          <small>年/月/日という形で指定してください(年は西暦で書いてください。略した書き方では対応できません)</small>
-        </div>
-        <div ng-if="ruleWriterFase==='to'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <input ng-model="ruleInput">
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button><br>
-          <small>年/月/日という形もしくは、10date、10week、10yearのように期間で指定してください(年は西暦で書いてください。略した書き方では対応できません)</small>
+          <small>年/月/日...年/月/日という形で指定してください。年は西暦限定です。始まりはあるけど終わりはないという場合は年/月/日...として終わりの方を省略してください。</small>
         </div>
         <div ng-if="ruleWriterFase==='operator'">
           <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
@@ -187,7 +184,7 @@
       </form>
       </md-whiteframe><!--}}}-->
       <md-sidenav md-component-id="left"><!--{{{-->
-      <div id="setting" ng-controller="settingCtrl" ng-if="eventListToEdit.id===''"><!--{{{-->
+      <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
         <md-button ng-click="toggleNav()">Close</md-button>
         <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
         <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
@@ -226,13 +223,13 @@
         </ul>
         <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
       </div><!--}}}-->
-      <div id="event-list" ng-controller="eventListCtrl" ng-if="eventListToEdit.id!==''"><!--{{{-->
-        <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
+      <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
+        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
         <ul>
           <li ng-repeat="item in habitList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button></li>
           <li ng-repeat="item in eventList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button></li>
         </ul>
-        <md-button ng-click="eventListToEdit.id=''">閉じる</md-button>
+        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
       </div><!--}}}-->
       </md-sidenav><!--}}}-->
     </div>

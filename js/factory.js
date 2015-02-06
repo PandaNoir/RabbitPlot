@@ -1,4 +1,7 @@
 angular.module(appName)
+.factory('_',function(){//{{{
+    return _;
+})//}}}
 .factory('user',['$rootScope',function($rootScope){//{{{
     if(localStorage&&angular.fromJson(localStorage.getItem('private'))){
         var user=angular.fromJson(localStorage.getItem('private'));
@@ -180,10 +183,11 @@ angular.module(appName)
         return new ErrorConstructor(mes);
     };
 }])//}}}
-.factory('mode',['eventForm',function(eventForm){
+.factory('mode',['eventForm','$mdSidenav',function(eventForm,$mdSidenav){//{{{
     return {
         editsEventForm:false,
         editsGroupForm:false,
+        showsEventList:false,
         switchToEdit:function(){//{{{
             //event= eventのid:groupのid:eventのtype(event or habit)
             arguments=Array.prototype.slice.call(arguments);
@@ -222,9 +226,10 @@ angular.module(appName)
                 _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: arguments[0], month: arguments[1]+1, date: arguments[2]});
             }//}}}
             this.editsEventForm=true;
+            $mdSidenav('left').close();
         }//}}}
     };
-}])
+}])//}}}
 .run(['calF','$timeout',function(calF,$timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);

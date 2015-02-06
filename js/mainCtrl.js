@@ -4,24 +4,17 @@ var QUOTATION=0;
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
 
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
-.controller('mainCtrl',['$scope','eventForm','calF','eventCal','eventListToEdit','mode','$timeout','$filter','$sce','$mdSidenav',function($scope,eventForm,calendar,eventCal,eventListToEdit,mode,$timeout,$filter,$sce,$mdSidenav){//{{{
+.controller('mainCtrl',['$scope','_','calF','eventCal','mode','$mdSidenav',function($scope,_,calF,eventCal,mode,$mdSidenav){//{{{
+    console.log(mode,$mdSidenav);
     $scope._=_;
-    $scope.eventForm=eventForm;
-    $scope.calF=calendar;
-    $scope.eventListToEdit=eventListToEdit;
     $scope.mode=mode;
     mode.editsEventForm=false;
     mode.editsGroupForm=false;
-    mode.showsHowToWrite=false;
-    $scope.showHowToWrite=function(){
-        mode.showsHowToWrite=!mode.showsHowToWrite;
-    };
     $scope.splitSelector=eventCal.splitSelector;
     $scope.openNav=function(){
         $mdSidenav('left').toggle();
     };
-    var today=new Date();
-    $scope.calF.selected=$scope.calF.date;
+    calF.selected=calF.date;
     $scope.eventCalendar=eventCal.eventCalendar;
 }])//}}}
 .config(['$httpProvider',function ($httpProvider) {//{{{
@@ -62,63 +55,7 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
     };
 }])//}}}
 .run(['db','group','$rootScope',function(db,group,$rootScope){//{{{
-    var o={//{{{
-        id:0,
-        event:[
-            {name:'[mes]春分の日',year:2000,month:2,date:20},{name:'[mes]秋分の日',year:2000,month:8,date:23},
-            {name:'[mes]春分の日',year:2001,month:2,date:20},{name:'[mes]秋分の日',year:2001,month:8,date:23},
-            {name:'[mes]春分の日',year:2002,month:2,date:21},{name:'[mes]秋分の日',year:2002,month:8,date:23},
-            {name:'[mes]春分の日',year:2003,month:2,date:21},{name:'[mes]秋分の日',year:2003,month:8,date:23},
-            {name:'[mes]春分の日',year:2004,month:2,date:20},{name:'[mes]秋分の日',year:2004,month:8,date:23},
-            {name:'[mes]春分の日',year:2005,month:2,date:20},{name:'[mes]秋分の日',year:2005,month:8,date:23},
-            {name:'[mes]春分の日',year:2006,month:2,date:21},{name:'[mes]秋分の日',year:2006,month:8,date:23},
-            {name:'[mes]春分の日',year:2007,month:2,date:21},{name:'[mes]秋分の日',year:2007,month:8,date:23},
-            {name:'[mes]春分の日',year:2008,month:2,date:20},{name:'[mes]秋分の日',year:2008,month:8,date:23},
-            {name:'[mes]春分の日',year:2009,month:2,date:20},{name:'[mes]秋分の日',year:2009,month:8,date:23},
-            {name:'[mes]春分の日',year:2010,month:2,date:21},{name:'[mes]秋分の日',year:2010,month:8,date:23},
-            {name:'[mes]春分の日',year:2011,month:2,date:21},{name:'[mes]秋分の日',year:2011,month:8,date:23},
-            {name:'[mes]春分の日',year:2012,month:2,date:20},{name:'[mes]秋分の日',year:2012,month:8,date:22},
-            {name:'[mes]春分の日',year:2013,month:2,date:20},{name:'[mes]秋分の日',year:2013,month:8,date:23},
-            {name:'[mes]春分の日',year:2014,month:2,date:21},{name:'[mes]秋分の日',year:2014,month:8,date:23},
-            {name:'[mes]春分の日',year:2015,month:2,date:21},{name:'[mes]秋分の日',year:2015,month:8,date:23},
-            {name:'[mes]春分の日',year:2016,month:2,date:20},{name:'[mes]秋分の日',year:2016,month:8,date:22},
-            {name:'[mes]春分の日',year:2017,month:2,date:20},{name:'[mes]秋分の日',year:2017,month:8,date:23},
-            {name:'[mes]春分の日',year:2018,month:2,date:21},{name:'[mes]秋分の日',year:2018,month:8,date:23},
-            {name:'[mes]春分の日',year:2019,month:2,date:21},{name:'[mes]秋分の日',year:2019,month:8,date:23},
-            {name:'[mes]春分の日',year:2020,month:2,date:20},{name:'[mes]秋分の日',year:2020,month:8,date:22},
-            {name:'[mes]春分の日',year:2021,month:2,date:20},{name:'[mes]秋分の日',year:2021,month:8,date:23},
-            {name:'[mes]春分の日',year:2022,month:2,date:21},{name:'[mes]秋分の日',year:2022,month:8,date:23},
-            {name:'[mes]春分の日',year:2023,month:2,date:21},{name:'[mes]秋分の日',year:2023,month:8,date:23},
-            {name:'[mes]春分の日',year:2024,month:2,date:20},{name:'[mes]秋分の日',year:2024,month:8,date:22},
-            {name:'[mes]春分の日',year:2025,month:2,date:20},{name:'[mes]秋分の日',year:2025,month:8,date:23},
-            {name:'[mes]春分の日',year:2026,month:2,date:20},{name:'[mes]秋分の日',year:2026,month:8,date:23},
-            {name:'[mes]春分の日',year:2027,month:2,date:21},{name:'[mes]秋分の日',year:2027,month:8,date:23},
-            {name:'[mes]春分の日',year:2028,month:2,date:20},{name:'[mes]秋分の日',year:2028,month:8,date:22},
-            {name:'[mes]春分の日',year:2029,month:2,date:20},{name:'[mes]秋分の日',year:2029,month:8,date:23},
-            {name:'[mes]春分の日',year:2030,month:2,date:20},{name:'[mes]秋分の日',year:2030,month:8,date:23},
-
-            {name:'[mes]十五夜',year:2000,month:8,date:12},{name:'[mes]十五夜',year:2001,month:9,date:1},
-            {name:'[mes]十五夜',year:2002,month:8,date:21},{name:'[mes]十五夜',year:2003,month:8,date:11},
-            {name:'[mes]十五夜',year:2004,month:8,date:28},{name:'[mes]十五夜',year:2005,month:8,date:18},
-            {name:'[mes]十五夜',year:2006,month:9,date:6},{name:'[mes]十五夜',year:2007,month:8,date:25},
-            {name:'[mes]十五夜',year:2008,month:8,date:14},{name:'[mes]十五夜',year:2009,month:9,date:3},
-            {name:'[mes]十五夜',year:2010,month:8,date:22},{name:'[mes]十五夜',year:2011,month:8,date:12},
-            {name:'[mes]十五夜',year:2012,month:8,date:30},{name:'[mes]十五夜',year:2013,month:8,date:19},
-            {name:'[mes]十五夜',year:2014,month:8,date:8},{name:'[mes]十五夜',year:2015,month:8,date:27},
-            {name:'[mes]十五夜',year:2016,month:8,date:15}
-        ],
-        habit:[
-            {name:'[mes]元旦',selector:'month:1 date:1'},{name:'[mes]成人の日',selector:'month:1 day:2nd-mon'},
-            {name:'[mes]昭和の日',selector:'month:4 date:29'},{name:'[mes]建国記念日',selector:'month:2 date:11'},
-            {name:'[mes]憲法記念日',selector:'month:5 date:3'},{name:'[mes]みどりの日',selector:'month:5 date:4'},
-            {name:'[mes]こどもの日',selector:'month:5 date:5'},{name:'[mes]海の日',selector:'month:7 day:3rd-mon'},
-            {name:'[mes]敬老の日',selector:'month:9 day:3rd-mon'},{name:'[mes]体育の日',selector:'month:10 day:2nd-mon'},
-            {name:'[mes]文化の日',selector:'month:11 date:3'},{name:'[mes]勤労感謝の日',selector:'month:11 date:23'},
-            {name:'[mes]天皇誕生日',selector:'month:12 date:23'}
-        ],
-        name:'祝日',
-        updated:true
-    };//}}}
+    var o=_.clone(group);
     if(localStorage&&localStorage.getItem('group')){
         group.length=0;
         Array.prototype.push.apply(group,angular.fromJson(localStorage.getItem('group')));
@@ -199,7 +136,7 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
                 function updateClass(){
                     elm.removeClass('selected booked-0 booked-1 booked-2 booked-3 booked-4 booked-5 today');
                     elm.addClass(scope.dateClass(date).join(' '));
-                }
+                };
                 scope.$on('updated',updateClass);
                 updateClass();
                 elm.on('mouseenter',function(){

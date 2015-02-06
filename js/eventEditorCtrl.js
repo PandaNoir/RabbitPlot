@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('eventEditorCtrl',['$scope','group','user','eventForm','calF','db','$mdToast','mode',function($scope,group,user,eventForm,calF,db,$mdToast,mode){
+.controller('eventEditorCtrl',['$scope','group','user','eventForm','calF','db','mode','$mdToast',function($scope,group,user,eventForm,calF,db,mode,$mdToast){
     var today=new Date();
     var faseHistory=[];
     var rule=[];
