@@ -84,9 +84,12 @@ angular.module(appName)
         if($scope.search_keyword==''){
             return res;
         }
+        if(!group){
+            return res;
+        }
         for(var i=0,j=group.length;i<j;i++){
             if(res.length>30) break;
-            if(group[i].name.indexOf($scope.search_keyword)!==-1){
+            if(group[i]&&group[i].name&&group[i].name.indexOf($scope.search_keyword)!==-1){
                 res[res.length]=i;
             }
         }

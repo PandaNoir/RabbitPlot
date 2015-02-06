@@ -60,7 +60,7 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
     };
 }])//}}}
 .run(['db','group','$rootScope',function(db,group,$rootScope){//{{{
-    var o=_.clone(group);
+    var o=_.clone(group)[0];
     if(localStorage&&localStorage.getItem('group')){
         group.length=0;
         Array.prototype.push.apply(group,angular.fromJson(localStorage.getItem('group')));
