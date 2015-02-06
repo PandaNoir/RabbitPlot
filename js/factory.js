@@ -183,7 +183,7 @@ angular.module(appName)
         return new ErrorConstructor(mes);
     };
 }])//}}}
-.factory('mode',['eventForm','$mdSidenav',function(eventForm,$mdSidenav){//{{{
+.factory('mode',['eventForm','$mdSidenav','user','group',function(eventForm,$mdSidenav,user,group){//{{{
     return {
         editsEventForm:false,
         editsGroupForm:false,

@@ -31,7 +31,6 @@
   </head>
   <body>
     <div class="main ng-cloak" ng-controller="mainCtrl" ng-cloak>
-      <md-button href="how-to-use.html">使い方</md-button>
       <md-button class="md-fab"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
       <md-button class="md-fab" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
 
@@ -107,62 +106,62 @@
           <md-button class="md-raised md-primary" ng-click="addEvent()" ng-show="eventForm.mode==='add'" ng-disabled="eventEditor.$error.required">イベントを追加</md-button>
           <md-button class="md-raised md-primary" ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">保存</md-button>
           <md-button class="md-raised md-warn" ng-click="cancel()">キャンセル</md-button>
+          <hr>
+          <div ng-if="ruleWriterFase==='selector'"><!--{{{-->
+            <md-button class="md-raised md-primary" ng-if="eventForm.rule!==''" ng-click="cancelFase()">キャンセル</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('month')">何月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('date')">何日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('day')">何曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('not')">除く</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('range')">範囲</md-button>
+          </div>
+          <div ng-if="ruleWriterFase==='month'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':1')">1月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':2')">2月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':3')">3月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':4')">4月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':5')">5月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':6')">6月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':7')">7月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':8')">8月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':9')">9月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':10')">10月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':11')">11月</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':12')">12月</md-button>
+          </div>
+          <div ng-if="ruleWriterFase==='date'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button><input ng-model="ruleInput">日<md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
+          </div>
+          <div ng-if="ruleWriterFase==='day'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':sun')">日曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':mon')">月曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':tue')">火曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':wed')">水曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':thu')">木曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':fri')">金曜日</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':sat')">土曜日</md-button>
+          </div>
+          <div ng-if="ruleWriterFase==='not'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+            <md-button class="md-raised md-primary">祝日</md-button>
+            <input ng-model="ruleInput">
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
+          </div>
+          <div ng-if="ruleWriterFase==='range'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+            <input ng-model="ruleInput">
+            <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button><br>
+            <small>年/月/日...年/月/日という形で指定してください。年は西暦限定です。始まりはあるけど終わりはないという場合は年/月/日...として終わりの方を省略してください。</small>
+          </div>
+          <div ng-if="ruleWriterFase==='operator'">
+            <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('selector',' and ')">かつ (and)</md-button>
+            <md-button class="md-raised md-primary" ng-click="goFase('selector',' or ')">または (or)</md-button>
+            <md-button class="md-raised md-primary" ng-click="finishWritingRule()">決定</md-button>
+          </div><!--}}}-->
         </form>
-        <hr>
-        <div ng-if="ruleWriterFase==='selector'"><!--{{{-->
-          <md-button class="md-raised md-primary" ng-if="eventForm.rule!==''" ng-click="cancelFase()">キャンセル</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('month')">何月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('date')">何日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('day')">何曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('not')">除く</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('range')">範囲</md-button>
-        </div>
-        <div ng-if="ruleWriterFase==='month'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':1')">1月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':2')">2月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':3')">3月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':4')">4月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':5')">5月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':6')">6月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':7')">7月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':8')">8月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':9')">9月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':10')">10月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':11')">11月</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':12')">12月</md-button>
-        </div>
-        <div ng-if="ruleWriterFase==='date'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button><input ng-model="ruleInput">日<md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
-        </div>
-        <div ng-if="ruleWriterFase==='day'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':sun')">日曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':mon')">月曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':tue')">火曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':wed')">水曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':thu')">木曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':fri')">金曜日</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':sat')">土曜日</md-button>
-        </div>
-        <div ng-if="ruleWriterFase==='not'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <md-button class="md-raised md-primary">祝日</md-button>
-          <input ng-model="ruleInput">
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button>
-        </div>
-        <div ng-if="ruleWriterFase==='range'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <input ng-model="ruleInput">
-          <md-button class="md-raised md-primary" ng-click="goFase('operator',':'+ruleInput)">決定</md-button><br>
-          <small>年/月/日...年/月/日という形で指定してください。年は西暦限定です。始まりはあるけど終わりはないという場合は年/月/日...として終わりの方を省略してください。</small>
-        </div>
-        <div ng-if="ruleWriterFase==='operator'">
-          <md-button class="md-raised md-primary" ng-click="cancelFase()">キャンセル</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('selector',' and ')">かつ (and)</md-button>
-          <md-button class="md-raised md-primary" ng-click="goFase('selector',' or ')">または (or)</md-button>
-          <md-button class="md-raised md-primary" ng-click="finishWritingRule()">決定</md-button>
-        </div><!--}}}-->
       </md-whiteframe><!--}}}-->
       <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-show="mode.editsGroupForm"><!--{{{-->
       <form>
