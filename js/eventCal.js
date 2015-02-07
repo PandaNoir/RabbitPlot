@@ -1,11 +1,11 @@
 angular.module(appName)
-.factory('eventCal',['group','user','calF','error',function(group,user,calF,myError){
+.factory('eventCal',['group','user','calF','error','$log',function(group,user,calF,myError,$log){
+    function last(arr){return arr[arr.length-1];};
     var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
     var OPERATOR=0;
     var OTHERS=1;
     var LPARENTHESES=2;
     var RPARENTHESES=3;
-    function last(arr){return arr[arr.length-1];};
     var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;
@@ -19,8 +19,9 @@ angular.module(appName)
             monthInEC=calF.month;
             ECMemo=[];
         }else{
-            if(_.any(groups,function(item){return item.updated===true;})||user.updated){
+            if(groups.join(',')!==last(ECMemo)||_.any(groups,function(item){return item.updated===true;})||user.updated){
                 //どれか1つでもupdateされたものがあったらメモを使用しない
+                $log.debug('update caught.rebuild eventCalendar.');
                 ECMemo=[];
             }else{
                 //条件が変わっていないからそのまま使用
@@ -43,6 +44,7 @@ angular.module(appName)
             }
         }
         ECMemo=_.clone(eventCalendar);
+        ECMemo.push(groups.join(','));
         return ECMemo[date]||[];
     };//}}}
     function getEvents(groupID,y,m){//{{{
