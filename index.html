@@ -29,11 +29,86 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
   </head>
-  <body>
-    <div class="main ng-cloak" ng-controller="mainCtrl" ng-cloak>
-      <md-button class="md-fab"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
-      <md-button class="md-fab" ng-click="openNav()"><md-icon icon="image/ic_settings_24px.svg" style="width:24px; height:24px;"></md-icon></md-button>
+  <body ng-controller="mainCtrl">
+    <md-toolbar>
+    <div class="md-toolbar-tools" layout="row">
+      <md-button class="md-left" ng-click="openNav()"><md-icon icon="image/ic_menu_24px.svg"></md-icon></md-button>
+      <div flex class="">Rabbit Plot</div>
+      <md-button><md-icon icon="image/ic_add_24px.svg"></md-icon></md-button>
+      <a href="how-to-use.html"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></a>
+    </div>
+    </md-toolbar>
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left"><!--{{{-->
+    <md-toolbar>
+    <div class="md-toolbar-tools">設定</div>
+    </md-toolbar>
+    <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
+      <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
+      <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
+      <input type="text" ng-model="search_keyword">
+      <md-button class="md-raised md-primary" ng-click="search()">検索</md-button>
+      <md-button class="md-raised md-primary" ng-click="randomSearch()">ランダム</md-button>
+      <ul class="search-list">
+        <li ng-repeat="id in searchResult">
+          {{group[id].name}}
+          <md-button class="md-raised md-primary" ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</md-button>
+          <span class="error-message" ng-if="followsParent(id)!==true">
+            このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。
+            {{group[followsParent(id)].name}}をフォローしてください。
+            <md-button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</md-button>
+          </span>
+        </li>
+      </ul>
+      フォローしているグループ:
+      <md-list ng-if="user.following.length>0" class="following-list"><!--{{{-->
+      <md-item class="cf">
+      <md-item-content class="following" ng-class="user.isHiddenGroup(-1)?'hidden-group':'visible-group'">
+      <div class="md-tile-content">
+        プライベート<br>
+        <md-button ng-click="user.isHiddenGroup(-1)?show(-1):hide(-1)">{{user.isHiddenGroup(-1)?'表示する':'非表示にする'}}</md-button>
+        <md-button ng-click="showEventList('private')">イベント一覧</md-button>
+      </div>
+      </md-item-content>
+      </md-item>
+      <md-item ng-repeat="id in user.following" class="cf" ng-if="group[id]">
+      <md-item-content class="following" ng-class="user.isHiddenGroup(id)?'hidden-group':'visible-group'">
+      <div class="md-tile-content">
+        {{group[id].name}}<br>
+        <md-button ng-click="user.isHiddenGroup(id)?show(id):hide(id)">{{user.isHiddenGroup(id)?'表示する':'非表示にする'}}</md-button>
+        <md-button ng-click="unfollow(id)">フォロー解除</md-button>
+        <md-button ng-click="showEventList(id)">イベント一覧</md-button>
+      </div>
+      </md-item-content>
+      </md-item>
+      </md-list><!--}}}-->
+      <div ng-show="user.following.length==0">フォローしていません</div>
+      <md-button class="md-raised md-primary" ng-click="hideAll()">すべて非表示にする</md-button>
+      <md-button class="md-raised md-primary" ng-click="showAll()">すべて表示する</md-button><br>
 
+      <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
+    </div><!--}}}-->
+    <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
+      <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
+      <md-list>
+      <md-item ng-repeat="item in habitList track by $index">
+      <md-item-content>
+      <div class="md-tile-content">
+        {{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button>
+      </div>
+      </md-item-content>
+      </md-item>
+      <md-item ng-repeat="item in eventList track by $index">
+      <md-item-content>
+      <div class="md-tile-content">
+        {{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button>
+      </div>
+      </md-item-content>
+      </md-item>
+      </md-list>
+      <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
+    </div><!--}}}-->
+    </md-sidenav><!--}}}-->
+    <md-content class="main md-padding ng-cloak" ng-cloak>
       <div class="calendar" ng-controller="calendarCtrl"><!--{{{-->
 
         <div class="calendar-header cf">
@@ -182,55 +257,6 @@
         <md-button class="md-raised md-primary" ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</md-button>
       </form>
       </md-whiteframe><!--}}}-->
-      <md-sidenav md-component-id="left"><!--{{{-->
-      <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
-        <md-button ng-click="toggleNav()">Close</md-button>
-        <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
-        <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
-        フォローしているグループ:
-        <ul ng-if="user.following.length>0" class="following-list">
-          <li class="following cf" ng-class="user.isHiddenGroup(-1)?'hidden-group':'visible-group'">
-            プライベート
-            <md-button ng-click="user.isHiddenGroup(-1)?show(-1):hide(-1)">{{user.isHiddenGroup(-1)?'表示する':'非表示にする'}}</md-button>
-            <md-button ng-click="showEventList('private')">イベント一覧</md-button>
-          </li>
-          <li ng-repeat="id in user.following" class="following cf" ng-if="group[id]" ng-class="user.isHiddenGroup(id)?'hidden-group':'visible-group'">
-            {{group[id].name}}
-            <md-button ng-click="user.isHiddenGroup(id)?show(id):hide(id)">{{user.isHiddenGroup(id)?'表示する':'非表示にする'}}</md-button>
-            <md-button ng-click="unfollow(id)">フォロー解除</md-button>
-            <md-button ng-click="showEventList(id)">イベント一覧</md-button>
-          </li>
-        </ul>
-        <div ng-show="user.following.length==0">フォローしていません</div>
-        <md-button class="md-raised md-primary" ng-click="hideAll()">すべて非表示にする</md-button>
-        <md-button class="md-raised md-primary" ng-click="showAll()">すべて表示する</md-button><br>
-
-
-        <input type="text" ng-model="search_keyword">
-        <md-button class="md-raised md-primary" ng-click="search()">検索</md-button>
-        <md-button class="md-raised md-primary" ng-click="randomSearch()">ランダム</md-button>
-        <ul class="search-list">
-          <li ng-repeat="id in searchResult">
-            {{group[id].name}}
-            <md-button class="md-raised md-primary" ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</md-button>
-            <span class="error-message" ng-if="followsParent(id)!==true">
-              このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。
-              {{group[followsParent(id)].name}}をフォローしてください。
-              <md-button ng-click="follow(followsParent(id))">{{group[followsParent(id)].name}}をフォロー</md-button>
-            </span>
-          </li>
-        </ul>
-        <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
-      </div><!--}}}-->
-      <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
-        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
-        <ul>
-          <li ng-repeat="item in habitList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button></li>
-          <li ng-repeat="item in eventList track by $index">{{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button></li>
-        </ul>
-        <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
-      </div><!--}}}-->
-      </md-sidenav><!--}}}-->
     </div>
   </body>
 </html>

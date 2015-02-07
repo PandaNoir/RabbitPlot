@@ -15,6 +15,9 @@ html,body,.main{
     font-family:monospace;
     margin:0;
 }
+.main{
+    height:600px;
+}
 body{
     position:relative;
     height:calc(100% - 20px);
@@ -123,21 +126,12 @@ ul{
 .search-list,.following-list{
     padding:0;
 }
-.following:first-child {/*{{{*/
+.following:first-child {
     border-top:1px solid #999;
-}
-.following {
-    padding:3px 10px;
-    border-bottom: 1px solid #999;
-    vertical-align:top;
 }
 .following.hidden-group{
     background: #E6E6E6;
 }
-.following button{
-    float:right;
-    vertical-align:top;
-}/*}}}*/
 .cf:after {
     display:block;
     clear:both;
