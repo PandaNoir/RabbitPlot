@@ -230,28 +230,6 @@ angular.module(appName)
         }//}}}
     };
 }])//}}}
-.run(['calF','$timeout',function(calF,$timeout){//{{{
-    var tomorrow=new Date();
-    tomorrow.setDate(tomorrow.getDate()+1);
-    tomorrow.setHours(0);
-    tomorrow.setMinutes(0);
-    tomorrow.setSeconds(0);
-    tomorrow.setMilliseconds(0);
-    function setTomorrow(){
-        var tomorrow=new Date();
-        tomorrow.setDate(tomorrow.getDate()+1);
-        tomorrow.setHours(0);
-        tomorrow.setMinutes(0);
-        tomorrow.setSeconds(0);
-        tomorrow.setMilliseconds(0);
-        var today=new Date();
-        calF.today.year=today.getFullYear();
-        calF.today.month=today.getMonth();
-        calF.today.date=today.getDate();
-        $timeout(setTomorrow,tomorrow-(new Date()));
-    }
-    $timeout(setTomorrow,tomorrow-(new Date()));
-}])//}}}
 .factory('db',['group','user','$http','$rootScope',function(group,user,$http,$rootScope){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
@@ -263,7 +241,7 @@ angular.module(appName)
         o.permission=o.permission||[];
         o.parents=o.parents||'';
         delete o.updated;
-        for(var key in o) o[key]=angular.toJson(o[key]);
+        for(var key in o) o[key]=toOneByte(angular.toJson(o[key]));
         o.type=type;
         $rootScope.$broadcast('updated');
         return $http.post(database,o).success(function(mes){
@@ -288,4 +266,27 @@ angular.module(appName)
         list:list,
         getNameList:getNameList
     };
-}]);//}}}
+}])//}}}
+.run(['calF','$timeout',function(calF,$timeout){//{{{
+    var tomorrow=new Date();
+    tomorrow.setDate(tomorrow.getDate()+1);
+    tomorrow.setHours(0);
+    tomorrow.setMinutes(0);
+    tomorrow.setSeconds(0);
+    tomorrow.setMilliseconds(0);
+    function setTomorrow(){
+        var tomorrow=new Date();
+        tomorrow.setDate(tomorrow.getDate()+1);
+        tomorrow.setHours(0);
+        tomorrow.setMinutes(0);
+        tomorrow.setSeconds(0);
+        tomorrow.setMilliseconds(0);
+        var today=new Date();
+        calF.today.year=today.getFullYear();
+        calF.today.month=today.getMonth();
+        calF.today.date=today.getDate();
+        $timeout(setTomorrow,tomorrow-(new Date()));
+    }
+    $timeout(setTomorrow,tomorrow-(new Date()));
+}])//}}}
+;//factoryとか追加するときに便利なようにここにセミコロン

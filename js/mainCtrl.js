@@ -7,6 +7,11 @@ function sortByNumber(a,b){
 function toInt(n){
     return parseInt(n,10);
 };
+function toOneByte(str){
+    str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+};
 
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
 .controller('mainCtrl',['$scope','_','calF','eventCal','mode','$mdSidenav',function($scope,_,calF,eventCal,mode,$mdSidenav){//{{{
