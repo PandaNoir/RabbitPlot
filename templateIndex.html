@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.css">
   </head>
   <body ng-controller="mainCtrl">
-    <md-toolbar>
+    <md-toolbar class="ng-cloak" ng-cloak>
     <div class="md-toolbar-tools" layout="row">
       <md-button class="md-left" ng-click="openNav()"><md-icon icon="image/ic_menu_24px.svg"></md-icon></md-button>
       <div flex class="">Rabbit Plot</div>
@@ -27,7 +27,7 @@
       <a href="how-to-use.html"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></a>
     </div>
     </md-toolbar>
-    <md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left"><!--{{{-->
+    <md-sidenav class="md-sidenav-left md-whiteframe-z2 ng-cloak" ng-cloak md-component-id="left"><!--{{{-->
     <md-toolbar>
     <div class="md-toolbar-tools">設定</div>
     </md-toolbar>
@@ -97,6 +97,7 @@
       <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
     </div><!--}}}-->
     </md-sidenav><!--}}}-->
+
     <md-content class="main md-padding ng-cloak" ng-cloak>
       <div class="calendar" ng-controller="calendarCtrl"><!--{{{-->
 
@@ -112,7 +113,7 @@
 
       </div><!--}}}-->
       <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}"><!--{{{-->
-        <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="calF.selected===calF.today.date&&calF.month===calF.today.month&&calF.year===calF.today.year"> - 今日</span></div>
+        <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="isToday()"> - 今日</span></div>
         <div ng-show="calF.selected===null"><br></div>
         <ul>
           <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
