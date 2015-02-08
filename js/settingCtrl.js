@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('settingCtrl',['$scope','group','user','db','eventListToEdit','groupForm','mode','$mdSidenav','$mdToast','$mdDialog',function($scope,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
+.controller('settingCtrl',['$scope','_','group','user','db','eventListToEdit','groupForm','mode','$mdSidenav','$mdToast','$mdDialog',function($scope,_,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
     $scope.group=group;
     $scope.user=user;
     $scope.groupForm=groupForm;
@@ -141,16 +141,4 @@ angular.module(appName)
     $scope.exportSetting=function(){
         $mdDialog.show($mdDialog.alert().title('').content('これをコピーして移行先で貼り付けてください。'+angular.toJson(user)).ok('ok'))
     };
-}])//}}}
-.directive('autoFocus',function(){//{{{
-    return {
-        link:function(scope,element,attrs){
-            function observer(value){
-                if(scope.focus===true){
-                    element[0].focus();
-                }
-            }
-            scope.$watch('focus',observer);
-        }
-    };
-});//}}}
+}]);//}}}

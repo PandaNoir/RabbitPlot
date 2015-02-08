@@ -1,5 +1,5 @@
 angular.module(appName)
-.factory('eventCal',['group','user','calF','error','$log',function(group,user,calF,myError,$log){
+.factory('eventCal',['_','group','user','calF','error','$log',function(_,group,user,calF,myError,$log){//{{{
     function last(arr){return arr[arr.length-1];};
     var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
     var OPERATOR=0;
@@ -484,4 +484,4 @@ angular.module(appName)
         eventCalendar:eventCalendar,
         splitSelector:splitSelector
     };
-}]);
+}]);//}}}

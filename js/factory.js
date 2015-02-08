@@ -2,7 +2,7 @@ angular.module(appName)
 .factory('_',function(){//{{{
     return _;
 })//}}}
-.factory('user',['$rootScope',function($rootScope){//{{{
+.factory('user',['_','$rootScope',function(_,$rootScope){//{{{
     if(localStorage&&angular.fromJson(localStorage.getItem('private'))){
         var user=angular.fromJson(localStorage.getItem('private'));
         user.isHiddenGroup=function(id){
@@ -183,7 +183,7 @@ angular.module(appName)
         return new ErrorConstructor(mes);
     };
 }])//}}}
-.factory('mode',['eventForm','$mdSidenav','user','group',function(eventForm,$mdSidenav,user,group){//{{{
+.factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
     return {
         editsEventForm:false,
         editsGroupForm:false,
@@ -230,7 +230,7 @@ angular.module(appName)
         }//}}}
     };
 }])//}}}
-.factory('db',['group','user','$http','$rootScope',function(group,user,$http,$rootScope){//{{{
+.factory('db',['_','group','user','$http','$rootScope',function(_,group,user,$http,$rootScope){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
