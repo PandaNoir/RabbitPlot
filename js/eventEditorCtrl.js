@@ -13,8 +13,40 @@ angular.module(appName)
     $scope.eventEditor={
         rules:'',
         selectedGroup:''
-    }
-    $scope.addEvent=function(){
+    };
+    $scope.ruleGuide={
+        day:[
+            [':sun','日曜日'],
+            [':mon','月曜日'],
+            [':tue','火曜日'],
+            [':wed','水曜日'],
+            [':thu','木曜日'],
+            [':fri','金曜日'],
+            [':sat','土曜日']
+        ],
+        month:[
+            [':1','1月'],
+            [':2','2月'],
+            [':3','3月'],
+            [':4','4月'],
+            [':5','5月'],
+            [':6','6月'],
+            [':7','7月'],
+            [':8','8月'],
+            [':9','9月'],
+            [':10','10月'],
+            [':11','11月'],
+            [':12','12月']
+        ],
+        selector:[
+            ['month','何月'],
+            ['date','何日'],
+            ['day','何曜日'],
+            ['not','除く'],
+            ['range','範囲']
+        ]
+    };
+    $scope.addEvent=function(){//{{{
         //イベントの追加
         var type=$scope.eventForm.type;
         if(eventForm.name===''||eventForm.selectedGroup===undefined||eventForm.selectedGroup===null){
@@ -52,8 +84,8 @@ angular.module(appName)
 
         mode.editsEventForm=false;
         save(eventForm.selectedGroup);
-    };
-    $scope.saveEvent=function(){
+    };//}}}
+    $scope.saveEvent=function(){//{{{
         //編集したイベントを保存する
         var type=eventForm.type;
         if(eventForm.year===null||eventForm.month===null||eventForm.date===null||eventForm.name===''){
@@ -82,7 +114,7 @@ angular.module(appName)
         }
         mode.editsEventForm=false;
         save(eventForm.selectedGroup);
-    };
+    };//}}}
     $scope.cancel=function(){//{{{
         mode.editsEventForm=false;
     };

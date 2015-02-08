@@ -40,4 +40,5 @@ angular.module(appName)
         }
         mode.editsEventForm=false;
     };//}}}
+    $scope.dates=['日','月','火','水','木','金','土'];
 }]);
