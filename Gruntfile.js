@@ -11,16 +11,21 @@ module.exports = function(grunt) {
         'js/factory.js',
         'js/eventCal.js',
     ];
+    var scriptList='';
+    for(var i=0,j=files.length;i<j;i++){
+        scriptList+='<script src="'+files[i]+'" defer></script>';
+    }
     files.unshift('js/rabbit.prefix');
     files.push('js/rabbit.suffix');
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-compress');
-    grunt.loadNpmTasks('grunt-closure-compiler');
+
+    var mainJS='js/main.js';
+    var mainRawJS='js/main.raw.js';
+    require('load-grunt-tasks')(grunt);
+
     grunt.initConfig({
         concat: {
             prefix:{
-                dest: 'js/main.raw.js',
+                dest: mainRawJS,
                 src: files
             }
         },
@@ -32,7 +37,7 @@ module.exports = function(grunt) {
                 files:[
                     {
                     expand: true,
-                    src: 'js/main.js',
+                    src: mainJS,
                     ext: '.js.gz'
                 }
                 ]
@@ -41,8 +46,8 @@ module.exports = function(grunt) {
         'closure-compiler': {
             frontend: {
                 closurePath: 'compiler-latest/',
-                js:'js/main.raw.js',
-                jsOutputFile:'js/main.js',
+                js: mainRawJS,
+                jsOutputFile: mainJS,
                 options: {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5_STRICT'
@@ -50,8 +55,31 @@ module.exports = function(grunt) {
             }
         },
         clean: {
-            raw: ['js/main.raw.js']
+            raw: [mainRawJS]
+        },
+        replace: {
+            dev: {
+                src: ['indexTmpl.html'],
+                dest: 'index.html',
+                replacements: [{
+                    from: '<tmpl scriptlist></tmpl>',
+                    to: scriptList
+                },{
+                    from: '<div flex class="">Rabbit Plot</div>',
+                    to: '<div flex class="">Rabbit Plot ver.dev</div>'
+                }]
+
+            },
+            release: {
+                src: ['indexTmpl.html'],
+                dest: 'index.html',
+                replacements: [{
+                    from: '<tmpl scriptlist></tmpl>',
+                    to: '<script src="'+mainJS+'" defer></script>'
+                }]
+            }
         }
     });
-    grunt.registerTask('default', ['concat','closure-compiler','clean:raw','compress']);
+    grunt.registerTask('default', ['concat','closure-compiler','clean:raw','compress','replace:release']);
+    grunt.registerTask('dev', ['replace:dev']);
 };
