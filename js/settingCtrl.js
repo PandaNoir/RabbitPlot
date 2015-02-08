@@ -25,7 +25,6 @@ angular.module(appName)
     };//}}}
 
     $scope.toggleNav=function(){
-        console.log('called');
         $mdSidenav('left').close();
     };
     function follows(id){return $scope.user.following.indexOf(id)!==-1;};

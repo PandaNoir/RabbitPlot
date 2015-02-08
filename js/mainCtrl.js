@@ -15,7 +15,6 @@ function toOneByte(str){
 
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
 .controller('mainCtrl',['$scope','_','calF','eventCal','mode','$mdSidenav',function($scope,_,calF,eventCal,mode,$mdSidenav){//{{{
-    console.log(mode,$mdSidenav);
     $scope._=_;
     $scope.mode=mode;
     mode.editsEventForm=false;

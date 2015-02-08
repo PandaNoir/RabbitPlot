@@ -230,7 +230,7 @@ angular.module(appName)
         }//}}}
     };
 }])//}}}
-.factory('db',['_','group','user','$http','$rootScope',function(_,group,user,$http,$rootScope){//{{{
+.factory('db',['_','group','user','$http','$rootScope','$log',function(_,group,user,$http,$rootScope,$log){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
@@ -245,16 +245,16 @@ angular.module(appName)
         o.type=type;
         $rootScope.$broadcast('updated');
         return $http.post(database,o).success(function(mes){
-            console.log('updated');
-            console.log(mes);
+            $log.log('updated');
+            $log.log(mes);
         }).error(function(mes){
-            console.log(mes);
+            $log.log(mes);
         });
     };
     function list(){
         //データベースから指定idのデータを取得する
         return $http.post(database,{type:'list',groupID:user.following.join(',')}).success(function(data){return data}).error(function(mes){
-            console.log(mes);
+            $log.log(mes);
         });
     };
     function getNameList(){
