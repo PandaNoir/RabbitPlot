@@ -55,7 +55,11 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
         if(event[1]=='private'){
             res=user['private'][event[2]][event[0]].name;
         }else{
-            res=group[event[1]][event[2]][event[0]].name;
+            if(toInt(event[1])===0&&toInt(event[0])===-1){
+                res='[mes]振替休日';
+            }else{
+                res=group[event[1]][event[2]][event[0]].name;
+            }
         }
         if(removeMes!==false && res.indexOf('[mes]')===0){
             res=res.replace(/^\[mes\]/,'');
