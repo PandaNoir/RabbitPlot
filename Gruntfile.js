@@ -100,9 +100,20 @@ module.exports = function(grunt) {
                     'index.html': 'index.html'     // 'destination': 'source'
                 }
             }
-        }
+         },
+         cssmin: {
+             target: {
+                 files: [{
+                     expand: true,
+                     cwd: 'css',
+                     src: ['*.css', '!*.min.css'],
+                     dest: 'css',
+                     ext: '.min.css'
+                 }]
+             }
+         }
     });
-    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist']);
+    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
 };
