@@ -1,3 +1,7 @@
+function isLeapYear(year){
+    return year%400===0||year%4===0&&year%100!==0;
+};
+var OVER_MONTH=64;//calF.calendar()で来月の範囲に入った時に代入される値
 angular.module(appName)
 .factory('_',function(){//{{{
     return _;
@@ -123,7 +127,7 @@ angular.module(appName)
         }
         var first=(new Date(year,month,1)).getDay();
         var last=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
-        if(month===1 && (year%400==0 || year%100!=0 && year%4==0)){
+        if(month===1 && isLeapYear(year)){
             //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
             last=29;//うるう年だから
         }
@@ -141,7 +145,7 @@ angular.module(appName)
                     if(row*7+j-first<=last){
                         res[row][res[row].length]=row*7+j-first;//日付が今月の範囲に収まっている
                     }else{
-                        res[row][res[row].length]=32;//来月の範囲
+                        res[row][res[row].length]=OVER_MONTH;//来月の範囲
                     }
                 }else{
                     res[row][res[row].length]=0;//今月の範囲
@@ -349,7 +353,7 @@ angular.module(appName)
         if(groupID===0){
             //振替休日の選定
             var holidays=_.map(res,function(n){return n.date});
-            var sundayHoliday=_.intersection(holidays,execSelectors(splitSelector('day:sun'),y,m,[]));//日曜かつ祝日
+            var sundayHoliday=_.intersection(holidays,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
             res.push.apply(res,_.map(sundayHoliday,function(n){
                 var k=1;
                 while(_.indexOf(holidays,n+k,true)!==-1){
@@ -388,7 +392,7 @@ angular.module(appName)
         for(var i=0,i2=arr.length;i<i2;i++){
             arr[i].type='habit';
             arr[i].group=groupID;
-            var tmp_res=execSelectors(splitSelector(arr[i].selector),year,month,eventListRes);
+            var tmp_res=execSelectors(arr[i].selector,year,month,eventListRes);
             _.each(tmp_res,function(item,index){
                 tmp_res[index]={year:year,month:month,date:item,name:arr[i].name,group:groupID,id:i,type:'habit'};
             });
@@ -400,9 +404,9 @@ angular.module(appName)
         //セレクタを適応させて返す
         //year,monthはexecSelectorをメモ化するため
         //eventListResはnotで使用する配列。使用方法は、eventListResに入っているイベントに指定した名前と同じ名前が入っているところを除くという方法。つまり、not:name='燃えるごみの日'のようなときに使う。
+        selectors=splitSelector(selectors);//文字列として渡されたselectorsを分解する
         eventListRes=eventListRes||[];
         var stack=[];
-        var ALL_DAYS=_.flatten(calF.calendar(year,month));
         _.each(selectors,function(nowSelector){//{{{
             if(nowSelector[1]===OTHERS){
                 //セレクタの時
@@ -420,7 +424,13 @@ angular.module(appName)
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
             var all_days=function(){
-                return _.clone(ALL_DAYS);
+                return _.flatten(cal);
+            };
+            var meansPublicHoliday=function(s){
+                //sが祝日を表しているか判定
+                // publicHoliday || public-holiday || 祝日を想定
+                s=s.toLowerCase();
+                return s==='public-holiday'||s==='publicholiday'||s==='祝日';
             };
             var cal=calF.calendar(year,month);
             var dayDic={
@@ -467,7 +477,7 @@ angular.module(appName)
             var top4,top5,froms=[];//month/dateを処理するときにfromが2つでてくるから使用
             if(key==='not'){//{{{
                 tmp_res=all_days();
-                if(val==='public-holiday'||val==='祝日'){
+                if(meansPublicHoliday(val)){
                     //祝日を除くフィルタ
                     var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
                     for(var i=0,j=publicHolidays.length;i<j;i++) publicHolidays[i]=publicHolidays[i].date;
@@ -489,21 +499,40 @@ angular.module(appName)
                         }
                     });
                 }//}}}
-            }else if(key==='is'){
+            }else if(key==='is'){//{{{
                 // is:public-holidayと言った感じ
+                tmp_res=all_days();
+                if(meansPublicHoliday(val)){
+                    var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
+                    for(var i=0,j=publicHolidays.length;i<j;i++){
+                        publicHolidays[i]=publicHolidays[i].date;
+                    }
+                    tmp_res=_.intersection(tmp_res,publicHolidays);
+                }else if(val==='last'){
+                    //======================
+                    var lastDay=[31,28,31,30,31,30,31,31,30,31,30,31][month];
+                    if(isLeapYear(year)&&month===1){
+                        lastDay=29;
+                    }
+                    return [lastDay];
+                }else{
+                    throw myError('unexpected a value of a yesterday selector.'+val);
+                }
+                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);//}}}
             }else if(key==='yesterday'){//{{{
                 tmp_res=all_days();
-                if(val==='public-holiday'||val==='祝日'){
-                    var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
-                    for(var i=0,j=publicHolidays.length;i<j;i++) publicHolidays[i]=publicHolidays[i].date+1;//前日が祝日===今日は祝日の次の日
-                    tmp_res=_.intersection(tmp_res,publicHolidays);// 12/32日みたいな日があるかもしれないからこういう処理
+                if(meansPublicHoliday(val)){
+                    tmp_res=_.intersection(tmp_res,_.map(execSelector('is:'+val,year,month),function(n){return n+1;}));
+                    // 12/32日みたいな日があるかもしれないからこういう処理
                     GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
                 }else if(key==='day'||key==='date'){
-                    //この辺は代用できる気がするしいらないとおもう。一応つけるけど
+                    //この辺は代用できる気がするし、いらないとおもう。一応つけるけど
                     tmp_res=_.intersection(all_days(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
-                }//}}}
+                }
+                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
+                //}}}
             }else if(key==='range'){//{{{
                 if(val.slice(0,2)==='..'){//{{{
                     //..20xx/xx/xxという形式、つまりtoのみ指定
@@ -672,7 +701,7 @@ angular.module(appName)
                 }//}}}
             }else if(key==='year'){//{{{
                 if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
-                    if(year%400===0||year%4===0&&year%100!==0){
+                    if(isLeapYear(year)){
                         tmp_res=all_days();
                     }else{
                         tmp_res=[];
@@ -683,6 +712,7 @@ angular.module(appName)
             }else{
                 throw myError('undefined key "'+key+'".');
             }
+            while(last(tmp_res)===OVER_MONTH) tmp_res.pop();//来月分を排除
             if(key==='day'){
                 //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
                 GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
@@ -787,7 +817,8 @@ angular.module(appName)
     }//}}}
     return {
         eventCalendar:eventCalendar,
-        splitSelector:splitSelector
+        splitSelector:splitSelector,
+        execSelectors:execSelectors
     };
 }])//}}}
 .run(['calF','$timeout',function(calF,$timeout){//{{{
