@@ -278,17 +278,17 @@ angular.module(appName)
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;
     var beforeGroups='';//非表示表示切り替えに対応するため
-    var yearInEC=-1,monthInEC=-1;
+    var yearOfEC=-1,monthOfEC=-1;//ECMemoの年と月
     function eventCalendar(date){//{{{
         var events=[];
         var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         var groups=_.difference(user.following,user.hiddenGroup);
-        if(calF.year!==yearInEC||calF.month!==monthInEC){
-            yearInEC=calF.year;
-            monthInEC=calF.month;
+        if(calF.year!==yearOfEC||calF.month!==monthOfEC){
+            yearOfEC=calF.year;
+            monthOfEC=calF.month;
             ECMemo=[];
         }else{
-            if(groups.join(',')!==beforeGroups||_.any(groups,function(item){return item.updated===true;})||user.updated){
+            if(groups.join(',')!==beforeGroups||user.updated||_.any(groups,function(item){return item.updated===true;})){
                 //どれか1つでもupdateされたものがあったらメモを使用しない
                 ECMemo=[];
                 beforeGroups=groups.join(',');
@@ -304,12 +304,16 @@ angular.module(appName)
             //privateがhiddenに設定されていない
             events[events.length]=getEvents('private',calF.year,calF.month);
         }
+        //events=[{year,month,date,name,id,group,type}, ..];
         for(var i=0,i2=events.length;i<i2;i++){
             for(var j=0,j2=events[i].length;j<j2;j++){
-                if(!eventCalendar[events[i][j].date]){
-                    eventCalendar[events[i][j].date]=[];
+                var d=events[i][j].date;
+                if(!eventCalendar[d]){
+                    eventCalendar[d]=[];
                 }
-                eventCalendar[events[i][j].date][eventCalendar[events[i][j].date].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
+                //eventsをeventCalendarへ変換
+                //eventCalendar=[['id:group:type', ...], ...];
+                eventCalendar[d][eventCalendar[d].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
             }
         }
         ECMemo=_.clone(eventCalendar);
@@ -395,6 +399,8 @@ angular.module(appName)
     function execSelectors(selectors,year,month,eventListRes){//{{{
         //セレクタを適応させて返す
         //year,monthはexecSelectorをメモ化するため
+        //eventListResはnotで使用する配列。使用方法は、eventListResに入っているイベントに指定した名前と同じ名前が入っているところを除くという方法。つまり、not:name='燃えるごみの日'のようなときに使う。
+        eventListRes=eventListRes||[];
         var stack=[];
         var ALL_DAYS=_.flatten(calF.calendar(year,month));
         _.each(selectors,function(nowSelector){//{{{
@@ -417,7 +423,7 @@ angular.module(appName)
                 return _.clone(ALL_DAYS);
             };
             var cal=calF.calendar(year,month);
-            var day={
+            var dayDic={
                 'sunday':0,'sun':0,'日曜日':0,
                 'monday':1,'mon':1,'月曜日':1,
                 'tuesday':2,'tue':2,'火曜日':2,
@@ -427,18 +433,18 @@ angular.module(appName)
                 'saturday':6,'sat':6,'土曜日':6
             };
             var monthDic={
-                'January':0,'Jan':0,'睦月':0,
-                'February':1,'Feb':1,'如月':1,
-                'March':2,'Mar':2,'弥生':2,
-                'April':3,'Apr':3,'卯月':3,
-                'May':4,'皐月':4,
-                'June':5,'Jun':5,'水無月':5,
-                'July':6,'Jul':6,'文月':6,
-                'August':7,'Aug':7,'葉月':7,
-                'September':8,'Sep':8, '長月':8,
-                'October':9,'Oct':9,'神無月':9,
-                'November':10,'Nov':10,'霜月':10,
-                'December':11,'Dec':11,'師走':11
+                'january':0,'jan':0,'睦月':0,
+                'february':1,'feb':1,'如月':1,
+                'march':2,'mar':2,'弥生':2,
+                'april':3,'apr':3,'卯月':3,
+                'may':4,'皐月':4,
+                'june':5,'jun':5,'水無月':5,
+                'july':6,'jul':6,'文月':6,
+                'august':7,'aug':7,'葉月':7,
+                'september':8,'sep':8, '長月':8,
+                'october':9,'oct':9,'神無月':9,
+                'november':10,'nov':10,'霜月':10,
+                'december':11,'dec':11,'師走':11
             };
             //セレクタを実行する
             //注意:nowSelectorはnowSelector[0]が代入されている。この関数内ではnowSelector[0]しか使用されていなかったからだ。変更がある場合注意せよ
@@ -640,23 +646,23 @@ angular.module(appName)
             }else if(key==='date'){//{{{
                 tmp_res[tmp_res.length]=toInt(val);//}}}
             }else if(key==='month'){//{{{
-                if(!monthDic[val] && toInt(val)!=month+1 || monthDic[val] && monthDic[val]!=month)
+                if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!=month)
                     tmp_res=[];//違う月の時
-                else if(!monthDic[val] && toInt(val)==month+1 || monthDic[val] && monthDic[val]==month)
+                else
                     tmp_res=all_days();//同じ月の時//}}}
             }else if(key==='day'){//{{{
                 if(val.match(/^\d/)){
                     //valが1st-wedといった具合になっている
                     val=val.match(/^(\d+)(?:st|nd|rd|th)-?(.+)$/);
                     var ordinalNum=toInt(val[1]);
-                    var valDay=day[val[2]];
+                    var valDay=dayDic[val[2].toLowerCase()];
                     var dayCount=0;
                     var index=0;
                     while(cal[index][valDay]==='') index++;//今月に入るまでループ回す
                     index=index-1+ordinalNum;//今月の初日をindexが指しているから、-1してordinalNum足せば対象の日となる
                     tmp_res[tmp_res.length]=cal[index][valDay];
                 }else{
-                    var valDay=day[val];
+                    var valDay=dayDic[val.toLowerCase()];
                     var dayCount=0;
                     _.some(cal,function(week){
                         if(week[valDay]!==''){
