@@ -113,6 +113,7 @@ module.exports = function(grunt) {
          }
     });
     grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
+    grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
 };

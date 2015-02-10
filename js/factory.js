@@ -521,11 +521,13 @@ angular.module(appName)
                 GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);//}}}
             }else if(key==='yesterday'){//{{{
                 tmp_res=all_days();
+                var key2=val.split(':')[0];
+                var val2=val.split(':').slice(1).join(':');
                 if(meansPublicHoliday(val)){
                     tmp_res=_.intersection(tmp_res,_.map(execSelector('is:'+val,year,month),function(n){return n+1;}));
                     // 12/32日みたいな日があるかもしれないからこういう処理
                     GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
-                }else if(key==='day'||key==='date'){
+                }else if(key2==='day'||key2==='date'){
                     //この辺は代用できる気がするし、いらないとおもう。一応つけるけど
                     tmp_res=_.intersection(all_days(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
                 }else{
