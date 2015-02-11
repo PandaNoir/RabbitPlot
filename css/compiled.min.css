@@ -1,0 +1,450 @@
+/*** uncss> filename: css/style.min.css ***/
+
+md-whiteframe {
+  background: #fff;
+  margin: 20px;
+  padding: 20px;
+}
+
+.ng-cloak,
+[ng-cloak],
+[ng:cloak] {
+  display: none!important;
+}
+
+.main,
+body,
+html {
+  background: #fcfcfc;
+  font-family: monospace;
+  margin: 0;
+}
+
+.main {
+  height: 600px;
+}
+
+body {
+  position: relative;
+  height: calc(100% - 20px);
+}
+
+.calendar {
+  width: 315px;
+  padding: 10px;
+  margin: 0 auto;
+  border-radius: 3px;
+  -webkit-user-select: none;
+  user-select: none;
+  font-size: 0;
+}
+
+.calendar .cal-row {
+  width: 315px;
+}
+
+.calendar .date {
+  cursor: pointer;
+  width: 43px;
+  height: 30px;
+  position: relative;
+  padding: 5px 0;
+  vertical-align: top;
+  display: inline-block;
+  text-align: center;
+  border: 1px solid transparent;
+  font-size: initial;
+}
+
+.calendar-header {
+  text-align: center;
+  font-size: initial;
+}
+
+.calendar-header .left {
+  float: left;
+  width: 40px;
+}
+
+.calendar-header .right {
+  float: right;
+  width: 40px;
+}
+
+ul {
+  list-style: none;
+}
+
+#setting {
+  padding-top: 30px;
+}
+
+#event-list {
+  display: inline-block;
+  vertical-align: top;
+  width: 500px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  background: #f3f3f3;
+  box-shadow: 0 0 10px #ccc;
+  border-radius: 3px;
+  position: absolute;
+}
+
+.error-message {
+  color: #c00;
+}
+
+.following-list,
+.search-list {
+  padding: 0;
+}
+
+.following:first-child {
+  border-top: 1px solid #999;
+}
+
+.cf:after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+input:disabled {
+  color: #999;
+}
+
+@media screen and (max-device-width:480px) {
+  #event-list,
+  #setting {
+    display: block;
+    position: initial;
+    bottom: initial;
+    left: initial;
+    right: initial;
+    width: 300px;
+    margin: 20px auto;
+  }
+
+  .main,
+  body,
+  html {
+    height: auto;
+  }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+    -moz-tap-highlight-color: transparent;
+    tap-highlight-color: transparent;
+  }
+
+  .following-list,
+  .search-list {
+    overflow-y: auto;
+    height: auto;
+  }
+}
+
+/*** uncss> filename: lib/css/angular-material.min.css ***/
+
+/*!
+ * Angular Material Design
+ * https://github.com/angular/material
+ * @license MIT
+ * v0.7.1
+ */
+
+*,
+:after,
+:before {
+  box-sizing: border-box;
+}
+
+:focus {
+  outline: 0;
+}
+
+body,
+html {
+  height: 100%;
+  color: rgba(0,0,0,.87);
+  background: #fff;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html,
+input,
+select {
+  font-family: RobotoDraft,Roboto,'Helvetica Neue',sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+}
+
+a {
+  background: 0 0;
+  outline: 0;
+}
+
+input,
+select {
+  margin: 0;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+[layout] {
+  box-sizing: border-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+[layout=column] {
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+[layout=row] {
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+@-moz-document url-prefix()  {
+  [layout-fill] {
+    margin: 0;
+    width: 100%;
+    min-height: auto;
+    height: inherit;
+  }
+}
+
+[flex] {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+[layout-align="center center"] {
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+[layout-align="center center"] {
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+@media (max-width:600px) {
+  [layout-sm] {
+    box-sizing: border-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  [layout-sm=column] {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+md-content {
+  display: block;
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+md-content.md-padding {
+  padding: 8px;
+}
+
+@media (min-width:600px) {
+  md-content.md-padding {
+    padding: 16px;
+  }
+}
+
+md-icon {
+  margin: 5px auto auto;
+  padding: 0;
+  background-repeat: no-repeat no-repeat;
+  pointer-events: none;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  z-index: 0;
+}
+
+md-input-container {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  padding: 2px 2px 26px;
+}
+
+md-input-container input[type=text],
+md-input-container input[type=number] {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+md-input-container label {
+  -webkit-order: 1;
+  -ms-flex-order: 1;
+  order: 1;
+  pointer-events: none;
+  -webkit-font-smoothing: antialiased;
+  padding-left: 2px;
+  z-index: 1;
+  -webkit-transform: translate3d(0,24px,0) scale(1);
+  transform: translate3d(0,24px,0) scale(1);
+  -webkit-transform-origin: left top;
+  transform-origin: left top;
+  transition: -webkit-transform cubic-bezier(.25,.8,.25,1) .25s;
+  transition: transform cubic-bezier(.25,.8,.25,1) .25s;
+}
+
+md-list {
+  padding: 8px 0;
+}
+
+md-item-content {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  box-sizing: border-box;
+  position: relative;
+  padding: 0;
+}
+
+.md-tile-content {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 16px;
+  text-overflow: ellipsis;
+}
+
+md-radio-button {
+  display: block;
+  margin: 15px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+md-radio-group {
+  border: 1px dotted transparent;
+  display: block;
+  outline: 0;
+}
+
+md-sidenav {
+  position: absolute;
+  width: 304px;
+  min-width: 304px;
+  bottom: 0;
+  z-index: 60;
+  background-color: #fff;
+  overflow: auto;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.md-sidenav-left,
+md-sidenav {
+  left: 0;
+  top: 0;
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+}
+
+@media (max-width:360px) {
+  md-sidenav {
+    width: 85%;
+  }
+}
+
+md-toolbar {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  font-size: 1.3em;
+  min-height: 64px;
+  width: 100%;
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+
+.md-toolbar-tools {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  width: 100%;
+  height: 64px;
+  max-height: 64px;
+  font-size: inherit;
+  font-weight: 400;
+  padding: 0 16px;
+  margin: 0;
+}
+
+.md-toolbar-tools>* {
+  font-size: inherit;
+}
+
+.md-toolbar-tools a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-whiteframe-z2 {
+  box-shadow: 0 8px 17px rgba(0,0,0,.2);
+}
+
+.md-whiteframe-z4 {
+  box-shadow: 0 16px 28px 0 rgba(0,0,0,.22);
+}

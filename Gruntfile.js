@@ -110,10 +110,40 @@ module.exports = function(grunt) {
                      ext: '.min.css'
                  }]
              }
+         },
+         uncss: {
+             dist: {
+                 files: [
+                     { src: 'index.html', dest: 'css/compiled.min.css'}
+                 ]
+             },
+             options: {
+                 compress:true
+             }
+         },
+         bower: {
+             install: {
+                 options: {
+                     targetDir: './lib',
+                     layout : function (type, component) {
+                         if (type === 'css') {
+                             return 'css';
+                         } else {
+                             return 'js';
+                         }
+                     },
+                     install: true,
+                     verbose: false,
+                     cleanTargetDir: false,
+                     cleanBowerDir: false,
+                     bowerOptions: {}
+                 }
+             }
          }
     });
-    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
+    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','uncss','cssmin']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);
+    grunt.registerTask('css', ['uncss']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
 };
