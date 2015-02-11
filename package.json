@@ -2,11 +2,7 @@
   "name": "RabbitPlot",
   "version": "1.0.0",
   "description": "Rabbit Plotとは最新型カレンダーアプリです。   予定をグループをフォローすることで管理します。   例えばxx学校をフォローすれば、xx学校の体育祭、文化祭などが自分のカレンダーにも表示されます。   つまり、グループをフォローする以外に特別なことをしなくても予定が管理できます。   グループの予定が変更されれば自分のカレンダーにも自動で反映されます。",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "PandaNoir",
-  "license": "ISC",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-closure-compiler": "0.0.21",
@@ -20,7 +16,6 @@
     "karma-jasmine": "^0.1.5",
     "load-grunt-tasks": "^3.1.0"
   },
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/PandaNoir/RabbitPlot.git"
