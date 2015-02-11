@@ -129,7 +129,12 @@
         <ul>
           <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
           <li ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
-            <span ng-dblclick="mode.switchToEdit(event)">{{event|format}}</span><span class="right"><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button></span>
+            <span ng-dblclick="mode.switchToEdit(event)">{{event|format}}</span>
+            <span class="right">
+              <md-button ng-click="mode.switchToEdit(event)">編集</md-button>
+              <md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button>
+              <md-button ng-click="deleteEvent(event)" ng-if="user.hasPermission(event.split(':')[1])">削除</md-button>
+            </span>
           </li>
         </ul>
 

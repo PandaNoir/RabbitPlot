@@ -2,16 +2,12 @@ angular.module(appName)
 .factory('_',function(){//{{{
     return _;
 })//}}}
-.factory('user',['_','$rootScope',function(_,$rootScope){//{{{
+.factory('user',['_','$rootScope','$mdDialog','group',function(_,$rootScope,$mdDialog,group){//{{{
     if(localStorage&&angular.fromJson(localStorage.getItem('private'))){
         var user=angular.fromJson(localStorage.getItem('private'));
-        user.isHiddenGroup=function(id){
-            return _.indexOf(this.hiddenGroup,id,true)!==-1;
-        };
-        user.save=function(){
-            $rootScope.$broadcast('updated');
-            localStorage.setItem('private',angular.toJson(this));
-        };
+        if(!user.id){
+            user.id=uuid();
+        }
         user.updated=true;
     }else{
         var user={
@@ -22,15 +18,20 @@ angular.module(appName)
                 name:'プライベート'
             },
             hiddenGroup:[],
-            isHiddenGroup:function(id){
-                return _.indexOf(this.hiddenGroup,id,true)!==-1;
-            },
-            save:function(){
-                $rootScope.$broadcast('updated');
-                localStorage.setItem('private',angular.toJson(this));
-            }
+            id:uuid()
         };
+        $mdDialog.show($mdDialog.alert().title('[重要]ユーザー情報を生成しました。').content('これはあなたのパソコンにのみ保存されるもので、データベースに登録されたり、どこかへ送られたりしません。ただし、なにかの拍子にデータが消去されてidが変更されてしまうとグループの権限が消えてしまいます。だから、次の文字列を保存しておいてください。'+angular.toJson(user)).ok('ok'));
     }
+    user.isHiddenGroup=function(id){
+        return _.indexOf(this.hiddenGroup,id,true)!==-1;
+    };
+    user.save=function(){
+        $rootScope.$broadcast('updated');
+        localStorage.setItem('private',angular.toJson(this));
+    };
+    user.hasPermission=function(groupID){
+        return groupID==='private'||_.indexOf(group[groupID].permission,user.id)!==-1;
+    };
     user.save();
     return user;
 }])//}}}
