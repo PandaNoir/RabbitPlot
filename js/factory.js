@@ -404,7 +404,7 @@ angular.module(appName)
         //セレクタを適応させて返す
         //year,monthはexecSelectorをメモ化するため
         //eventListResはnotで使用する配列。使用方法は、eventListResに入っているイベントに指定した名前と同じ名前が入っているところを除くという方法。つまり、not:name='燃えるごみの日'のようなときに使う。
-        selectors=splitSelector(selectors);//文字列として渡されたselectorsを分解する
+        selectors=shuntingYard(splitSelector(selectors));//文字列として渡されたselectorsを分解する
         eventListRes=eventListRes||[];
         var stack=[];
         _.each(selectors,function(nowSelector){//{{{
@@ -779,7 +779,7 @@ angular.module(appName)
         if(selector.substring(start)!==''){
             resPush([selector.substring(start),OTHERS]);
         }
-        return SSMemo[selector]=shuntingYard(res);
+        return SSMemo[selector]=res;
     }//}}}
     function shuntingYard(formula){//{{{
         var stack=[];
@@ -824,8 +824,7 @@ angular.module(appName)
     return {
         eventCalendar:eventCalendar,
         splitSelector:splitSelector,
-        execSelectors:execSelectors,//テスト用
-        splitSelector:splitSelector//テスト用
+        execSelectors:execSelectors//テスト用
     };
 }])//}}}
 .run(['calF','$timeout',function(calF,$timeout){//{{{
