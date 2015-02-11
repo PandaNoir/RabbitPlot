@@ -16,102 +16,83 @@ angular.module(appName)
     };
     $scope.ruleGuide={
         day:[
-            [':sun','日曜日'],
-            [':mon','月曜日'],
-            [':tue','火曜日'],
-            [':wed','水曜日'],
-            [':thu','木曜日'],
-            [':fri','金曜日'],
-            [':sat','土曜日']
+            [':sun','日曜日'],[':mon','月曜日'],[':tue','火曜日'],[':wed','水曜日'],[':thu','木曜日'],[':fri','金曜日'],[':sat','土曜日']
         ],
         month:[
-            [':1','1月'],
-            [':2','2月'],
-            [':3','3月'],
-            [':4','4月'],
-            [':5','5月'],
-            [':6','6月'],
-            [':7','7月'],
-            [':8','8月'],
-            [':9','9月'],
-            [':10','10月'],
-            [':11','11月'],
-            [':12','12月']
+            [':1','1月'],[':2','2月'],[':3','3月'],[':4','4月'],[':5','5月'],[':6','6月'],
+            [':7','7月'],[':8','8月'],[':9','9月'],[':10','10月'],[':11','11月'],[':12','12月']
         ],
         selector:[
-            ['month','何月'],
-            ['date','何日'],
-            ['day','何曜日'],
-            ['not','除く'],
-            ['range','範囲']
+            ['month','何月'],['date','何日'],['day','何曜日'],['not','除く'],['range','範囲']
         ]
     };
     $scope.addEvent=function(){//{{{
-        //イベントの追加
-        var type=$scope.eventForm.type;
-        if(eventForm.name===''||eventForm.selectedGroup===undefined||eventForm.selectedGroup===null){
-            return;
-        }
-        var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
-        if(testDate.getFullYear()!==toInt(eventForm.year)||testDate.getMonth()!==toInt(eventForm.month)-1||testDate.getDate()!==toInt(eventForm.date)){
-            //正常範囲に入っていない
-            return;
-        }
-
-        if(type=='event'){
-            var target={
-                year:eventForm.year,
-                month:eventForm.month-1,//!!important
-                date:eventForm.date,
-                name:eventForm.name
-            };
-        }else if(type=='habit'){
-            var target={
-                selector:eventForm.rule,
-                name:eventForm.name
-            };
-        }
-
+        var type=eventForm.type;
         if(eventForm.selectedGroup==='private'){
-            $scope.user['private'][type][$scope.user['private'][type].length]=target;
-            $scope.user.updated=true;
+            saveEvent($scope.user['private'][type].length, eventForm.selectedGroup);
         }else if(eventForm.selectedGroup!==null){
-            $scope.group[eventForm.selectedGroup][type][$scope.group[eventForm.selectedGroup][type].length]=target;
-            $scope.group[eventForm.selectedGroup].updated=true;
+            saveEvent($scope.group[eventForm.selectedGroup][type].length, eventForm.selectedGroup);
         }
-
-        $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
-
-        mode.editsEventForm=false;
-        save(eventForm.selectedGroup);
     };//}}}
-    $scope.saveEvent=function(){//{{{
+    $scope.editEvent=function(){//{{{
+        console.log(eventForm);
+        saveEvent(eventForm.id,eventForm.selectedGroup);
+    };//}}}
+    function saveEvent(eventID,groupID){//{{{
         //編集したイベントを保存する
         var type=eventForm.type;
-        if(eventForm.year===null||eventForm.month===null||eventForm.date===null||eventForm.name===''){
+        var isInvalid= eventForm.name==='' ||//nameは必須
+            type==='event' && (eventForm.year===null || eventForm.month===null || eventForm.date===null) ||//eventの時はyear,month,dateすべて必須
+            type==='habit' && (eventForm.rule==='') ||//habitの時はrule必須
+            eventForm.selectedGroup===undefined || eventForm.selectedGroup===null;//selectedGroupも必須
+        if(isInvalid){
+            $mdToast.show($mdToast.simple().content('入力が不適切です').position('top right').hideDelay(3000));
             //selectedGroupは変更できない仕様だから判定いらない
             return;
         }
-        var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
-        if(testDate.getFullYear()!==toInt(eventForm.year)||testDate.getMonth()!==toInt(eventForm.month)-1||testDate.getDate()!==toInt(eventForm.date)){
-            //正常範囲に入っていない
-            return;
+        if(type==='event'){
+            var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
+            isInvalid= testDate.getFullYear()!==toInt(eventForm.year)||
+                testDate.getMonth()!==toInt(eventForm.month)-1||
+                testDate.getDate()!==toInt(eventForm.date);
+            //2014/12/32のような時の排除と、null/undefined/'hoge'のようなでたらめな日付を排除するためにこうなっている
+            if(isInvalid){
+                //正常範囲に入っていない
+                return;
+            }
         }
-        if(eventForm.selectedGroup==='private'){
-            var group=$scope.user['private'][type][eventForm.id];
-        }else if(eventForm.selectedGroup!==null){
-            var group=$scope.group[eventForm.selectedGroup][type][eventForm.id];
-            $scope.group[eventForm.selectedGroup].updated=true;
+        if(groupID==='private'){
+            if(!user['private'][type][eventID]){
+                user['private'][type][eventID]={};//eventIDがない==新たに追加の時対策
+            }
+            if(type==='event'){
+                user['private'][type][eventID].year=eventForm.year;
+                user['private'][type][eventID].month=eventForm.month-1;
+                user['private'][type][eventID].date=eventForm.date;
+                user['private'][type][eventID].name=eventForm.name;
+                user.updated=true;
+            }else if(type==='habit'){
+                user['private'][type][eventID].selector=eventForm.rule;
+                user['private'][type][eventID].name=eventForm.name;
+                user.updated=true;
+            }
+        }else{
+            if(!group[eventForm.selectedGroup][type][eventID]){
+                group[eventForm.selectedGroup][type][eventID]={};
+            }
+            if(type==='event'){
+                group[eventForm.selectedGroup][type][eventID].year=eventForm.year;
+                group[eventForm.selectedGroup][type][eventID].month=eventForm.month-1;
+                group[eventForm.selectedGroup][type][eventID].date=eventForm.date;
+                group[eventForm.selectedGroup][type][eventID].name=eventForm.name;
+                group[eventForm.selectedGroup].updated=true;
+            }else if(type==='habit'){
+                group[eventForm.selectedGroup][type][eventID].selector=eventForm.rule;
+                group[eventForm.selectedGroup][type][eventID].name=eventForm.name;
+                group[eventForm.selectedGroup].updated=true;
+            }
         }
-        if(type=='event'){
-            group.year=eventForm.year;
-            group.month=eventForm.month-1;
-            group.date=eventForm.date;
-            group.name=eventForm.name;
-        }else if(type=='habit'){
-            group.selector=eventForm.rule;
-            group.name=eventForm.name;
-        }
+        $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
         mode.editsEventForm=false;
         save(eventForm.selectedGroup);
     };//}}}

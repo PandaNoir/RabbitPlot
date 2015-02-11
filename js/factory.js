@@ -192,16 +192,19 @@ angular.module(appName)
             //event= eventのid:groupのid:eventのtype(event or habit)
             var args=Array.prototype.slice.call(arguments);
             if(args.length===1||args.length===2&&args[1]===true){//{{{
-                //switchToEdit(event)の場合
-                var event=args[0];
+                //switchToEdit(event [,isEdit])の場合
+                var event=args[0].split(':');// event=[eventID,groupID,eventType];
                 eventForm.mode=args.length===1?'edit':'add';
-                event=event.split(':');
 
-                _.extend(eventForm,{type: event[2], id: args.length===1? event[0]: 0});
+                _.extend(eventForm,{
+                    type: event[2],
+                    id: args.length===1? event[0]: 0
+                });
+
                 if(event[1]!=='private'){
                     eventForm.selectedGroup=toInt(event[1]);
                 }else{
-                    eventForm.selectedGroup=event[1];
+                    eventForm.selectedGroup='private';//event[1]==='private'
                 }
                 if(event[2]==='event'){
                     _.map(['year','month','date','name'],function(key){
@@ -400,6 +403,9 @@ angular.module(appName)
         //セレクタを適応させて返す
         //year,monthはexecSelectorをメモ化するため
         //eventListResはnotで使用する配列。使用方法は、eventListResに入っているイベントに指定した名前と同じ名前が入っているところを除くという方法。つまり、not:name='燃えるごみの日'のようなときに使う。
+        if(selectors===''){
+            throw myError('cannot exec empty selector.');
+        }
         selectors=shuntingYard(splitSelector(selectors));//文字列として渡されたselectorsを分解する
         eventListRes=eventListRes||[];
         var stack=[];

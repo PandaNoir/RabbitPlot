@@ -108,7 +108,9 @@
           <md-button ng-click="nextYear()" class="right">&gt;&gt;</md-button>
           <md-button ng-click="nextMonth()" class="right">&gt;</md-button>
         </div>
-        <div class="cal-row"><span class="date" ng-repeat="item in ::dates">{{item}}</span></div>
+        <div class="cal-row">
+          <span class="date" ng-repeat="item in ::dates">{{item}}</span>
+        </div>
         <div class="cal-row" ng-repeat="row in calF.calendar(calF.year,calF.month)">
           <span app-date="0" app-row="row"></span>
           <span app-date="1" app-row="row"></span>
@@ -138,7 +140,7 @@
         <form name="eventEditor" class="md-padding">
           {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
-          <md-radio-group ng-model="eventForm.type">
+          <md-radio-group ng-model="eventForm.type" ng-if="eventForm.mode==='add'">
           <md-radio-button value="event">event</md-radio-button>
           <md-radio-button  value="habit">habit</md-radio-button>
           </md-radio-group>
@@ -178,7 +180,7 @@
           <span class="error-message" ng-show="eventEditor.name.$error.required">必須</span><br>
           </md-input-container>
           <md-button class="md-raised md-primary" ng-click="addEvent()" ng-show="eventForm.mode==='add'" ng-disabled="eventEditor.$error.required">イベントを追加</md-button>
-          <md-button class="md-raised md-primary" ng-click="saveEvent()" ng-show="eventForm.mode==='edit'">保存</md-button>
+          <md-button class="md-raised md-primary" ng-click="editEvent()" ng-show="eventForm.mode==='edit'">保存</md-button>
           <md-button class="md-raised md-warn" ng-click="cancel()">キャンセル</md-button>
           <hr>
           <div ng-if="ruleWriterFase==='selector'"><!--{{{-->
