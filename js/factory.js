@@ -1,7 +1,3 @@
-function isLeapYear(year){
-    return year%400===0||year%4===0&&year%100!==0;
-};
-var OVER_MONTH=64;//calF.calendar()で来月の範囲に入った時に代入される値
 angular.module(appName)
 .factory('_',function(){//{{{
     return _;
