@@ -1,6 +1,7 @@
 module.exports = function(grunt) {
     var pkg = grunt.file.readJSON('package.json');
     var files=[
+        './js/global.js',
         './js/mainCtrl.js',
         './js/calendarCtrl.js',
         './js/eventEditorCtrl.js',
@@ -36,10 +37,22 @@ module.exports = function(grunt) {
                 },
                 files:[
                     {
-                    expand: true,
-                    src: mainJS,
-                    ext: '.js.gz'
-                }
+                        expand: true,
+                        src: [mainJS,'./lib/js/*'],
+                        ext: '.js.gz'
+                    }
+                ]
+            },
+            css: {
+                options: {
+                    mode: 'gzip'
+                },
+                files:[
+                    {
+                        expand: true,
+                        src: ['css/*','./lib/css/*'],
+                        ext: '.css.gz'
+                    }
                 ]
             }
         },
@@ -111,16 +124,6 @@ module.exports = function(grunt) {
                  }]
              }
          },
-         uncss: {
-             dist: {
-                 files: [
-                     { src: 'index.html', dest: 'css/compiled.min.css'}
-                 ]
-             },
-             options: {
-                 compress:true
-             }
-         },
          bower: {
              install: {
                  options: {
@@ -141,9 +144,8 @@ module.exports = function(grunt) {
              }
          }
     });
-    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','uncss','cssmin']);
+    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);
-    grunt.registerTask('css', ['uncss']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
 };

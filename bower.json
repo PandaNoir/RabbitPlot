@@ -24,26 +24,33 @@
   },
   "exportsOverride": {
     "angular": {
-        "js": "**/angular.min.js"
+        "js": "**/angular.min.js",
+        "js": "**/angular.min.js.map"
     },
     "angular-animate": {
-        "js": "**/angular-animate.min.js"
+        "js": "**/angular-animate.min.js",
+        "js": "**/angular-animate.min.js.map"
     },
     "angular-aria": {
-        "js": "**/angular-aria.min.js"
+        "js": "**/angular-aria.min.js",
+        "js": "**/angular-aria.min.js.map"
     },
     "angular-material": {
       "js": "**/angular-material.min.js",
+      "js": "**/angular-material.min.js.map",
       "css": "**/angular-material.min.css"
     },
     "angular-messages": {
-        "js": "**/angular-messages.min.js"
+        "js": "**/angular-messages.min.js",
+        "js": "**/angular-messages.min.js.map"
     },
     "angular-touch": {
-        "js": "**/angular-touch.min.js"
+        "js": "**/angular-touch.min.js",
+        "js": "**/angular-touch.min.js.map"
     },
     "lodash": {
-        "js": "**/lodash.min.js"
+        "js": "**/lodash.min.js",
+        "js": "**/lodash.min.js.map"
     }
   },
   "homepage": "https://github.com/PandaNoir/RabbitPlot"
