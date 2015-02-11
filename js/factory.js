@@ -683,8 +683,9 @@ angular.module(appName)
                     tmp_res=all_days();//同じ月の時//}}}
             }else if(key==='day'){//{{{
                 if(val.match(/^\d/)){
+                    // day:3rd-wed
                     //valが1st-wedといった具合になっている
-                    val=val.match(/^(\d+)(?:st|nd|rd|th)-?(.+)$/);
+                    val=val.match(/^(\d+)(?:st|[nr]d|th)-?(.+)$/i);
                     var ordinalNum=toInt(val[1]);
                     var valDay=dayDic[val[2].toLowerCase()];
                     var dayCount=0;
@@ -693,6 +694,7 @@ angular.module(appName)
                     index=index-1+ordinalNum;//今月の初日をindexが指しているから、-1してordinalNum足せば対象の日となる
                     tmp_res[tmp_res.length]=cal[index][valDay];
                 }else{
+                    // day:mon,tue,...
                     var valDay=dayDic[val.toLowerCase()];
                     var dayCount=0;
                     _.some(cal,function(week){
@@ -703,12 +705,14 @@ angular.module(appName)
                 }//}}}
             }else if(key==='year'){//{{{
                 if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
+                    //year: leap-year
                     if(isLeapYear(year)){
                         tmp_res=all_days();
                     }else{
                         tmp_res=[];
                     }
                 }else if(toInt(val)!==year){
+                    // year:Int
                     tmp_res=[];//違う年
                 }else tmp_res=all_days();//}}}
             }else{
@@ -820,7 +824,8 @@ angular.module(appName)
     return {
         eventCalendar:eventCalendar,
         splitSelector:splitSelector,
-        execSelectors:execSelectors
+        execSelectors:execSelectors,//テスト用
+        splitSelector:splitSelector//テスト用
     };
 }])//}}}
 .run(['calF','$timeout',function(calF,$timeout){//{{{
