@@ -37,10 +37,10 @@ module.exports = function(grunt) {
                 },
                 files:[
                     {
-                        expand: true,
-                        src: [mainJS,'./lib/js/*'],
-                        ext: '.js.gz'
-                    }
+                    expand: true,
+                    src: [mainJS,'./lib/js/*'],
+                    ext: '.js.gz'
+                }
                 ]
             },
             css: {
@@ -49,10 +49,10 @@ module.exports = function(grunt) {
                 },
                 files:[
                     {
-                        expand: true,
-                        src: ['css/*','./lib/css/*'],
-                        ext: '.css.gz'
-                    }
+                    expand: true,
+                    src: ['css/*','./lib/css/*'],
+                    ext: '.css.gz'
+                }
                 ]
             }
         },
@@ -88,6 +88,10 @@ module.exports = function(grunt) {
                     from: '<tmpl scriptlist></tmpl>',
                     to: scriptList
                 },{
+                    from: '<tmpl css></tmpl>',
+                    to:'<link rel="stylesheet" href="css/style.css">'
+                },{
+
                     from: '<div flex class="">Rabbit Plot</div>',
                     to: '<div flex class="">Rabbit Plot ver.dev</div>'
                 }]
@@ -99,6 +103,9 @@ module.exports = function(grunt) {
                 replacements: [{
                     from: '<tmpl scriptlist></tmpl>',
                     to: '<script src="'+mainJS+'" defer></script>'
+                },{
+                    from: '<tmpl css></tmpl>',
+                    to:'<link rel="stylesheet" href="css/style.min.css">'
                 }]
             }
         },
@@ -112,37 +119,37 @@ module.exports = function(grunt) {
                     'index.html': 'index.html'     // 'destination': 'source'
                 }
             }
-         },
-         cssmin: {
-             target: {
-                 files: [{
-                     expand: true,
-                     cwd: 'css',
-                     src: ['*.css', '!*.min.css'],
-                     dest: 'css',
-                     ext: '.min.css'
-                 }]
-             }
-         },
-         bower: {
-             install: {
-                 options: {
-                     targetDir: './lib',
-                     layout : function (type, component) {
-                         if (type === 'css') {
-                             return 'css';
-                         } else {
-                             return 'js';
-                         }
-                     },
-                     install: true,
-                     verbose: false,
-                     cleanTargetDir: false,
-                     cleanBowerDir: false,
-                     bowerOptions: {}
-                 }
-             }
-         }
+        },
+        cssmin: {
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: 'css',
+                    src: ['*.css', '!*.min.css'],
+                    dest: 'css',
+                    ext: '.min.css'
+                }]
+            }
+        },
+        bower: {
+            install: {
+                options: {
+                    targetDir: './lib',
+                    layout : function (type, component) {
+                        if (type === 'css') {
+                            return 'css';
+                        } else {
+                            return 'js';
+                        }
+                    },
+                    install: true,
+                    verbose: false,
+                    cleanTargetDir: false,
+                    cleanBowerDir: false,
+                    bowerOptions: {}
+                }
+            }
+        }
     });
     grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);

@@ -1,12 +1,20 @@
 /*chain case;*/
 
 md-whiteframe {
-  background: #fff;
-  margin: 20px;
-  padding: 20px; }
+    background: #fff;
+    margin: 20px;
+    padding: 20px;
+}
+
+.s24 {
+    width: 24px;
+    height: 24px;
+    color: #f00;
+}
 .ng-cloak, .x-ng-cloak{
   display: none !important;
 }
+
 [ng-cloak],[ng:cloak], [data-ng-cloak], [x-ng-cloak]{
   display: none !important;
 }
@@ -21,15 +29,6 @@ html,body,.main{
 body{
     position:relative;
     height:calc(100% - 20px);
-}
-.code{
-    display: inline-block;
-    height: 1em;
-    vertical-align: top;
-    background: #EEE;
-    border: 1px solid #CCC;
-    padding: 1px 7px;
-    margin:0 3px;
 }
 .calendar{/*{{{*/
     width: 315px;
@@ -111,15 +110,6 @@ ul{
     bottom: 30px;
     left: 50%;
 }
-#how-to-write {
-    top:0;
-    left:0;
-    font-size: 15px;
-    clear:both;
-    width:1000px;
-    width:calc(100% - 20px);
-    margin-bottom:30px;
-}
 .error-message{
     color:#c00;
 }
@@ -154,35 +144,6 @@ input:disabled {
 #event-editor [name='rules']{
     width:200px;
 }
-.dialog{/*{{{*/
-    position:fixed;
-    left:50%;
-    top:50%;
-    width:300px;
-    border:1px solid #ccc;
-    background:#fff;
-    opacity:0.9;
-    padding:30px;
-    margin-left:-180px;
-    margin-top:-30px;
-}
-.dialog.animate-show-hide.ng-hide-add.ng-hide-add-active,
-.dialog.animate-show-hide.ng-hide-remove {
-    opacity:0;
-    display:block!important;
-}
-.dialog.animate-show-hide.ng-hide-remove.ng-hide-remove-active,
-.dialog.animate-show-hide.ng-hide-add {
-    opacity:0.9;
-    display:block!important;
-}
-.dialog.animate-show-hide.ng-hide-add.ng-hide-add-active{
-    -webkit-transition:opacity 0.3s linear 0;
-    -moz-transition:opacity 0.3s linear 0;
-    -o-transition:opacity 0.3s linear 0;
-    transition:opacity 0.3s linear 0;
-}
-/*}}}*/
 @media screen and (max-device-width: 480px) {/*{{{*/
     #detail,#setting,#how-to-write,#event-list{
         display:block;
