@@ -5,7 +5,9 @@ md-whiteframe {
     margin: 20px;
     padding: 20px;
 }
-
+.event-item{
+    width:300px;
+}
 .s24 {
     width: 24px;
     height: 24px;

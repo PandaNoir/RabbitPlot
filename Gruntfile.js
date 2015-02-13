@@ -85,10 +85,10 @@ module.exports = function(grunt) {
                 src: ['templateIndex.html'],
                 dest: 'index.html',
                 replacements: [{
-                    from: '<tmpl scriptlist></tmpl>',
+                    from: '<!--scriptlist-->',
                     to: scriptList
                 },{
-                    from: '<tmpl css></tmpl>',
+                    from: '<!--css-->',
                     to:'<link rel="stylesheet" href="css/style.css">'
                 },{
 
@@ -101,10 +101,10 @@ module.exports = function(grunt) {
                 src: ['templateIndex.html'],
                 dest: 'index.html',
                 replacements: [{
-                    from: '<tmpl scriptlist></tmpl>',
+                    from: '<!--scriptlist-->',
                     to: '<script src="'+mainJS+'" defer></script>'
                 },{
-                    from: '<tmpl css></tmpl>',
+                    from: '<!--css-->',
                     to:'<link rel="stylesheet" href="css/style.min.css">'
                 }]
             }
@@ -151,7 +151,8 @@ module.exports = function(grunt) {
             }
         }
     });
-    grunt.registerTask('default', ['concat','closure-compiler:frontend','clean:raw','compress','replace:release','htmlmin:dist','cssmin']);
+    grunt.registerTask('compile',['concat','closure-compiler:frontend','clean:raw']);
+    grunt.registerTask('default', ['compile','compress','replace:release','htmlmin:dist','cssmin']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);

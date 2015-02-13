@@ -74,7 +74,7 @@ angular.module(appName)
         return res;
     }
     $scope.makeAGroup=function(){
-        groupForm.isEditMode=true;
+        mode.editsGroupForm=true;
         $mdSidenav('left').close();
     };
     $scope.search=function(){//{{{

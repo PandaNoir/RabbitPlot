@@ -14,8 +14,8 @@
     <script src="./lib/js/angular-touch.min.js" defer></script>
     <script src="./lib/js/angular-messages.min.js" defer></script>
     <script src="./lib/js/lodash.min.js" defer></script>
-    <tmpl scriptlist></tmpl>
-    <tmpl css></tmpl>
+    <!--scriptlist-->
+    <!--css-->
     <link rel="stylesheet" href="./lib/css/angular-material.min.css">
   </head>
   <body ng-controller="mainCtrl">
@@ -79,19 +79,13 @@
     <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
       <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
       <md-list>
+
       <md-item ng-repeat="item in habitList track by $index">
-      <md-item-content>
-      <div class="md-tile-content">
-        {{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':habit')">編集</md-button>
-      </div>
-      </md-item-content>
+      <md-item-content><div event-item app-event="$index+':'+eventListToEdit.id+':habit'"></div></md-item-content>
       </md-item>
+
       <md-item ng-repeat="item in eventList track by $index">
-      <md-item-content>
-      <div class="md-tile-content">
-        {{item.name}}<md-button ng-click="mode.switchToEdit($index+':'+eventListToEdit.id+':event')">編集</md-button>
-      </div>
-      </md-item-content>
+      <md-item-content><div event-item app-event="$index+':'+eventListToEdit.id+':event'"></div></md-item-content>
       </md-item>
       </md-list>
       <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
@@ -123,25 +117,23 @@
         <!--{{row[6]!==0&&row[6]!==32?row[6]:''}}-->
 
       </div><!--}}}-->
-      <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}"><!--{{{-->
+      <div layout="row">
+      <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}" flex><!--{{{-->
         <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="isToday()"> - 今日</span></div>
         <div ng-show="calF.selected===null"><br></div>
-        <ul>
-          <li ng-show="eventCalendar(calF.selected).length===0">予定なし</li>
-          <li ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
-            <span ng-dblclick="mode.switchToEdit(event)">{{event|format}}</span>
-            <span class="right">
-              <md-button ng-click="mode.switchToEdit(event)">編集</md-button>
-              <md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button>
-              <md-button ng-click="deleteEvent(event)" ng-if="user.hasPermission(event.split(':')[1])">削除</md-button>
-            </span>
-          </li>
-        </ul>
+        <md-list>
+          <md-item ng-show="eventCalendar(calF.selected).length===0">予定なし</md-item>
+          <md-item ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
+          <md-item-content>
+          <div event-item app-event="event"></div>
+          </md-item-content>
+          </md-item>
+        </md-list>
 
         <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="mode.switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
         <br ng-if="calF.selected===null">
       </md-whiteframe><!--}}}-->
-      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm"><!--{{{-->
+      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm" flex><!--{{{-->
         <form name="eventEditor" class="md-padding">
           {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
@@ -223,7 +215,7 @@
           </div><!--}}}-->
         </form>
       </md-whiteframe><!--}}}-->
-      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-show="mode.editsGroupForm"><!--{{{-->
+      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsGroupForm" flex><!--{{{-->
       <form>
         グループを追加します<br>
         <md-input-container>
@@ -240,8 +232,10 @@
         <md-button class="md-raised md-primary" ng-click="groupForm.parentGroup.push('')">親グループを増やす</md-button><br>
         <md-button class="md-raised md-primary" ng-click="addGroup()" ng-show="groupForm.mode==='add'">グループを追加</md-button>
         <md-button class="md-raised md-primary" ng-click="editGroup()" ng-show="groupForm.mode==='edit'">保存</md-button>
+        <md-button class="md-raised md-warn" ng-click="cancel()">キャンセル</md-button>
       </form>
       </md-whiteframe><!--}}}-->
-    </div>
+      </div>
+    </md-content>
   </body>
 </html>

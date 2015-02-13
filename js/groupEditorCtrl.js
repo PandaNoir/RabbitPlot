@@ -24,5 +24,8 @@ angular.module(appName)
         $mdToast.show($mdToast.simple().content('グループ '+$scope.groupForm.name+' を作成しました').position('top right').hideDelay(3000));
 
         $scope.groupForm.name='';
-    }
+    };
+    $scope.cancel=function(){
+        mode.editsGroupForm=false;
+    };
 }]);
