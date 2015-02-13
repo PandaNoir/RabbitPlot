@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('detailCtrl',['$scope','eventCal','calF','group','user','mode','db',function($scope,eventCal,calF,group,user,mode,db){
+.controller('detailCtrl',['$scope','eventCal','calF','user','mode',function($scope,eventCal,calF,user,mode){
     $scope.mode=mode;
     $scope.calF=calF;
     $scope.eventCalendar=eventCal.eventCalendar;

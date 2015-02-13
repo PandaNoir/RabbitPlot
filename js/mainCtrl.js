@@ -97,7 +97,7 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
         scope: {event:'=appEvent'},
         template: '<div class="md-item-content event-item" layout="row"><div flex>{{event|format}}</div><div flex><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button><md-button ng-click="deleteEvent(event)" ng-if="user.hasPermission(event.split(\':\')[1])">削除</md-button></div></div>',
         replace:true,
-        controller: ['$scope','mode','user',function($scope,mode,user){
+        controller: ['$scope','mode','user','db',function($scope,mode,user,db){
             $scope.mode=mode;
             $scope.user=user;
             $scope.deleteEvent=function(event){
