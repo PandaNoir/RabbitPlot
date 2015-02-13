@@ -156,6 +156,9 @@ input:disabled {
         width:300px;
         margin:20px auto;
     }
+    .event-item{
+        width:220px;
+    }
     html,body,.main{
         height:auto;
     }

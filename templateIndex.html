@@ -117,7 +117,7 @@
         <!--{{row[6]!==0&&row[6]!==32?row[6]:''}}-->
 
       </div><!--}}}-->
-      <div layout="row">
+      <div layout="row" layout-sm="column">
       <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}" flex><!--{{{-->
         <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="isToday()"> - 今日</span></div>
         <div ng-show="calF.selected===null"><br></div>
