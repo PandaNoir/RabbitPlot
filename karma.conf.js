@@ -15,18 +15,14 @@ module.exports = function(config) {
 
         // list of files / patterns to load in the browser
         files: [
-            'https://cdn.jsdelivr.net/hammerjs/2.0.4/hammer.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-touch.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-animate.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-aria.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-messages.min.js',
-            'https://ajax.googleapis.com/ajax/libs/angularjs/1.3.12/angular-mocks.js',
-            'https://ajax.googleapis.com/ajax/libs/angular_material/0.7.1/angular-material.min.js',
-
-            'js/lodash.min.js',
-            'js/main.js',
-            'spec/*.js',
+            'lib/js/angular.min.js',
+            'lib/js/angular-touch.min.js',
+            'lib/js/angular-animate.min.js',
+            'lib/js/angular-aria.min.js',
+            'lib/js/angular-messages.min.js',
+            'lib/js/angular-mocks.js',
+            'lib/js/angular-material.min.js',
+            'lib/js/lodash.min.js',
             'js/main.js',
             'spec/*.js'
         ],
