@@ -42,7 +42,7 @@ angular.module(appName)
     };//}}}
     $scope.dates=['日','月','火','水','木','金','土'];
 }])//}}}
-.directive('appDate',[function(){//{{{
+.directive('appDate',function(){//{{{
     return {
         scope:{'row':'=appRow'},
         restrict:'A',
@@ -121,4 +121,4 @@ angular.module(appName)
             }
         }
     };
-}]);//}}}
+});//}}}
