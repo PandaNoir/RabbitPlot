@@ -50,7 +50,7 @@ angular.module(appName)
         name:''
     };
 })//}}}
-.factory('group',['$http',function($http){//{{{
+.factory('group',['_','$http',function(_,$http){//{{{
     var o=[{//{{{
         id:0,
         event:[
@@ -89,7 +89,7 @@ angular.module(appName)
     });
     return o;
 }])//}}}
-.factory('calendar',function(){//{{{
+.factory('calendar',['_',function(_){//{{{
     var today=new Date();
     var memo=[];
     function calendar(year,month){
@@ -153,7 +153,7 @@ angular.module(appName)
         disableHoverEvent:isSmartPhone
     };
     return res;
-})//}}}
+}])//}}}
 .factory('eventListToEdit',function(){//{{{
     return {
         id:''
@@ -317,25 +317,25 @@ angular.module(appName)
         //y=year,m=month
         if(groupID!=='private' && !group[groupID]) return [];//まだデータベースからデータ取得できてない場合などに返す。これがないとAngularJSがエラーぶん投げる。当然ですね
         var res=[];
-        var parent_res=[];
+        var parentRes=[];
         if(groupID==='private'){
             _.each(user.following,function(fg){
                 //fg=followingGroup
-                parent_res=parent_res.concat(getEvents(fg,y,m));
+                parentRes=parentRes.concat(getEvents(fg,y,m));
             });
             res = res.concat(getEventList(user['private'].event,y,m,'private'));
-            parent_res = parent_res.concat(res);
-            res = res.concat(getHabitList(user['private'].habit,y,m,'private',parent_res));
+            parentRes = parentRes.concat(res);
+            res = res.concat(getHabitList(user['private'].habit,y,m,'private',parentRes));
             user.updated=false;
         }else{
             if(group[groupID].parents){
                 _.each(group[groupID].parents,function(parent){
-                    parent_res = parent_res.concat(getEvents(parent,y,m));
+                    parentRes = parentRes.concat(getEvents(parent,y,m));
                 });
             }
             res=res.concat(getEventList(group[groupID].event,y,m,groupID));
-            parent_res = parent_res.concat(res);
-            res = res.concat(getHabitList(group[groupID].habit,y,m,groupID,parent_res));
+            parentRes = parentRes.concat(res);
+            res = res.concat(getHabitList(group[groupID].habit,y,m,groupID,parentRes));
             group[groupID].updated=false;
         }
         if(groupID===0){
@@ -361,12 +361,12 @@ angular.module(appName)
         if(!arr) return res;
         for(var i=0,j=arr.length;i<j;i++){
             if(arr[i].year===y && arr[i].month===m){
-                var tmp_res=_.clone(arr[i]);
-                tmp_res.group=groupID;
-                tmp_res.type='event';
-                tmp_res.id=i;
-                res[res.length]=tmp_res;
-                tmp_res=null;
+                var tmpRes=_.clone(arr[i]);
+                tmpRes.group=groupID;
+                tmpRes.type='event';
+                tmpRes.id=i;
+                res[res.length]=tmpRes;
+                tmpRes=null;
             }
         }
         return res;
@@ -380,11 +380,11 @@ angular.module(appName)
         for(var i=0,i2=arr.length;i<i2;i++){
             arr[i].type='habit';
             arr[i].group=groupID;
-            var tmp_res=execSelectors(arr[i].selector,year,month,eventListRes);
-            _.each(tmp_res,function(item,index){
-                tmp_res[index]={year:year,month:month,date:item,name:arr[i].name,group:groupID,id:i,type:'habit'};
+            var tmpRes=execSelectors(arr[i].selector,year,month,eventListRes);
+            _.each(tmpRes,function(item,index){
+                tmpRes[index]={year:year,month:month,date:item,name:arr[i].name,group:groupID,id:i,type:'habit'};
             });
-            res=res.concat(tmp_res);
+            res=res.concat(tmpRes);
         }
         return res;
     }//}}}
@@ -414,7 +414,7 @@ angular.module(appName)
             }
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
-            var all_days=function(){
+            var allDays=function(){
                 return _.flatten(cal);
             };
             var meansPublicHoliday=function(s){
@@ -461,23 +461,23 @@ angular.module(appName)
             }
             var key=nowSelector.split(':')[0];
             var val=nowSelector.split(':').slice(1).join(':');
-            var tmp_res=[];
-            var from_res=[],to_res=[];
-            var from_reses=[];
+            var tmpRes=[];
+            var fromRes=[],toRes=[];
+            var fromReses=[];
             var from,to;
             var top4,top5,froms=[];//month/dateを処理するときにfromが2つでてくるから使用
             if(key==='not'){//{{{
-                tmp_res=all_days();
+                tmpRes=allDays();
                 if(meansPublicHoliday(val)){
                     //祝日を除くフィルタ
                     var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
                     for(var i=0,j=publicHolidays.length;i<j;i++) publicHolidays[i]=publicHolidays[i].date;
-                    tmp_res=_.difference(tmp_res,publicHolidays);
-                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
+                    tmpRes=_.difference(tmpRes,publicHolidays);
+                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 }else if(val.indexOf('year')===0||val.indexOf('month')===0||val.indexOf('date')===0||val.indexOf('day')===0){
                     //not:month=3 もしくは not:month:3
                     val=val.replace(/=/,':');//not:month=3をnot:month:3に揃える
-                    tmp_res=_.difference(all_days(),execSelector(val,year,month));//month:3を実行してその結果を返す
+                    tmpRes=_.difference(allDays(),execSelector(val,year,month));//month:3を実行してその結果を返す
                 }else{
                     var nameKey=val.split('=')[0];//not:name='なんとか'みたいにしてるから
                     var nameVal=val.replace(/^.+?=/,'');//not:name='なんとか'みたいにしてるから
@@ -486,19 +486,19 @@ angular.module(appName)
                         if(resItem[nameKey]===nameVal || resItem[nameKey].indexOf('[mes]')===0 && resItem[nameKey].slice(5)===nameVal){
                             //eventListResはnot:name="自主練なし"みたいな指定をしたいから使う
                             //多分反例が出てくるからそのうち直したい
-                            tmp_res=_.without(tmp_res,resItem.date);
+                            tmpRes=_.without(tmpRes,resItem.date);
                         }
                     });
                 }//}}}
             }else if(key==='is'){//{{{
                 // is:public-holidayと言った感じ
-                tmp_res=all_days();
+                tmpRes=allDays();
                 if(meansPublicHoliday(val)){
                     var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
                     for(var i=0,j=publicHolidays.length;i<j;i++){
                         publicHolidays[i]=publicHolidays[i].date;
                     }
-                    tmp_res=_.intersection(tmp_res,publicHolidays);
+                    tmpRes=_.intersection(tmpRes,publicHolidays);
                 }else if(val==='last'){
                     //======================
                     var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];
@@ -509,22 +509,22 @@ angular.module(appName)
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);//}}}
+                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);//}}}
             }else if(key==='yesterday'){//{{{
-                tmp_res=all_days();
+                tmpRes=allDays();
                 var key2=val.split(':')[0];
                 var val2=val.split(':').slice(1).join(':');
                 if(meansPublicHoliday(val)){
-                    tmp_res=_.intersection(tmp_res,_.map(execSelector('is:'+val,year,month),function(n){return n+1;}));
+                    tmpRes=_.intersection(tmpRes,_.map(execSelector('is:'+val,year,month),function(n){return n+1;}));
                     // 12/32日みたいな日があるかもしれないからこういう処理
-                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
+                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 }else if(key2==='day'||key2==='date'){
                     //この辺は代用できる気がするし、いらないとおもう。一応つけるけど
-                    tmp_res=_.intersection(all_days(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
+                    tmpRes=_.intersection(allDays(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
+                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 //}}}
             }else if(key==='range'){//{{{
                 if(val.slice(0,2)==='..'){//{{{
@@ -543,13 +543,13 @@ angular.module(appName)
                         throw myError('invalid range selector.'+key+':'+val);
                     }
                     if(to.getFullYear()<year || to.getFullYear()==year && to.getMonth()<month){
-                        //明らかにto以降だからtmp_resは空
-                        tmp_res=[];
+                        //明らかにto以降だからtmpResは空
+                        tmpRes=[];
                     }else if(to.getFullYear()==year && to.getMonth()==month){
                         //toがかぶっているであろう時
-                        tmp_res=all_days();
-                        tmp_res=tmp_res.slice(0,_.lastIndexOf(tmp_res,to.getDate(),true)+1);
-                    }else tmp_res=all_days();//}}}
+                        tmpRes=allDays();
+                        tmpRes=tmpRes.slice(0,_.lastIndexOf(tmpRes,to.getDate(),true)+1);
+                    }else tmpRes=allDays();//}}}
                 }else if(val.slice(-2)==='..'){//{{{
                     //20xx/xx/xx..という形式、つまりfromのみ指定
                     //必ずyear/month/date という形。year,month,dateはいづれも省略不可。month/dateとはとれない
@@ -565,24 +565,24 @@ angular.module(appName)
                     }
                     if(from.getFullYear()>year || from.getFullYear()==year && from.getMonth()>month){
                         //fromよりも明らかに以前
-                        tmp_res=[];
+                        tmpRes=[];
                     }else if(from.getFullYear()==year && from.getMonth()==month){
                         //fromの境目あたり。
-                        tmp_res=all_days();
-                        tmp_res=tmp_res.slice(_.indexOf(tmp_res,from.getDate(),true));
-                    }else tmp_res=all_days();//}}}
+                        tmpRes=allDays();
+                        tmpRes=tmpRes.slice(_.indexOf(tmpRes,from.getDate(),true));
+                    }else tmpRes=allDays();//}}}
                 }else if(val.indexOf('..')!==-1){//{{{
                     //20xx/xx/xx..20xx/xx/xxという形式
                     //month/date..month/dateも可能(例:12/29..1/3)
-                    tmp_res=[];
+                    tmpRes=[];
                     val=val.split('...');//下で..の時の処理もしてる
                     if(val.length===1){
                         //...がなかった = ..があった
                         val=val[0].split('..');
                     }
-                    from_res=[];
-                    to_res=[];
-                    from_reses=[];
+                    fromRes=[];
+                    toRes=[];
+                    fromReses=[];
                     from=val[0];
                     froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                     to=val[1];
@@ -600,19 +600,19 @@ angular.module(appName)
                     _.each(froms,function(fromItem){
                         if(fromItem.getFullYear()>year || fromItem.getFullYear()==year && fromItem.getMonth()>month){
                             //fromよりも明らかに以前
-                            from_res=[];
+                            fromRes=[];
                         }else if(fromItem.getFullYear()==year&&fromItem.getMonth()==month){
                             //fromの境目あたり。
-                            from_res=all_days();
-                            from_res=from_res.slice(_.indexOf(from_res,fromItem.getDate(),true));
+                            fromRes=allDays();
+                            fromRes=fromRes.slice(_.indexOf(fromRes,fromItem.getDate(),true));
 
-                        }else from_res=all_days();
-                        from_reses.push(from_res);
+                        }else fromRes=allDays();
+                        fromReses.push(fromRes);
                     });
-                    froms=_.zip(froms,from_reses);// [[from,from_res],[from,from_res], ...]
+                    froms=_.zip(froms,fromReses);// [[from,fromRes],[from,fromRes], ...]
                     _.each(froms,function(item){
                         var from=item[0];
-                        var from_res=item[1];
+                        var fromRes=item[1];
                         var nowTo;
                         //to処理
                         if(top4==='date'||top4==='week'||top4==='year'||top5==='dates'||top5==='weeks'||top5==='years'){
@@ -643,47 +643,47 @@ angular.module(appName)
                             }
                         }
                         if(nowTo.getFullYear()<year || nowTo.getFullYear()==year && nowTo.getMonth()<month){
-                            //明らかにto以降だからto_resは空
-                            to_res=[];
+                            //明らかにto以降だからtoResは空
+                            toRes=[];
                         }else if(nowTo.getFullYear()==year && nowTo.getMonth()==month){
                             //toがかぶっているであろう時
-                            to_res=all_days();
-                            to_res=to_res.slice(0,_.lastIndexOf(to_res,nowTo.getDate(),true)+1);//toより前
-                        }else to_res=all_days();
-                        if(!_.isEmpty(_.intersection(from_res,to_res))){
-                            tmp_res=_.intersection(from_res,to_res);
+                            toRes=allDays();
+                            toRes=toRes.slice(0,_.lastIndexOf(toRes,nowTo.getDate(),true)+1);//toより前
+                        }else toRes=allDays();
+                        if(!_.isEmpty(_.intersection(fromRes,toRes))){
+                            tmpRes=_.intersection(fromRes,toRes);
                         }
                     });//}}}
                 }else{//{{{
                     throw myError('invalid selector "'+key+':'+val+'" in '+group[groupID].name+'.');
                 }//}}}//}}}
             }else if(key==='date'){//{{{
-                tmp_res[tmp_res.length]=toInt(val);//}}}
+                tmpRes[tmpRes.length]=toInt(val);//}}}
             }else if(key==='month'){//{{{
                 if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!=month)
-                    tmp_res=[];//違う月の時
+                    tmpRes=[];//違う月の時
                 else
-                    tmp_res=all_days();//同じ月の時//}}}
+                    tmpRes=allDays();//同じ月の時//}}}
             }else if(key==='day'){//{{{
                 if(val.match(/^\d/)){
                     // day:3rd-wed
                     //valが1st-wedといった具合になっている
                     val=val.toLowerCase().match(/^(\d+)(?:st|[nr]d|th)-?(.+)$/);
                     var ordinalNum=toInt(val[1]);
-                    tmp_res=[(execSelector('day:'+val[2],year,month)||[])[ordinalNum-1]];
+                    tmpRes=[(execSelector('day:'+val[2],year,month)||[])[ordinalNum-1]];
                 }else if(val.slice(0,4).toLowerCase()==='last'){
                     // day:last-wed
                     val=val.toLowerCase();
                     var valDay=val.slice(4);//valのlast以降の文字列
                     if(valDay.charAt(0)==='-') valDay=valDay.slice(1);//last-wedの-を取り除く
-                    tmp_res=[_.last(execSelector('day:'+valDay,year,month))];
+                    tmpRes=[_.last(execSelector('day:'+valDay,year,month))];
                 }else{
                     // day:mon,tue,...
                     var valDay=dayDic[val.toLowerCase()];
                     var dayCount=0;
                     _.some(cal,function(week){
                         if(week[valDay]!==''){
-                            tmp_res[tmp_res.length]=week[valDay];
+                            tmpRes[tmpRes.length]=week[valDay];
                         }
                     });
                 }//}}}
@@ -691,23 +691,23 @@ angular.module(appName)
                 if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
                     //year: leap-year
                     if(isLeapYear(year)){
-                        tmp_res=all_days();
+                        tmpRes=allDays();
                     }else{
-                        tmp_res=[];
+                        tmpRes=[];
                     }
                 }else if(toInt(val)!==year){
                     // year:Int
-                    tmp_res=[];//違う年
-                }else tmp_res=all_days();//}}}
+                    tmpRes=[];//違う年
+                }else tmpRes=allDays();//}}}
             }else{
                 throw myError('undefined key "'+key+'".');
             }
-            while(last(tmp_res)===OVER_MONTH) tmp_res.pop();//来月分を排除
+            while(last(tmpRes)===OVER_MONTH) tmpRes.pop();//来月分を排除
             if(key==='day'){
                 //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmp_res);
+                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
             }
-            return tmp_res;
+            return tmpRes;
         }//}}}
         if(stack.length!=1){
             console.log(stack,selectors);
