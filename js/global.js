@@ -2,6 +2,8 @@ var OVER_MONTH=64;//calF.calendar()で来月の範囲に入った時に代入さ
 var appName='rabbit';
 var MEMO_LIMIT=1950;//メモを高速化するために添字から引く値。2015よりも65を添え字としたほうが高速。
 var isSmartPhone=((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0);
+
+var slice=Array.prototype.slice;
 function sortByNumber(a,b){
     return a-b;
 };

@@ -54,38 +54,6 @@ angular.module(appName)
     var o=[{//{{{
         id:0,
         event:[
-            {name:'[mes]春分の日',year:2000,month:2,date:20},{name:'[mes]秋分の日',year:2000,month:8,date:23},
-            {name:'[mes]春分の日',year:2001,month:2,date:20},{name:'[mes]秋分の日',year:2001,month:8,date:23},
-            {name:'[mes]春分の日',year:2002,month:2,date:21},{name:'[mes]秋分の日',year:2002,month:8,date:23},
-            {name:'[mes]春分の日',year:2003,month:2,date:21},{name:'[mes]秋分の日',year:2003,month:8,date:23},
-            {name:'[mes]春分の日',year:2004,month:2,date:20},{name:'[mes]秋分の日',year:2004,month:8,date:23},
-            {name:'[mes]春分の日',year:2005,month:2,date:20},{name:'[mes]秋分の日',year:2005,month:8,date:23},
-            {name:'[mes]春分の日',year:2006,month:2,date:21},{name:'[mes]秋分の日',year:2006,month:8,date:23},
-            {name:'[mes]春分の日',year:2007,month:2,date:21},{name:'[mes]秋分の日',year:2007,month:8,date:23},
-            {name:'[mes]春分の日',year:2008,month:2,date:20},{name:'[mes]秋分の日',year:2008,month:8,date:23},
-            {name:'[mes]春分の日',year:2009,month:2,date:20},{name:'[mes]秋分の日',year:2009,month:8,date:23},
-            {name:'[mes]春分の日',year:2010,month:2,date:21},{name:'[mes]秋分の日',year:2010,month:8,date:23},
-            {name:'[mes]春分の日',year:2011,month:2,date:21},{name:'[mes]秋分の日',year:2011,month:8,date:23},
-            {name:'[mes]春分の日',year:2012,month:2,date:20},{name:'[mes]秋分の日',year:2012,month:8,date:22},
-            {name:'[mes]春分の日',year:2013,month:2,date:20},{name:'[mes]秋分の日',year:2013,month:8,date:23},
-            {name:'[mes]春分の日',year:2014,month:2,date:21},{name:'[mes]秋分の日',year:2014,month:8,date:23},
-            {name:'[mes]春分の日',year:2015,month:2,date:21},{name:'[mes]秋分の日',year:2015,month:8,date:23},
-            {name:'[mes]春分の日',year:2016,month:2,date:20},{name:'[mes]秋分の日',year:2016,month:8,date:22},
-            {name:'[mes]春分の日',year:2017,month:2,date:20},{name:'[mes]秋分の日',year:2017,month:8,date:23},
-            {name:'[mes]春分の日',year:2018,month:2,date:21},{name:'[mes]秋分の日',year:2018,month:8,date:23},
-            {name:'[mes]春分の日',year:2019,month:2,date:21},{name:'[mes]秋分の日',year:2019,month:8,date:23},
-            {name:'[mes]春分の日',year:2020,month:2,date:20},{name:'[mes]秋分の日',year:2020,month:8,date:22},
-            {name:'[mes]春分の日',year:2021,month:2,date:20},{name:'[mes]秋分の日',year:2021,month:8,date:23},
-            {name:'[mes]春分の日',year:2022,month:2,date:21},{name:'[mes]秋分の日',year:2022,month:8,date:23},
-            {name:'[mes]春分の日',year:2023,month:2,date:21},{name:'[mes]秋分の日',year:2023,month:8,date:23},
-            {name:'[mes]春分の日',year:2024,month:2,date:20},{name:'[mes]秋分の日',year:2024,month:8,date:22},
-            {name:'[mes]春分の日',year:2025,month:2,date:20},{name:'[mes]秋分の日',year:2025,month:8,date:23},
-            {name:'[mes]春分の日',year:2026,month:2,date:20},{name:'[mes]秋分の日',year:2026,month:8,date:23},
-            {name:'[mes]春分の日',year:2027,month:2,date:21},{name:'[mes]秋分の日',year:2027,month:8,date:23},
-            {name:'[mes]春分の日',year:2028,month:2,date:20},{name:'[mes]秋分の日',year:2028,month:8,date:22},
-            {name:'[mes]春分の日',year:2029,month:2,date:20},{name:'[mes]秋分の日',year:2029,month:8,date:23},
-            {name:'[mes]春分の日',year:2030,month:2,date:20},{name:'[mes]秋分の日',year:2030,month:8,date:23},
-
             {name:'[mes]十五夜',year:2000,month:8,date:12},{name:'[mes]十五夜',year:2001,month:9,date:1},
             {name:'[mes]十五夜',year:2002,month:8,date:21},{name:'[mes]十五夜',year:2003,month:8,date:11},
             {name:'[mes]十五夜',year:2004,month:8,date:28},{name:'[mes]十五夜',year:2005,month:8,date:18},
@@ -108,6 +76,17 @@ angular.module(appName)
         name:'祝日',
         updated:true
     }];//}}}
+    var shuubun={name:'[mes]秋分の日',month:8};
+    var shuubunDates=[23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23]
+    _.each(shuubunDates,function(date,year){
+        o.event[o.event.length]=_.extend(_.clone(shuubun),{year:2000+year,date:date});
+    });
+
+    var shunbun={name:'[mes]春分の日',month:2};
+    var shunbunDates=[20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20]//2000年からのもの
+    _.each(shunbunDates,function(date,year){
+        o.event[o.event.length]=_.extend(_.clone(shunbun),{year:2000+year,date:date});
+    });
     return o;
 }])//}}}
 .factory('calF',function(){//{{{
@@ -191,7 +170,7 @@ angular.module(appName)
         showsEventList:false,
         switchToEdit:function(){//{{{
             //event= eventのid:groupのid:eventのtype(event or habit)
-            var args=Array.prototype.slice.call(arguments);
+            var args=slice.call(arguments);
             if(args.length===1||args.length===2&&args[1]===true){//{{{
                 //switchToEdit(event [,isEdit])の場合
                 var event=args[0].split(':');// event=[eventID,groupID,eventType];
@@ -417,7 +396,7 @@ angular.module(appName)
             }else if(nowSelector[1]===OPERATOR){
                 //演算子の時
                 if(nowSelector[0]==='&&') //セレクタのand処理部分
-                    stack.push(_.intersection(stack.pop(),stack.pop()));//!!!stack.pop()しているため、stack.pushを直してはいけない
+                    stack.push(_.intersection(stack.pop(),stack.pop()));//[重要]stack.pop()しているため、stack.pushを直してはいけない
                 else if(nowSelector[0]==='||')
                     stack.push(_.union(stack.pop(),stack.pop()));//同上
                 else{
