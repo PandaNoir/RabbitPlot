@@ -79,13 +79,13 @@ angular.module(appName)
     var shuubun={name:'[mes]秋分の日',month:8};
     var shuubunDates=[23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23]
     _.each(shuubunDates,function(date,year){
-        o.event[o.event.length]=_.extend(_.clone(shuubun),{year:2000+year,date:date});
+        o[0].event[o[0].event.length]=_.extend(_.clone(shuubun),{year:2000+year,date:date});
     });
 
     var shunbun={name:'[mes]春分の日',month:2};
     var shunbunDates=[20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20]//2000年からのもの
     _.each(shunbunDates,function(date,year){
-        o.event[o.event.length]=_.extend(_.clone(shunbun),{year:2000+year,date:date});
+        o[0].event[o[0].event.length]=_.extend(_.clone(shunbun),{year:2000+year,date:date});
     });
     return o;
 }])//}}}
@@ -101,11 +101,11 @@ angular.module(appName)
         }else{
             memo[year-MEMO_LIMIT]=[];
         }
-        var first=(new Date(year,month,1)).getDay();
-        var last=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
+        var firstDay=(new Date(year,month,1)).getDay();
+        var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
         if(month===1 && isLeapYear(year)){
             //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
-            last=29;//うるう年だから
+            lastDate=29;//うるう年だから
         }
 
         var res=[];//カレンダー用配列
@@ -113,21 +113,24 @@ angular.module(appName)
         res.month=month;
         var i=0;
         var row=0;
-        loop:while(true){
+        while(row===0 || _.last(res[row-1])<lastDate){// res[row-1]なのは、このループのラストでrowを1足しているから
             res[row]=[];
             for(var j=1;j<=7;j++){
-                //i*7+j-first.getDay()でその部分の日付
-                if(row*7+j-first>0){
-                    if(row*7+j-first<=last){
-                        res[row][res[row].length]=row*7+j-first;//日付が今月の範囲に収まっている
+                //i*7+j-firstDayでその部分の日付
+                if(row*7+j-firstDay>0){
+                    //先月の範囲でない
+                    if(row*7+j-firstDay<=lastDate){
+                        //来月の範囲でない
+                        res[row][res[row].length]=row*7+j-firstDay;//日付が今月の範囲に収まっている
                     }else{
+                        //来月の範囲
                         res[row][res[row].length]=OVER_MONTH;//来月の範囲
                     }
                 }else{
-                    res[row][res[row].length]=0;//先月の範囲
+                    //先月の範囲
+                    res[row][res[row].length]=0;
                 }
             }
-            if(res[row][res[row].length-1]>=last) break;
             row++;
         }
         return memo[year-MEMO_LIMIT][month]=res;
@@ -492,11 +495,11 @@ angular.module(appName)
                     tmp_res=_.intersection(tmp_res,publicHolidays);
                 }else if(val==='last'){
                     //======================
-                    var lastDay=[31,28,31,30,31,30,31,31,30,31,30,31][month];
+                    var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];
                     if(isLeapYear(year)&&month===1){
-                        lastDay=29;
+                        lastDate=29;
                     }
-                    return [lastDay];
+                    return [lastDate];
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
