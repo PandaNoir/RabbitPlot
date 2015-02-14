@@ -57,6 +57,7 @@ describe('test',function(){
             expect(eventCal.splitSelector('key:value かつ key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
             expect(eventCal.splitSelector('key:value && key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
             expect(eventCal.splitSelector('key:value and key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(eventCal.splitSelector('key:value key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
         }));
         it('should attach OPERATOR to "or"',inject(function(eventCal){
             expect(eventCal.splitSelector('key:value または key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);

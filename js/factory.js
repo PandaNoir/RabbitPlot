@@ -745,18 +745,11 @@ angular.module(appName)
                     isInString=true;
                 }else if(nowChar===' '){
                     resPush([selector.substring(start,i),OTHERS]);
-                    var operator={' and ':'&&', ' かつ ':'&&', ' && ':'&&', ' or ':'||', ' または ':'||', ' || ':'||'};
-                    var matchedOperator=selector.substr(i).match(/^ (?:and|&&|かつ|or|\|\||または) /);
-                    if(matchedOperator!==null){
-                        matchedOperator=matchedOperator[0];
-                        resPush([operator[matchedOperator],OPERATOR]);
-                        start=i+matchedOperator.length;
-                        i+=matchedOperator.length;
-                    }else{
-                        resPush(['&&',OPERATOR]);
-                        start=i+1;
-                        i+=1;
-                    }
+                    var operator={' ':'&&', ' and ':'&&', ' かつ ':'&&', ' && ':'&&', ' or ':'||', ' または ':'||', ' || ':'||'};
+                    var matchedOperator=selector.substr(i).match(/^ (?:and|&&|かつ|or|\|\||または) |^ /)[0];
+                    resPush([operator[matchedOperator],OPERATOR]);
+                    start=i+matchedOperator.length;
+                    i+=matchedOperator.length;
                 }else if(nowChar==='('||nowChar===')'){
                     resPush([selector.substring(start,i),OTHERS]);
                     resPush([nowChar,nowChar==='('?LPARENTHESES:RPARENTHESES]);
