@@ -23,7 +23,7 @@ module.exports = function(config) {
             'lib/js/angular-mocks.js',
             'lib/js/angular-material.min.js',
             'lib/js/lodash.min.js',
-            'js/main.js',
+            'js/main.test.js',
             'spec/*.js'
         ],
 

@@ -28,6 +28,10 @@ module.exports = function(grunt) {
             prefix:{
                 dest: mainRawJS,
                 src: files
+            },
+            test:{
+                dest: './js/main.test.js',
+                src:files
             }
         },
         compress: {
@@ -155,5 +159,5 @@ module.exports = function(grunt) {
     grunt.registerTask('html', ['replace:release','htmlmin:dist']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw']);
     grunt.registerTask('dev', ['replace:dev']);
-    grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
+    grunt.registerTask('test', ['concat:test']);
 };
