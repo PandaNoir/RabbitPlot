@@ -163,7 +163,7 @@
             <md-button class="md-raised md-primary" ng-click="startWritingRule()">ガイド</md-button>
             </md-input-container>
           </div>
-
+          <md-checkbox ng-model="eventForm.isMessage">メッセージ</md-checkbox>
           <span ng-show="eventForm.mode==='add'">
             グループ:<select ng-model="eventForm.selectedGroup" ng-options="id as id!='private'?group[id].name:'private' for id in user.following.concat('private')" name="selectedGroup" required>
               <option value="">選択してください</option>

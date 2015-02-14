@@ -206,9 +206,15 @@ angular.module(appName)
                         eventForm.rule=group[event[1]].habit[event[0]].selector;
                         eventForm.name=group[event[1]].habit[event[0]].name;
                     }
-                }//}}}
+                }
+                eventForm.isMessage=(eventForm.name.slice(0,'[mes]'.length)==='[mes]');
+                if(eventForm.isMessage){
+                    eventForm.name=eventForm.name.slice('[mes]'.length);
+                }
+                //}}}
             }else if(args.length===3){//{{{
                 //switchToEdit(year,month,date)の場合
+                //この場合は、新規でyear/month/dateにイベントを作成する
                 _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: args[0], month: args[1]+1, date: args[2]});
             }//}}}
             this.editsEventForm=true;

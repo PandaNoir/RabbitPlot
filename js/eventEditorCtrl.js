@@ -35,7 +35,6 @@ angular.module(appName)
         }
     };//}}}
     $scope.editEvent=function(){//{{{
-        console.log(eventForm);
         saveEvent(eventForm.id,eventForm.selectedGroup);
     };//}}}
     function saveEvent(eventID,groupID){//{{{
@@ -51,6 +50,7 @@ angular.module(appName)
             return;
         }
         if(type==='event'){
+            //ここも正常かどうかのチェック
             var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
             isInvalid= testDate.getFullYear()!==toInt(eventForm.year)||
                 testDate.getMonth()!==toInt(eventForm.month)-1||
@@ -60,6 +60,9 @@ angular.module(appName)
                 //正常範囲に入っていない
                 return;
             }
+        }
+        if(eventForm.isMessage){
+            eventForm.name='[mes]'+eventForm.name;
         }
         if(groupID==='private'){
             if(!user['private'][type][eventID]){
