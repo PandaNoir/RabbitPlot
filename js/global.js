@@ -7,6 +7,12 @@ var slice=Array.prototype.slice;
 function sortByNumber(a,b){
     return a-b;
 };
+function isValidDate(y,m,d){
+    var date=new Date(y,m,d);
+    return date.getFullYear()===toInt(y)&&
+        date.getMonth()===toInt(m)&&
+        date.getDate()===toInt(d);
+};
 function toInt(n){
     return parseInt(n,10);
 };

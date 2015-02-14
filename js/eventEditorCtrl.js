@@ -51,12 +51,8 @@ angular.module(appName)
         }
         if(type==='event'){
             //ここも正常かどうかのチェック
-            var testDate=new Date(eventForm.year,eventForm.month-1,eventForm.date);
-            isInvalid= testDate.getFullYear()!==toInt(eventForm.year)||
-                testDate.getMonth()!==toInt(eventForm.month)-1||
-                testDate.getDate()!==toInt(eventForm.date);
-            //2014/12/32のような時の排除と、null/undefined/'hoge'のようなでたらめな日付を排除するためにこうなっている
-            if(isInvalid){
+            if(!isValidDate(eventForm.year,eventForm.month-1,eventForm.date)){
+                //2014/12/32のような時の排除と、null/undefined/'hoge'のようなでたらめな日付を排除するためにこうなっている
                 //正常範囲に入っていない
                 return;
             }

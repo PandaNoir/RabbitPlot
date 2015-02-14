@@ -535,21 +535,20 @@ angular.module(appName)
                     }else{
                         val=val.slice(2);//..をカット
                     }
-                    tmp_res=all_days();
                     // 2014/1/1 のように区切れている
                     //こっちはfromの設定とあまり関係ない
-                    val=val.split('/');
-                    val=_.map(val,toInt);
+                    val=_.map(val.split('/'),toInt);
                     to=new Date(val[0],val[1]-1,val[2]);//これでtoが生成できる
+                    if(!isValidDate(val[0],val[1]-1,val[2])){
+                        throw myError('invalid range selector.'+key+':'+val);
+                    }
                     if(to.getFullYear()<year || to.getFullYear()==year && to.getMonth()<month){
                         //明らかにto以降だからtmp_resは空
                         tmp_res=[];
-                    }else if(to.getFullYear()==year&&to.getMonth()==month){
+                    }else if(to.getFullYear()==year && to.getMonth()==month){
                         //toがかぶっているであろう時
                         tmp_res=all_days();
-                        tmp_res=_.filter(tmp_res,function(n){
-                            return n<=to.getDate();//toより前であることが条件
-                        });
+                        tmp_res=tmp_res.slice(0,_.lastIndexOf(tmp_res,to.getDate(),true)+1);
                     }else tmp_res=all_days();//}}}
                 }else if(val.slice(-2)==='..'){//{{{
                     //20xx/xx/xx..という形式、つまりfromのみ指定
@@ -559,18 +558,18 @@ angular.module(appName)
                     }else{
                         val=val.slice(0,-2);//..をカット
                     }
-                    val=val.split('/');
-                    val=_.map(val,toInt);
+                    val=_.map(val.split('/'),toInt);
                     from=new Date(val[0],val[1]-1,val[2]);
+                    if(!isValidDate(val[0],val[1]-1,val[2])){
+                        throw myError('invalid range selector.'+key+':'+val);
+                    }
                     if(from.getFullYear()>year || from.getFullYear()==year && from.getMonth()>month){
                         //fromよりも明らかに以前
                         tmp_res=[];
-                    }else if(from.getFullYear()==year&&from.getMonth()==month){
+                    }else if(from.getFullYear()==year && from.getMonth()==month){
                         //fromの境目あたり。
                         tmp_res=all_days();
-                        tmp_res=_.filter(tmp_res,function(n){
-                            return n>=from.getDate();
-                        });
+                        tmp_res=tmp_res.slice(_.indexOf(tmp_res,from.getDate(),true));
                     }else tmp_res=all_days();//}}}
                 }else if(val.indexOf('..')!==-1){//{{{
                     //20xx/xx/xx..20xx/xx/xxという形式
@@ -585,33 +584,28 @@ angular.module(appName)
                     to_res=[];
                     from_reses=[];
                     from=val[0];
+                    froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                     to=val[1];
                     top4=to.substr(to.length-4,4);//最後の4文字を取り出す。to:4weekのようになっているから
                     top5=to.substr(to.length-5,5);//最後の5文字を取り出す。to:4weeksのようになっているから
-                    froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                     //from処理
-                    from=from.split('/');
-                    from=_.map(from,toInt);
+                    from=_.map(from.split('/'),toInt);
                     if(from.length===3){
                         // year/month/dateと記述されている
-                        var from1=new Date(from[0],from[1]-1,from[2]);
-                        froms.push(from1);
+                        froms.push(new Date(from[0],from[1]-1,from[2]));
                     }else if(from.length===2){
-                        // month/date yearがないから、すべてのyearに当てはまる。ただし、去年及び今年のもの以外は重要でない
-                        var from1=new Date(year-1,from[0]-1,from[1]);
-                        var from2=new Date(year,from[0]-1,from[1]);
-                        froms.push(from1,from2);
+                        // month/date yearがないから、すべてのyearに当てはまる。ただし、去年及び今年のもの以外は重要でない。
+                        froms.push(new Date(year-1,from[0]-1,from[1]),new Date(year,from[0]-1,from[1]));
                     }
                     _.each(froms,function(fromItem){
-                        if(fromItem.getFullYear()>year||fromItem.getFullYear()==year&&fromItem.getMonth()>month){
+                        if(fromItem.getFullYear()>year || fromItem.getFullYear()==year && fromItem.getMonth()>month){
                             //fromよりも明らかに以前
                             from_res=[];
                         }else if(fromItem.getFullYear()==year&&fromItem.getMonth()==month){
                             //fromの境目あたり。
                             from_res=all_days();
-                            from_res=_.filter(from_res,function(n){
-                                return n>=fromItem.getDate();
-                            });
+                            from_res=from_res.slice(_.indexOf(from_res,fromItem.getDate(),true));
+
                         }else from_res=all_days();
                         from_reses.push(from_res);
                     });
@@ -654,9 +648,7 @@ angular.module(appName)
                         }else if(nowTo.getFullYear()==year && nowTo.getMonth()==month){
                             //toがかぶっているであろう時
                             to_res=all_days();
-                            to_res=_.filter(to_res,function(n){
-                                return n<=nowTo.getDate();//toより前であることが条件
-                            });
+                            to_res=to_res.slice(0,_.lastIndexOf(to_res,nowTo.getDate(),true)+1);//toより前
                         }else to_res=all_days();
                         if(!_.isEmpty(_.intersection(from_res,to_res))){
                             tmp_res=_.intersection(from_res,to_res);
