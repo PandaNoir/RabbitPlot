@@ -56,6 +56,10 @@ module.exports = function(grunt) {
                     expand: true,
                     src: './lib/js/*.min.js',
                     ext: '.min.js.gz'
+                },{
+                    expand: true,
+                    src: './lib/css/*.min.css',
+                    ext: '.min.css.gz'
                 }
                 ]
             },
@@ -66,8 +70,8 @@ module.exports = function(grunt) {
                 files:[
                     {
                     expand: true,
-                    src: ['css/*','./lib/css/*'],
-                    ext: '.css.gz'
+                    src: ['css/*.min.css'],
+                    ext: '.min.css.gz'
                 }
                 ]
             }
