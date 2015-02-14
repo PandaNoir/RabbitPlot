@@ -42,8 +42,20 @@ module.exports = function(grunt) {
                 files:[
                     {
                     expand: true,
-                    src: [mainJS,'./lib/js/*'],
+                    src: [mainJS],
                     ext: '.js.gz'
+                }
+                ]
+            },
+            lib: {
+                options: {
+                    mode: 'gzip'
+                },
+                files:[
+                    {
+                    expand: true,
+                    src: './lib/js/*.min.js',
+                    ext: '.min.js.gz'
                 }
                 ]
             },
@@ -161,9 +173,10 @@ module.exports = function(grunt) {
             }
         }
     });
-    grunt.registerTask('default', ['js','html','cssmin','compress']);
+    grunt.registerTask('default', ['js','html','cssmin','compress:js','compress:css']);
     grunt.registerTask('html', ['replace:release','htmlmin:dist']);
     grunt.registerTask('js', ['concat:prefix','closure-compiler:frontend','clean:raw']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('test', ['concat:test','karma']);
+    grunt.registerTask('lib', ['bower:install','compress:lib']);
 };
