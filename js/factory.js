@@ -89,7 +89,7 @@ angular.module(appName)
     });
     return o;
 }])//}}}
-.factory('calF',function(){//{{{
+.factory('calendar',function(){//{{{
     var today=new Date();
     var memo=[];
     function calendar(year,month){
@@ -253,7 +253,7 @@ angular.module(appName)
         getNameList:getNameList
     };
 }])//}}}
-.factory('eventCal',['_','group','user','calF','error',function(_,group,user,calF,myError){//{{{
+.factory('eventCal',['_','group','user','calendar','error',function(_,group,user,calendar,myError){//{{{
     function last(arr){return arr[arr.length-1];};
     var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
     var OPERATOR=0;
@@ -269,9 +269,9 @@ angular.module(appName)
         var events=[];
         var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         var groups=_.difference(user.following,user.hiddenGroup);
-        if(calF.year!==yearOfEC||calF.month!==monthOfEC){
-            yearOfEC=calF.year;
-            monthOfEC=calF.month;
+        if(calendar.year!==yearOfEC||calendar.month!==monthOfEC){
+            yearOfEC=calendar.year;
+            monthOfEC=calendar.month;
             ECMemo=[];
         }else{
             if(groups.join(',')!==beforeGroups||user.updated||_.any(groups,function(item){return item.updated===true;})){
@@ -284,11 +284,11 @@ angular.module(appName)
             }
         }
         for(var i=0,i2=groups.length;i<i2;i++){
-            events[events.length]=getEvents(groups[i],calF.year,calF.month);
+            events[events.length]=getEvents(groups[i],calendar.year,calendar.month);
         }
         if(!user.isHiddenGroup(-1)){
             //privateがhiddenに設定されていない
-            events[events.length]=getEvents('private',calF.year,calF.month);
+            events[events.length]=getEvents('private',calendar.year,calendar.month);
         }
         //events=[{year,month,date,name,id,group,type}, ..];
         for(var i=0,i2=events.length;i<i2;i++){
@@ -417,7 +417,7 @@ angular.module(appName)
                 s=s.toLowerCase();
                 return s==='public-holiday'||s==='publicholiday'||s==='祝日';
             };
-            var cal=calF.calendar(year,month);
+            var cal=calendar.calendar(year,month);
             var dayDic={
                 'sunday':0,'sun':0,'日曜日':0,
                 'monday':1,'mon':1,'月曜日':1,
@@ -812,7 +812,7 @@ angular.module(appName)
         execSelectors:execSelectors//テスト用
     };
 }])//}}}
-.run(['calF','$timeout',function(calF,$timeout){//{{{
+.run(['calendar','$timeout',function(calendar,$timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);
     tomorrow.setHours(0);
@@ -827,9 +827,9 @@ angular.module(appName)
         tomorrow.setSeconds(0);
         tomorrow.setMilliseconds(0);
         var today=new Date();
-        calF.today.year=today.getFullYear();
-        calF.today.month=today.getMonth();
-        calF.today.date=today.getDate();
+        calendar.today.year=today.getFullYear();
+        calendar.today.month=today.getMonth();
+        calendar.today.date=today.getDate();
         $timeout(setTomorrow,tomorrow-(new Date()));
     }
     $timeout(setTomorrow,tomorrow-(new Date()));

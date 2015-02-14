@@ -1,5 +1,5 @@
 angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
-.controller('mainCtrl',['$scope','_','calF','eventCal','mode','$mdSidenav',function($scope,_,calF,eventCal,mode,$mdSidenav){//{{{
+.controller('mainCtrl',['$scope','_','calendar','eventCal','mode','$mdSidenav',function($scope,_,calendar,eventCal,mode,$mdSidenav){//{{{
     $scope._=_;
     $scope.mode=mode;
     mode.editsEventForm=false;
@@ -8,7 +8,7 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
     $scope.openNav=function(){
         $mdSidenav('left').toggle();
     };
-    calF.selected=calF.date;
+    calendar.selected=calendar.date;
     $scope.eventCalendar=eventCal.eventCalendar;
 }])//}}}
 .config(['$httpProvider',function ($httpProvider) {//{{{

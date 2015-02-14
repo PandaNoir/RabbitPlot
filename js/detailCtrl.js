@@ -1,10 +1,10 @@
 angular.module(appName)
-.controller('detailCtrl',['$scope','eventCal','calF','user','mode',function($scope,eventCal,calF,user,mode){
+.controller('detailCtrl',['$scope','eventCal','calendar','user','mode',function($scope,eventCal,calendar,user,mode){
     $scope.mode=mode;
-    $scope.calF=calF;
+    $scope.calendar=calendar;
     $scope.eventCalendar=eventCal.eventCalendar;
     $scope.user=user;
     $scope.isToday=function(){
-        return calF.selected===calF.today.date && calF.month===calF.today.month && calF.year===calF.today.year;
+        return calendar.selected===calendar.today.date && calendar.month===calendar.today.month && calendar.year===calendar.today.year;
     };
 }]);

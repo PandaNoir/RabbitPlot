@@ -151,9 +151,9 @@ module.exports = function(grunt) {
             }
         }
     });
-    grunt.registerTask('compile',['concat','closure-compiler:frontend','clean:raw']);
-    grunt.registerTask('default', ['compile','compress','replace:release','htmlmin:dist','cssmin']);
-    grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw','compress']);
+    grunt.registerTask('default', ['js','html','cssmin','compress']);
+    grunt.registerTask('html', ['replace:release','htmlmin:dist']);
+    grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw']);
     grunt.registerTask('dev', ['replace:dev']);
     grunt.registerTask('pretty', ['closure-compiler:frontend_debug']);
 };

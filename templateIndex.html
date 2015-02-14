@@ -98,14 +98,14 @@
         <div class="calendar-header cf">
           <md-button ng-click="lastYear()" class="left">&lt;&lt;</md-button>
           <md-button ng-click="lastMonth()" class="left">&lt;</md-button>
-          {{calF.year}}/{{calF.month+1}}
+          {{calendar.year}}/{{calendar.month+1}}
           <md-button ng-click="nextYear()" class="right">&gt;&gt;</md-button>
           <md-button ng-click="nextMonth()" class="right">&gt;</md-button>
         </div>
         <div class="cal-row">
           <span class="date" ng-repeat="item in ::dates">{{item}}</span>
         </div>
-        <div class="cal-row" ng-repeat="row in calF.calendar(calF.year,calF.month)">
+        <div class="cal-row" ng-repeat="row in calendar.calendar(calendar.year,calendar.month)">
           <span app-date="0" app-row="row"></span>
           <span app-date="1" app-row="row"></span>
           <span app-date="2" app-row="row"></span>
@@ -119,19 +119,19 @@
       </div><!--}}}-->
       <div layout="row" layout-sm="column">
       <md-whiteframe ng-controller="detailCtrl" class="md-whiteframe-z2" layout="column" layout-align="center center" ng-class="{hideSetting:!mode.showsSetting}" flex><!--{{{-->
-        <div ng-show="calF.selected!==null">{{calF.month+1}}/{{calF.selected}}({{calF.selectedDay()}})<span ng-if="isToday()"> - 今日</span></div>
-        <div ng-show="calF.selected===null"><br></div>
+        <div ng-show="calendar.selected!==null">{{calendar.month+1}}/{{calendar.selected}}({{calendar.selectedDay()}})<span ng-if="isToday()"> - 今日</span></div>
+        <div ng-show="calendar.selected===null"><br></div>
         <md-list>
-          <md-item ng-show="eventCalendar(calF.selected).length===0">予定なし</md-item>
-          <md-item ng-repeat="event in eventCalendar(calF.selected) track by $index" class="cf">
+          <md-item ng-show="eventCalendar(calendar.selected).length===0">予定なし</md-item>
+          <md-item ng-repeat="event in eventCalendar(calendar.selected) track by $index" class="cf">
           <md-item-content>
           <div event-item app-event="event"></div>
           </md-item-content>
           </md-item>
         </md-list>
 
-        <md-button class="md-raised md-primary" ng-show="calF.selected!==null" ng-click="mode.switchToEdit(calF.year,calF.month,calF.selected)">イベントを追加</md-button>
-        <br ng-if="calF.selected===null">
+        <md-button class="md-raised md-primary" ng-show="calendar.selected!==null" ng-click="mode.switchToEdit(calendar.year,calendar.month,calendar.selected)">イベントを追加</md-button>
+        <br ng-if="calendar.selected===null">
       </md-whiteframe><!--}}}-->
       <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm" flex><!--{{{-->
         <form name="eventEditor" class="md-padding">

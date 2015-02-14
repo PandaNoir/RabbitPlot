@@ -16,8 +16,8 @@ describe('test',function(){
         it('is selector',inject(function(eventCal){
             expect(eventCal.execSelectors('is:public-holiday',year,month)).toEqual([11]);
         }));
-        it('month selector',inject(function(eventCal,calF){
-            var all_days=_.without(_.flatten(calF.calendar(year,month)),OVER_MONTH);
+        it('month selector',inject(function(eventCal,calendar){
+            var all_days=_.without(_.flatten(calendar.calendar(year,month)),OVER_MONTH);
             expect(eventCal.execSelectors('month:2',year,month)).toEqual(all_days);
             expect(eventCal.execSelectors('month:3',year,month)).toEqual([]);
         }));
@@ -29,8 +29,8 @@ describe('test',function(){
             expect(eventCal.execSelectors('range:12/29...1/3',year,12-1)).toEqual([29,30,31]);
             expect(eventCal.execSelectors('range:12/29...1/3',year,1-1)).toEqual([1,2,3]);
         }));
-        it('year selector',inject(function(eventCal,calF){
-            var all_days=_.without(_.flatten(calF.calendar(year,month)),OVER_MONTH);
+        it('year selector',inject(function(eventCal,calendar){
+            var all_days=_.without(_.flatten(calendar.calendar(year,month)),OVER_MONTH);
             expect(eventCal.execSelectors('year:'+(year+1),year,month)).toEqual([]);
             expect(eventCal.execSelectors('year:'+year,year,month)).toEqual(all_days);
             expect(eventCal.execSelectors('year:leap-year',year,month)).toEqual(all_days);
@@ -65,14 +65,14 @@ describe('test',function(){
     describe('calendar.calendar()',function(){
         var OVER_MONTH=64;
 
-        it('should be real calendar.',inject(function(calF){
-            var c=calF.calendar(2014,2-1);
+        it('should be real calendar.',inject(function(calendar){
+            var c=calendar.calendar(2014,2-1);
             var exp=[[0,0,0,0,0,0,1],[2,3,4,5,6,7,8],[9,10,11,12,13,14,15],[16,17,18,19,20,21,22],[23,24,25,26,27,28,OVER_MONTH]];
             exp.year=2014;
             exp.month=1;
             expect(c).toEqual(exp);
-            expect(JSON.stringify(calF.calendar(2014,2-1))).toEqual(JSON.stringify([[0,0,0,0,0,0,1],[2,3,4,5,6,7,8],[9,10,11,12,13,14,15],[16,17,18,19,20,21,22],[23,24,25,26,27,28,OVER_MONTH]]));
-            expect(_.flatten(calF.calendar(2014,2-1))).toEqual([0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,OVER_MONTH]);
+            expect(JSON.stringify(calendar.calendar(2014,2-1))).toEqual(JSON.stringify([[0,0,0,0,0,0,1],[2,3,4,5,6,7,8],[9,10,11,12,13,14,15],[16,17,18,19,20,21,22],[23,24,25,26,27,28,OVER_MONTH]]));
+            expect(_.flatten(calendar.calendar(2014,2-1))).toEqual([0,0,0,0,0,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,OVER_MONTH]);
         }));
     });
 });
