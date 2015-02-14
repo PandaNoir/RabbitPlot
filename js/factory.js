@@ -124,7 +124,7 @@ angular.module(appName)
                         res[row][res[row].length]=OVER_MONTH;//来月の範囲
                     }
                 }else{
-                    res[row][res[row].length]=0;//今月の範囲
+                    res[row][res[row].length]=0;//先月の範囲
                 }
             }
             if(res[row][res[row].length-1]>=last) break;
@@ -577,8 +577,8 @@ angular.module(appName)
                     from_reses=[];
                     from=val[0];
                     to=val[1];
-                    top4=to.substr(to.length-4,4);//最後の4文字を取り出す。理由はto:4weekのようになっているから
-                    top5=to.substr(to.length-5,5);//最後の4文字を取り出す。理由はto:4weekのようになっているから
+                    top4=to.substr(to.length-4,4);//最後の4文字を取り出す。to:4weekのようになっているから
+                    top5=to.substr(to.length-5,5);//最後の5文字を取り出す。to:4weeksのようになっているから
                     froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                     //from処理
                     from=from.split('/');
