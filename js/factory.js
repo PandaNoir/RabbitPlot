@@ -740,17 +740,13 @@ angular.module(appName)
                 }else if(nowChar===' '){
                     resPush([selector.substring(start,i),OTHERS]);
                     var operator={' and ':'&&', ' かつ ':'&&', ' && ':'&&', ' or ':'||', ' または ':'||', ' || ':'||'};
-                    var added=false;
-                    operatorLoop:for(var key in operator){
-                        if(selector.substr(i,key.length)===key){
-                            resPush([operator[key],OPERATOR]);
-                            start=i+key.length;
-                            i+=key.length;
-                            added=true;
-                            break operatorLoop;
-                        }
-                    }
-                    if(!added){
+                    var matchedOperator=selector.substr(i).match(/^ (?:and|&&|かつ|or|\|\||または) /);
+                    if(matchedOperator!==null){
+                        matchedOperator=matchedOperator[0];
+                        resPush([operator[matchedOperator],OPERATOR]);
+                        start=i+matchedOperator.length;
+                        i+=matchedOperator.length;
+                    }else{
                         resPush(['&&',OPERATOR]);
                         start=i+1;
                         i+=1;
