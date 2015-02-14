@@ -91,36 +91,4 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
         });
     });
 }])//}}}
-.directive('eventItem',function(){
-    return {
-        restrict: 'A',
-        scope: {event:'=appEvent'},
-        template: '<div class="md-item-content event-item" layout="row"><div flex>{{event|format}}</div><div flex><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button><md-button ng-click="deleteEvent(event)" ng-if="user.hasPermission(event.split(\':\')[1])">削除</md-button></div></div>',
-        replace:true,
-        controller: ['$scope','mode','user','db',function($scope,mode,user,db){
-            $scope.mode=mode;
-            $scope.user=user;
-            $scope.deleteEvent=function(event){
-                var eventID=event.split(':')[0];
-                var groupID=event.split(':')[1];
-                var type=event.split(':')[2];
-                if(user.hasPermission(groupID)){
-                    if(groupID==='private'){
-                        user['private'][type].splice(eventID,1);
-                        user.updated=true;
-                        user.save();
-                    }else{
-                        group[groupID][type].splice(eventID,1);
-                        group[groupID].updated=true;
-                        db.post(group[groupID],groupID,'update');
-                    }
-                }else{
-                    return;
-                }
-            };
-        }],
-        link: function(scope,elm,attrs){
-        }
-    };
-})
 ;

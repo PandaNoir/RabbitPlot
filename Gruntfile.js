@@ -9,7 +9,8 @@ module.exports = function(grunt) {
         './js/detailCtrl.js',
         './js/settingCtrl.js',
         './js/eventListCtrl.js',
-        './js/factory.js'
+        './js/factory.js',
+        './js/directive.js'
     ];
     var scriptList='';
     for(var i=0,j=files.length;i<j;i++){
