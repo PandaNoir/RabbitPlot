@@ -153,11 +153,17 @@ module.exports = function(grunt) {
                     bowerOptions: {}
                 }
             }
+        },
+        karma: {
+            unit: {
+                configFile: 'karma.conf.js',
+                singleRun: true
+            }
         }
     });
     grunt.registerTask('default', ['js','html','cssmin','compress']);
     grunt.registerTask('html', ['replace:release','htmlmin:dist']);
     grunt.registerTask('js', ['concat','closure-compiler:frontend','clean:raw']);
     grunt.registerTask('dev', ['replace:dev']);
-    grunt.registerTask('test', ['concat:test']);
+    grunt.registerTask('test', ['concat:test','karma']);
 };
