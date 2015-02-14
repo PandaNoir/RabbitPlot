@@ -9,3 +9,4 @@ app/components
 *.swp
 *.gz
 *.map
+main.test.js

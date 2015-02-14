@@ -11,7 +11,12 @@ describe('test',function(){
             month=2-1;// 2012/2
         }));
         it('date selector',inject(function(eventCal){
+            expect(eventCal.execSelectors('date:3',year,month)).toEqual([3]);
+        }));
+        it('day selector',inject(function(eventCal){
             expect(eventCal.execSelectors('day:wed',year,month)).toEqual([1,8,15,22,29]);
+            expect(eventCal.execSelectors('day:2nd-wed',year,month)).toEqual([8]);
+            expect(eventCal.execSelectors('day:last-wed',year,month)).toEqual([29]);
         }));
         it('is selector',inject(function(eventCal){
             expect(eventCal.execSelectors('is:public-holiday',year,month)).toEqual([11]);

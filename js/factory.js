@@ -670,14 +670,15 @@ angular.module(appName)
                 if(val.match(/^\d/)){
                     // day:3rd-wed
                     //valが1st-wedといった具合になっている
-                    val=val.match(/^(\d+)(?:st|[nr]d|th)-?(.+)$/i);
+                    val=val.toLowerCase().match(/^(\d+)(?:st|[nr]d|th)-?(.+)$/);
                     var ordinalNum=toInt(val[1]);
-                    var valDay=dayDic[val[2].toLowerCase()];
-                    var dayCount=0;
-                    var index=0;
-                    while(cal[index][valDay]==='') index++;//今月に入るまでループ回す
-                    index=index-1+ordinalNum;//今月の初日をindexが指しているから、-1してordinalNum足せば対象の日となる
-                    tmp_res[tmp_res.length]=cal[index][valDay];
+                    tmp_res=[(execSelector('day:'+val[2],year,month)||[])[ordinalNum-1]];
+                }else if(val.slice(0,4).toLowerCase()==='last'){
+                    // day:last-wed
+                    val=val.toLowerCase();
+                    var valDay=val.slice(4);//valのlast以降の文字列
+                    if(valDay.charAt(0)==='-') valDay=valDay.slice(1);//last-wedの-を取り除く
+                    tmp_res=[_.last(execSelector('day:'+valDay,year,month))];
                 }else{
                     // day:mon,tue,...
                     var valDay=dayDic[val.toLowerCase()];
