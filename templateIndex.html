@@ -34,6 +34,9 @@
     <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
       <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
       <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
+      <md-button class="md-raised md-primary" ng-click="hideAll()">すべてのグループを非表示にする</md-button>
+      <md-button class="md-raised md-primary" ng-click="showAll()">すべてのグループを表示する</md-button><br>
+      <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
       <input type="text" ng-model="search_keyword">
       <md-button class="md-raised md-primary" ng-click="search()">検索</md-button>
       <md-button class="md-raised md-primary" ng-click="randomSearch()">ランダム</md-button>
@@ -70,11 +73,7 @@
       </md-item-content>
       </md-item>
       </md-list><!--}}}-->
-      <div ng-show="user.following.length==0">フォローしていません</div>
-      <md-button class="md-raised md-primary" ng-click="hideAll()">すべて非表示にする</md-button>
-      <md-button class="md-raised md-primary" ng-click="showAll()">すべて表示する</md-button><br>
-
-      <md-button class="md-raised md-primary" ng-click="makeAGroup()">グループを作る</md-button><br>
+      <div ng-show="user.following.length==0">フォローしているグループはありません</div>
     </div><!--}}}-->
     <div id="event-list" ng-controller="eventListCtrl" ng-if="mode.showsEventList"><!--{{{-->
       <md-button ng-click="mode.showsEventList=false">閉じる</md-button>
