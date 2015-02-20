@@ -181,7 +181,7 @@ angular.module(appName)
 
                 _.extend(eventForm,{
                     type: event[2],
-                    id: args.length===1? event[0]: 0
+                    id: args.length===1? toInt(event[0]): 0
                 });
 
                 if(event[1]!=='private'){
