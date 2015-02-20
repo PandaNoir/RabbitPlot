@@ -23,7 +23,6 @@ angular.module(appName)
             };
             $scope.dateClass=function(date){
                 if(date!==0&&date!==32){
-                    var calendar=$scope.calendar;
                     var res=[];
                     if(calendar.selected===date) res[res.length]='selected';
                     res[res.length]=$scope.bookedClass(date);
