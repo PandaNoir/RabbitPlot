@@ -415,7 +415,12 @@ angular.module(appName)
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
             var allDays=function(){
-                return _.flatten(cal);
+                var res=_.flatten(cal);
+                var first=_.lastIndexOf(res,0,true);
+                var last=_.indexOf(res,OVER_MONTH,true);
+                first+=1;//みつからない場合もこれでOK。firstが0になることで頭から抜き取ってこれるから。
+                if(last===-1) last=res.length;
+                return res.slice(first,last);
             };
             var meansPublicHoliday=function(s){
                 //sが祝日を表しているか判定
@@ -425,13 +430,13 @@ angular.module(appName)
             };
             var cal=calendar.calendar(year,month);
             var dayDic={
-                'sunday':0,'sun':0,'日曜日':0,
-                'monday':1,'mon':1,'月曜日':1,
-                'tuesday':2,'tue':2,'火曜日':2,
-                'wednesday':3,'wed':3,'水曜日':3,
-                'thursday':4,'thu':4,'木曜日':4,
-                'friday':5,'fri':5,'金曜日':5,
-                'saturday':6,'sat':6,'土曜日':6
+                'sunday':0,'sun':0,'日曜日':0,'日':0,
+                'monday':1,'mon':1,'月曜日':1,'月':1,
+                'tuesday':2,'tue':2,'火曜日':2,'火':2,
+                'wednesday':3,'wed':3,'水曜日':3',水':3,
+                'thursday':4,'thu':4,'木曜日':4,'木':4,
+                'friday':5,'fri':5,'金曜日':5,'金':5,
+                'saturday':6,'sat':6,'土曜日':6,'土':6
             };
             var monthDic={
                 'january':0,'jan':0,'睦月':0,
@@ -702,7 +707,6 @@ angular.module(appName)
             }else{
                 throw myError('undefined key "'+key+'".');
             }
-            while(last(tmpRes)===OVER_MONTH) tmpRes.pop();//来月分を排除
             if(key==='day'){
                 //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
                 GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
