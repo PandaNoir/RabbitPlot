@@ -1,4 +1,4 @@
-var gulp=require('gulp'),concat=require('gulp-concat'),minifyCss=require('gulp-minify-css'),closure=require('gulp-closure-compiler'),gzip=require('gulp-gzip'),karma=require('gulp-karma'),minifyHtml=require('gulp-minify-html'),replace=require('gulp-replace'),rimraf=require('rimraf'),rename=require('gulp-rename'),_=require('lodash');
+var gulp=require('gulp'),concat=require('gulp-concat'),minifyCss=require('gulp-minify-css'),closureCompiler=require('gulp-closure-compiler'),gzip=require('gulp-gzip'),karma=require('gulp-karma'),minifyHtml=require('gulp-minify-html'),replace=require('gulp-replace'),rimraf=require('rimraf'),rename=require('gulp-rename'),_=require('lodash');
 
 var path = {
     js: [
@@ -16,7 +16,7 @@ function wrap(files,name){
 }
 
 gulp.task('concat', function() {
-    gulp.src(wrap(path.js,'rabbit'))
+    return gulp.src(wrap(path.js,'rabbit'))
     .pipe(concat(mainRawJS))
     .pipe(gulp.dest('./js/'));
 });
@@ -32,15 +32,23 @@ gulp.task('karma',['concat'], function() {
     });
 });
 gulp.task('minify',['concat'],function(cb){
-    gulp.src('./js/'+mainRawJS)
-    .pipe(closure({
-        compilerPath: './compiler-latest/build/compiler.jar',
-        compilation_level: 'SIMPLE_OPTIMIZATIONS',
-        language_in: 'ECMASCRIPT5_STRICT',
-        fileName: mainJS
+    gulp.src('./js/main.raw.js')
+    .pipe(closureCompiler({
+        compilerPath: './bower_components/closure-compiler/compiler.jar',
+        fileName: 'main.js',
+        compilerFlags:{
+            compilation_level: 'SIMPLE_OPTIMIZATIONS',
+            language_in: 'ECMASCRIPT5_STRICT'
+        }
     }))
-    .pipe(gulp.dest('./js/'));
-    rimraf('./js/'+mainRawJS,cb);
+    .pipe(gulp.dest('./js/'))
+
+    .pipe(gzip())
+    .pipe(gulp.dest('./js/'))
+    .on('end',function(){
+        rimraf('./js/'+mainRawJS,cb);
+    });
+
     gulp.src(path.lib)
     .pipe(gzip())
     .pipe(gulp.dest('./lib/js'));
