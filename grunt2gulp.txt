@@ -1,0 +1,10 @@
+grunt-bower-task => ??
+grunt-closure-compiler => gulp-closure-compiler
+grunt-contrib-clean => (native)
+grunt-contrib-compress => gulp-gzip
+grunt-contrib-concat => gulp-concat
+grunt-contrib-cssmin => gulp-minify-css
+grunt-contrib-htmlmin => gulp-minify-html
+grunt-karma => gulp-karma
+grunt-text-replace => gulp-replace
+grunt-uncss
