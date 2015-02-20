@@ -6,6 +6,7 @@ var path = {
         './js/detailCtrl.js','./js/settingCtrl.js','./js/eventListCtrl.js','./js/factory.js','./js/directive.js'
     ],
     lib: ['./lib/js/angular.min.js','./lib/js/angular-touch.min.js','./lib/js/angular-animate.min.js','./lib/js/angular-aria.min.js','./lib/js/angular-messages.min.js','./lib/js/angular-material.min.js','./lib/js/lodash.min.js'],
+    libcss: ['./lib/css/angular-material.min.css'],
     css: ['./css/style.css']
 };
 var mainJS='main.js',mainRawJS='main.raw.js',mainPrettyJS='main.pretty.js';
@@ -80,6 +81,12 @@ gulp.task('cssmin',function(){
     .pipe(gulp.dest('./css'))
     .pipe(gzip())
     .pipe(gulp.dest('./css'));
+
+    gulp.src(path.libcss)
+    .pipe(minifyCss())
+    .pipe(gulp.dest('./lib/css'))
+    .pipe(gzip())
+    .pipe(gulp.dest('./lib/css'));
 });
 
 gulp.task('default', ['minify','release','cssmin']);
