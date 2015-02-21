@@ -42,6 +42,8 @@ angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
         }else{
             if(toInt(event[1])===0&&toInt(event[0])===-1){
                 res='[mes]振替休日';
+            }else if(toInt(event[1])===0&&toInt(event[0])===-2){
+                res='[mes]国民の休日';
             }else{
                 res=group[event[1]][event[2]][event[0]].name;
             }

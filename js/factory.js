@@ -406,18 +406,32 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
         }
         if(groupID===0){
             //振替休日の選定
-            if(y<1973||y==1973&&m<4) return [];//振替休日が制定されるより前
-            var holidays=_.map(res,function(n){return n.date});
-            var sundayHoliday=_.intersection(holidays,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
-            res.push.apply(res,_.map(sundayHoliday,function(n){
-                var k=1;
-                while(_.indexOf(holidays,n+k,true)!==-1){
-                    //振替先が祝日
-                    k+=1;
-                }
-                return {year:y,month:m,date:n+k,name:'[mes]振替休日',group:0,id:-1,type:'habit'};
-            }));
-            res.sort();
+            if(!(y<1973||y==1973&&m<4)){
+                //振替休日が制定されたあと
+                var holidays=_.map(res,function(n){return n.date});
+                var sundayHoliday=_.intersection(holidays,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
+                res.push.apply(res,_.map(sundayHoliday,function(n){
+                    var k=1;
+                    while(_.indexOf(holidays,n+k,true)!==-1){
+                        //振替先が祝日
+                        k+=1;
+                    }
+                    return {year:y,month:m,date:n+k,name:'[mes]振替休日',group:0,id:-1,type:'habit'};
+                }));
+                res.sort();
+            }
+            if(y>=1985||y==1985&&m==12&&d>=27){
+                //国民の休日が制定されたあと
+                var holidays=_.map(res,function(n){return n.date});
+                var beforeDay=0;
+                _.each(holidays,function(n){
+                    if(n-beforeDay===2){
+                        res.push({year:y,month:m,date:n-1,name:'[mes]国民の休日',group:0,id:-2,type:'habit'});
+                    }
+                    beforeDay=n;
+                });
+                res.sort();
+            }
         }
         return res;
     };//}}}
