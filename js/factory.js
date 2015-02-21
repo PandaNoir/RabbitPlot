@@ -101,7 +101,6 @@ angular.module(appName)
         }else{
             memo[year-MEMO_LIMIT]=[];
         }
-        var firstDay=(new Date(year,month,1)).getDay();
         var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
         if(month===1 && isLeapYear(year)){
             //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
@@ -112,27 +111,25 @@ angular.module(appName)
         res.year=year;
         res.month=month;
         var i=0;
-        var row=0;
-        while(row===0 || _.last(res[row-1])<lastDate){// res[row-1]なのは、このループのラストでrowを1足しているから
-            res[row]=[];
-            for(var j=1;j<=7;j++){
-                //i*7+j-firstDayでその部分の日付
-                if(row*7+j-firstDay>0){
-                    //先月の範囲でない
-                    if(row*7+j-firstDay<=lastDate){
-                        //来月の範囲でない
-                        res[row][res[row].length]=row*7+j-firstDay;//日付が今月の範囲に収まっている
-                    }else{
-                        //来月の範囲
-                        res[row][res[row].length]=OVER_MONTH;//来月の範囲
-                    }
-                }else{
-                    //先月の範囲
-                    res[row][res[row].length]=0;
-                }
-            }
-            row++;
+        var day=(new Date(year,month,1)).getDay();
+        var row=[];
+        for(var i=day;i>0;i--){
+            row[row.length]=0;
         }
+        for(var i=1;i<=lastDate;i++){
+            if(day>6){
+                day=0;
+                res[res.length]=row;
+                row=[];
+            }
+            row[row.length]=i;//日付が今月の範囲に収まっている
+            day++;
+        }
+        for(var i=day;i<7;i++){
+            row[row.length]=OVER_MONTH;
+        }
+        if(row.length>0) res[res.length]=row;
+        row=null;
         return memo[year-MEMO_LIMIT][month]=res;
     };
     var res={

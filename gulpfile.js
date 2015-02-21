@@ -29,7 +29,7 @@ gulp.task('karma',['concat'], function() {
         action: 'run',
         singleRun: true
     })).on('error',function(err){
-        throw err;
+        console.error(err);
     });
 });
 gulp.task('minify',['concat'],function(cb){
