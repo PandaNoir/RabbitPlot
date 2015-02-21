@@ -54,38 +54,107 @@ angular.module(appName)
     var o=[{//{{{
         id:0,
         event:[
-            {name:'[mes]十五夜',year:2000,month:8,date:12},{name:'[mes]十五夜',year:2001,month:9,date:1},
-            {name:'[mes]十五夜',year:2002,month:8,date:21},{name:'[mes]十五夜',year:2003,month:8,date:11},
-            {name:'[mes]十五夜',year:2004,month:8,date:28},{name:'[mes]十五夜',year:2005,month:8,date:18},
-            {name:'[mes]十五夜',year:2006,month:9,date:6},{name:'[mes]十五夜',year:2007,month:8,date:25},
-            {name:'[mes]十五夜',year:2008,month:8,date:14},{name:'[mes]十五夜',year:2009,month:9,date:3},
-            {name:'[mes]十五夜',year:2010,month:8,date:22},{name:'[mes]十五夜',year:2011,month:8,date:12},
-            {name:'[mes]十五夜',year:2012,month:8,date:30},{name:'[mes]十五夜',year:2013,month:8,date:19},
-            {name:'[mes]十五夜',year:2014,month:8,date:8},{name:'[mes]十五夜',year:2015,month:8,date:27},
-            {name:'[mes]十五夜',year:2016,month:8,date:15}
+            {name:'[mes]十五夜',year:1901,month:8,date:27},{name:'[mes]十五夜',year:1902,month:8,date:16},
+            {name:'[mes]十五夜',year:1903,month:9,date:5},{name:'[mes]十五夜',year:1904,month:8,date:24},
+            {name:'[mes]十五夜',year:1905,month:8,date:13},{name:'[mes]十五夜',year:1906,month:9,date:2},
+            {name:'[mes]十五夜',year:1907,month:8,date:22},{name:'[mes]十五夜',year:1908,month:8,date:10},
+            {name:'[mes]十五夜',year:1909,month:8,date:29},{name:'[mes]十五夜',year:1910,month:8,date:18},
+            {name:'[mes]十五夜',year:1911,month:9,date:6},{name:'[mes]十五夜',year:1912,month:8,date:25},
+            {name:'[mes]十五夜',year:1913,month:8,date:15},{name:'[mes]十五夜',year:1914,month:9,date:4},
+            {name:'[mes]十五夜',year:1915,month:8,date:23},{name:'[mes]十五夜',year:1916,month:8,date:12},
+            {name:'[mes]十五夜',year:1917,month:8,date:30},{name:'[mes]十五夜',year:1918,month:8,date:19},
+            {name:'[mes]十五夜',year:1919,month:9,date:8},{name:'[mes]十五夜',year:1920,month:8,date:26},
+            {name:'[mes]十五夜',year:1921,month:8,date:16},{name:'[mes]十五夜',year:1922,month:9,date:5},
+            {name:'[mes]十五夜',year:1923,month:8,date:25},{name:'[mes]十五夜',year:1924,month:8,date:13},
+            {name:'[mes]十五夜',year:1925,month:9,date:2},{name:'[mes]十五夜',year:1926,month:8,date:21},
+            {name:'[mes]十五夜',year:1927,month:8,date:10},{name:'[mes]十五夜',year:1928,month:8,date:28},
+            {name:'[mes]十五夜',year:1929,month:8,date:17},{name:'[mes]十五夜',year:1930,month:9,date:6},
+            {name:'[mes]十五夜',year:1931,month:8,date:26},{name:'[mes]十五夜',year:1932,month:8,date:15},
+            {name:'[mes]十五夜',year:1933,month:9,date:4},{name:'[mes]十五夜',year:1934,month:8,date:23},
+            {name:'[mes]十五夜',year:1935,month:8,date:12},{name:'[mes]十五夜',year:1936,month:8,date:30},
+            {name:'[mes]十五夜',year:1937,month:8,date:19},{name:'[mes]十五夜',year:1938,month:9,date:8},
+            {name:'[mes]十五夜',year:1939,month:8,date:27},{name:'[mes]十五夜',year:1940,month:8,date:16},
+            {name:'[mes]十五夜',year:1941,month:9,date:5},{name:'[mes]十五夜',year:1942,month:8,date:25},
+            {name:'[mes]十五夜',year:1943,month:8,date:14},{name:'[mes]十五夜',year:1944,month:9,date:1},
+            {name:'[mes]十五夜',year:1945,month:8,date:20},{name:'[mes]十五夜',year:1946,month:8,date:10},
+            {name:'[mes]十五夜',year:1947,month:8,date:29},{name:'[mes]十五夜',year:1948,month:8,date:17},
+            {name:'[mes]十五夜',year:1949,month:9,date:6},{name:'[mes]十五夜',year:1950,month:8,date:26},
+            {name:'[mes]十五夜',year:1951,month:8,date:15},{name:'[mes]十五夜',year:1952,month:9,date:3},
+            {name:'[mes]十五夜',year:1953,month:8,date:22},{name:'[mes]十五夜',year:1954,month:8,date:11},
+            {name:'[mes]十五夜',year:1955,month:8,date:30},{name:'[mes]十五夜',year:1956,month:8,date:19},
+            {name:'[mes]十五夜',year:1957,month:8,date:8},{name:'[mes]十五夜',year:1958,month:8,date:27},
+            {name:'[mes]十五夜',year:1959,month:8,date:17},{name:'[mes]十五夜',year:1960,month:9,date:5},
+            {name:'[mes]十五夜',year:1961,month:8,date:24},{name:'[mes]十五夜',year:1962,month:8,date:13},
+            {name:'[mes]十五夜',year:1963,month:9,date:2},{name:'[mes]十五夜',year:1964,month:8,date:20},
+            {name:'[mes]十五夜',year:1965,month:8,date:10},{name:'[mes]十五夜',year:1966,month:8,date:29},
+            {name:'[mes]十五夜',year:1967,month:8,date:18},{name:'[mes]十五夜',year:1968,month:9,date:6},
+            {name:'[mes]十五夜',year:1969,month:8,date:26},{name:'[mes]十五夜',year:1970,month:8,date:15},
+            {name:'[mes]十五夜',year:1971,month:9,date:3},{name:'[mes]十五夜',year:1972,month:8,date:22},
+            {name:'[mes]十五夜',year:1973,month:8,date:11},{name:'[mes]十五夜',year:1974,month:8,date:30},
+            {name:'[mes]十五夜',year:1975,month:8,date:20},{name:'[mes]十五夜',year:1976,month:8,date:8},
+            {name:'[mes]十五夜',year:1977,month:8,date:27},{name:'[mes]十五夜',year:1978,month:8,date:17},
+            {name:'[mes]十五夜',year:1979,month:9,date:5},{name:'[mes]十五夜',year:1980,month:8,date:23},
+            {name:'[mes]十五夜',year:1981,month:8,date:12},{name:'[mes]十五夜',year:1982,month:9,date:1},
+            {name:'[mes]十五夜',year:1983,month:8,date:21},{name:'[mes]十五夜',year:1984,month:8,date:10},
+            {name:'[mes]十五夜',year:1985,month:8,date:29},{name:'[mes]十五夜',year:1986,month:8,date:18},
+            {name:'[mes]十五夜',year:1987,month:9,date:7},{name:'[mes]十五夜',year:1988,month:8,date:25},
+            {name:'[mes]十五夜',year:1989,month:8,date:14},{name:'[mes]十五夜',year:1990,month:9,date:3},
+            {name:'[mes]十五夜',year:1991,month:8,date:22},{name:'[mes]十五夜',year:1992,month:8,date:11},
+            {name:'[mes]十五夜',year:1993,month:8,date:30},{name:'[mes]十五夜',year:1994,month:8,date:20},
+            {name:'[mes]十五夜',year:1995,month:8,date:9},{name:'[mes]十五夜',year:1996,month:8,date:27},
+            {name:'[mes]十五夜',year:1997,month:8,date:16},{name:'[mes]十五夜',year:1998,month:9,date:5},
+            {name:'[mes]十五夜',year:1999,month:8,date:24},{name:'[mes]十五夜',year:2000,month:8,date:12},
+            {name:'[mes]十五夜',year:2001,month:9,date:1},{name:'[mes]十五夜',year:2002,month:8,date:21},
+            {name:'[mes]十五夜',year:2003,month:8,date:11},{name:'[mes]十五夜',year:2004,month:8,date:28},
+            {name:'[mes]十五夜',year:2005,month:8,date:18},{name:'[mes]十五夜',year:2006,month:9,date:6},
+            {name:'[mes]十五夜',year:2007,month:8,date:25},{name:'[mes]十五夜',year:2008,month:8,date:14},
+            {name:'[mes]十五夜',year:2009,month:9,date:3},{name:'[mes]十五夜',year:2010,month:8,date:22},
+            {name:'[mes]十五夜',year:2011,month:8,date:12},{name:'[mes]十五夜',year:2012,month:8,date:30},
+            {name:'[mes]十五夜',year:2013,month:8,date:19},{name:'[mes]十五夜',year:2014,month:8,date:8},
+            {name:'[mes]十五夜',year:2015,month:8,date:27},{name:'[mes]十五夜',year:2016,month:8,date:15},
+            {name:'[mes]十五夜',year:2017,month:9,date:4},{name:'[mes]十五夜',year:2018,month:8,date:24},
+            {name:'[mes]十五夜',year:2019,month:8,date:13},{name:'[mes]十五夜',year:2020,month:9,date:1},
+            {name:'[mes]十五夜',year:2021,month:8,date:21},{name:'[mes]十五夜',year:2022,month:8,date:10},
+            {name:'[mes]十五夜',year:2023,month:8,date:29},{name:'[mes]十五夜',year:2024,month:8,date:17},
+            {name:'[mes]十五夜',year:2025,month:9,date:6},{name:'[mes]十五夜',year:2026,month:8,date:25},
+            {name:'[mes]十五夜',year:2027,month:8,date:15},{name:'[mes]十五夜',year:2028,month:9,date:3},
+            {name:'[mes]十五夜',year:2029,month:8,date:22},{name:'[mes]十五夜',year:2030,month:8,date:12}
         ],
         habit:[
-            {name:'[mes]元旦',selector:'month:1 date:1'},{name:'[mes]成人の日',selector:'month:1 day:2nd-mon'},
-            {name:'[mes]昭和の日',selector:'month:4 date:29'},{name:'[mes]建国記念日',selector:'month:2 date:11'},
-            {name:'[mes]憲法記念日',selector:'month:5 date:3'},{name:'[mes]みどりの日',selector:'month:5 date:4'},
-            {name:'[mes]こどもの日',selector:'month:5 date:5'},{name:'[mes]海の日',selector:'month:7 day:3rd-mon'},
-            {name:'[mes]敬老の日',selector:'month:9 day:3rd-mon'},{name:'[mes]体育の日',selector:'month:10 day:2nd-mon'},
-            {name:'[mes]文化の日',selector:'month:11 date:3'},{name:'[mes]勤労感謝の日',selector:'month:11 date:23'},
-            {name:'[mes]天皇誕生日',selector:'month:12 date:23'}
+            {name:'[mes]元旦',selector:'range:1948/7/20.. month:1 date:1'},
+            {name:'[mes]成人の日',selector:'range:1948/7/20..1999/12/31 month:1 date:15'},
+            {name:'[mes]成人の日',selector:'range:2000/1/1.. month:1 day:2nd-mon'},
+            {name:'[mes]建国記念の日',selector:'range:1967/1/1.. month:2 date:11'},
+            {name:'[mes]天皇誕生日',selector:'range:1948/7/20..1988/12/31 month:4 date:29'},
+            {name:'[mes]みどりの日',selector:'range:1989/1/1..2006/12/31 month:4 date:29'},
+            {name:'[mes]昭和の日',selector:'range:2007/1/1.. month:4 date:29'},
+            {name:'[mes]憲法記念日',selector:'range:1948/7/20.. month:5 date:3'},
+            {name:'[mes]みどりの日',selector:'range:2007/1/1.. month:5 date:4'},
+            {name:'[mes]こどもの日',selector:'range:1948/7/20.. month:5 date:5'},
+            {name:'[mes]海の日',selector:'range:1996/1/1..2002/12/31 month:7 date:20'},
+            {name:'[mes]海の日',selector:'range:2003/1/1.. month:7 day:3rd-mon'},
+            {name:'[mes]山の日',selector:'range:2016/1/1.. month:8 date:11'},
+            {name:'[mes]敬老の日',selector:'range:1966/1/1..2002/12/31 month:9 date:15'},
+            {name:'[mes]敬老の日',selector:'range:2003/1/1.. month:9 day:3rd-mon'},
+            {name:'[mes]体育の日',selector:'range:1966/1/1..1999/12/31 month:10 date:10'},
+            {name:'[mes]体育の日',selector:'range:2000/1/1.. month:10 day:2nd-mon'},
+            {name:'[mes]文化の日',selector:'range:1948/7/20.. month:11 date:3'},
+            {name:'[mes]勤労感謝の日',selector:'range:1948/7/20.. month:11 date:23'},
+            {name:'[mes]天皇誕生日',selector:'range:1989/1/1.. month:12 date:23'}
         ],
         name:'祝日',
         updated:true
     }];//}}}
     var shuubun={name:'[mes]秋分の日',month:8};
-    var shuubunDates=[23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23]
+    var shuubunDates=[23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23];//1948年からのもの
     _.each(shuubunDates,function(date,year){
-        o[0].event[o[0].event.length]=_.extend(_.clone(shuubun),{year:2000+year,date:date});
+        o[0].event[o[0].event.length]=_.extend(_.clone(shuubun),{year:1948+year,date:date});
     });
 
     var shunbun={name:'[mes]春分の日',month:2};
-    var shunbunDates=[20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20]//2000年からのもの
+var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20]//1949年からのもの
     _.each(shunbunDates,function(date,year){
-        o[0].event[o[0].event.length]=_.extend(_.clone(shunbun),{year:2000+year,date:date});
+        o[0].event[o[0].event.length]=_.extend(_.clone(shunbun),{year:1949+year,date:date});
     });
     return o;
 }])//}}}
@@ -337,6 +406,7 @@ angular.module(appName)
         }
         if(groupID===0){
             //振替休日の選定
+            if(y<1973||y==1973&&m<4) return [];//振替休日が制定されるより前
             var holidays=_.map(res,function(n){return n.date});
             var sundayHoliday=_.intersection(holidays,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
             res.push.apply(res,_.map(sundayHoliday,function(n){
