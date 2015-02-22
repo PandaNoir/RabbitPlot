@@ -49,47 +49,35 @@ angular.module(appName)
             //selectedGroupは変更できない仕様だから判定いらない
             return;
         }
-        if(type==='event'){
-            //ここも正常かどうかのチェック
-            if(!isValidDate(eventForm.year,eventForm.month-1,eventForm.date)){
-                //2014/12/32のような時の排除と、null/undefined/'hoge'のようなでたらめな日付を排除するためにこうなっている
-                //正常範囲に入っていない
-                return;
-            }
+        if(type==='event' && !isValidDate(eventForm.year,eventForm.month-1,eventForm.date) ){
+            $mdToast.show($mdToast.simple().content('入力が不適切です').position('top right').hideDelay(3000));
+            //2014/12/32のような時の排除と、null/undefined/'hoge'のようなでたらめな日付を排除するためにこうなっている
+            //正常範囲に入っていない
+            return;
         }
         if(eventForm.isMessage){
             eventForm.name='[mes]'+eventForm.name;
         }
+        var targetGroup;
         if(groupID==='private'){
-            if(!user['private'][type][eventID]){
-                user['private'][type][eventID]={};//eventIDがない==新たに追加の時対策
-            }
-            if(type==='event'){
-                user['private'][type][eventID].year=eventForm.year;
-                user['private'][type][eventID].month=eventForm.month-1;
-                user['private'][type][eventID].date=eventForm.date;
-                user['private'][type][eventID].name=eventForm.name;
-                user.updated=true;
-            }else if(type==='habit'){
-                user['private'][type][eventID].selector=eventForm.rule;
-                user['private'][type][eventID].name=eventForm.name;
-                user.updated=true;
-            }
+            if(!user['private'][type][eventID])
+                user['private'][type][eventID]={};//eventIDがない==新規追加の時対策
+            targetGroup=user['private'][type][eventID];
+            user.updated=true;
         }else{
-            if(!group[eventForm.selectedGroup][type][eventID]){
-                group[eventForm.selectedGroup][type][eventID]={};
-            }
-            if(type==='event'){
-                group[eventForm.selectedGroup][type][eventID].year=eventForm.year;
-                group[eventForm.selectedGroup][type][eventID].month=eventForm.month-1;
-                group[eventForm.selectedGroup][type][eventID].date=eventForm.date;
-                group[eventForm.selectedGroup][type][eventID].name=eventForm.name;
-                group[eventForm.selectedGroup].updated=true;
-            }else if(type==='habit'){
-                group[eventForm.selectedGroup][type][eventID].selector=eventForm.rule;
-                group[eventForm.selectedGroup][type][eventID].name=eventForm.name;
-                group[eventForm.selectedGroup].updated=true;
-            }
+            if(!group[eventForm.selectedGroup][type][eventID])
+                group[eventForm.selectedGroup][type][eventID]={};//eventIDがない==新規追加の時対策
+            targetGroup=group[eventForm.selectedGroup][type][eventID];
+            group[eventForm.selectedGroup].updated=true;
+        }
+        if(type==='event'){
+            targetGroup.year=eventForm.year;
+            targetGroup.month=eventForm.month-1;
+            targetGroup.date=eventForm.date;
+            targetGroup.name=eventForm.name;
+        }else if(type==='habit'){
+            targetGroup.selector=eventForm.rule;
+            targetGroup.name=eventForm.name;
         }
         $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
         mode.editsEvent=false;
