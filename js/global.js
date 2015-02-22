@@ -13,7 +13,7 @@ function toInt(n){
     return parseInt(n,10);
 };
 function toOneByte(str){
-    str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });
 };

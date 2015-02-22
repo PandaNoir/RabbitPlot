@@ -124,4 +124,42 @@ describe('test',function(){
             });
         }));
     });//}}}
+    describe('add group',function(){
+        var settingScope,groupScope,SettingCtrl,GroupEditorCtrl,$httpBackend;
+        beforeEach(inject(function($controller,$rootScope,_$httpBackend_){
+            $httpBackend = _$httpBackend_;
+            var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
+
+            $httpBackend.whenPOST(database,function(s){return s.indexOf('type=list')!==-1})
+            .respond('[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]');
+
+            $httpBackend.whenPOST(database,function(s){return s.indexOf('id=2')!==-1;})
+            .respond(201,'');
+
+            $httpBackend.whenPOST(database,'type=namelist')
+            .respond('[["\\"test group\\"","\\"test group2\\""]]');
+
+            settingScope=$rootScope.$new();
+            SettingCtrl=$controller('settingCtrl',{
+                $scope:settingScope
+            });
+            groupScope=$rootScope.$new();
+            GroupEditorCtrl=$controller('groupEditorCtrl',{
+                $scope:groupScope
+            });
+        }));
+        it('start group making.',inject(function(mode,groupForm,group){
+            $httpBackend.flush();
+            expect(group.length).toBe(2);
+
+            settingScope.makeAGroup();
+            expect(mode.editsGroup).toBe(true);
+
+            groupForm.name='hoge';
+            groupScope.addGroup();
+
+            expect(group.length).toBe(3);
+            expect(group[2].name).toBe('hoge');
+        }));
+    });
 });
