@@ -132,7 +132,7 @@
         <md-button class="md-raised md-primary" ng-show="calendar.selected!==null" ng-click="mode.switchToEdit(calendar.year,calendar.month,calendar.selected)">イベントを追加</md-button>
         <br ng-if="calendar.selected===null">
       </md-whiteframe><!--}}}-->
-      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEventForm" flex><!--{{{-->
+      <md-whiteframe ng-controller="eventEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsEvent" flex><!--{{{-->
         <form name="eventEditor" class="md-padding">
           {{eventForm.mode==='add'?'イベントを追加します':'イベントを編集します'}} <br>
 
@@ -214,7 +214,7 @@
           </div><!--}}}-->
         </form>
       </md-whiteframe><!--}}}-->
-      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsGroupForm" flex><!--{{{-->
+      <md-whiteframe ng-controller="groupEditorCtrl" class="md-whiteframe-z4" layout layout-align="center center" ng-if="mode.editsGroup" flex><!--{{{-->
       <form>
         グループを追加します<br>
         <md-input-container>
