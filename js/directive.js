@@ -5,9 +5,11 @@ angular.module(appName)
         restrict:'A',
         template:'<span class="date"></span>',
         replace:true,
-        controller:['$scope','calendar','eventCal','$filter',function($scope,calendar,eventCal,$filter){
+        controller:['$scope','calendar','eventCal','$filter','OVER_MONTH','IS_SMART_PHONE',function($scope,calendar,eventCal,$filter,OVER_MONTH,IS_SMART_PHONE){
+            $scope.OVER_MONTH=OVER_MONTH;
+            $scope.IS_SMART_PHONE=IS_SMART_PHONE;
             $scope.calendar=calendar;
-            $scope.bookedClass=function(date){
+            var countEvents=function(date){
                 var tmpCalendar=eventCal.eventCalendar(date);
                 var len=0;
                 for(var i=0,i2=tmpCalendar.length;i<i2;i++){
@@ -15,17 +17,13 @@ angular.module(appName)
                         len++;
                     }
                 }
-                if(len<5){
-                    return 'booked-'+len;
-                }else{
-                    return 'booked-5';
-                }
+                return len<5?len:5;
             };
             $scope.dateClass=function(date){
                 if(date!==0&&date!==32){
                     var res=[];
                     if(calendar.selected===date) res[res.length]='selected';
-                    res[res.length]=$scope.bookedClass(date);
+                    res[res.length] = 'booked-' + countEvents(date);
                     if(date===calendar.today.date && calendar.month===calendar.today.month && calendar.year===calendar.today.year){
                         res[res.length]='today';
                     }
@@ -40,7 +38,7 @@ angular.module(appName)
                 elm.removeClass('selected booked-0 booked-1 booked-2 booked-3 booked-4 booked-5 today');
                 elm.addClass(scope.dateClass(date).join(' '));
             };
-            if(!(date===0 || date===OVER_MONTH || date===undefined)){
+            if(!(date===0 || date===scope.OVER_MONTH || date===undefined)){
                 elm.append(angular.element('<span>').addClass('inner').text(date));
                 scope.$on('updated',updateClass);
                 updateClass();
@@ -62,7 +60,7 @@ angular.module(appName)
                     }
                 });
                 elm.on('click',function(){
-                    if(!isSmartPhone){
+                    if(!scope.IS_SMART_PHONE){
                         if(scope.calendar.selected===date){
                             scope.calendar.disableHoverEvent=!scope.calendar.disableHoverEvent;
                         }else{

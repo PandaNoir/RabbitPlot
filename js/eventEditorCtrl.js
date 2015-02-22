@@ -92,11 +92,11 @@ angular.module(appName)
             }
         }
         $mdToast.show($mdToast.simple().content('イベントを追加しました').position('top right').hideDelay(3000));
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
         save(eventForm.selectedGroup);
     };//}}}
     $scope.cancel=function(){//{{{
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
     };
     $scope.goFase=function(fase,opt){
         faseHistory[faseHistory.length]=$scope.ruleWriterFase;

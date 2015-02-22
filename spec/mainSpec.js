@@ -3,7 +3,6 @@ describe('test',function(){
     beforeEach(module('rabbit'));
     describe('execSelector()',function(){//{{{
         var year,month;
-        var OVER_MONTH=64;
         var f;
         beforeEach(inject(function(){
             // selectors list:'date', 'day', 'is', 'month', 'not', 'range', 'year', 'yesterday'
@@ -21,8 +20,8 @@ describe('test',function(){
         it('is selector',inject(function(eventCal){
             expect(eventCal.execSelectors('is:public-holiday',year,month)).toEqual([11]);
         }));
-        it('month selector',inject(function(eventCal,calendar){
-            var all_days=_.without(_.flatten(calendar.calendar(year,month)),0,OVER_MONTH);
+        it('month selector',inject(function(eventCal,calendar,OVER_MONTH){
+            var all_days=calendar.calendar(year,month,true);
             expect(eventCal.execSelectors('month:2',year,month)).toEqual(all_days);
             expect(eventCal.execSelectors('month:3',year,month)).toEqual([]);
         }));
@@ -34,8 +33,8 @@ describe('test',function(){
             expect(eventCal.execSelectors('range:12/29...1/3',year,12-1)).toEqual([29,30,31]);
             expect(eventCal.execSelectors('range:12/29...1/3',year,1-1)).toEqual([1,2,3]);
         }));
-        it('year selector',inject(function(eventCal,calendar){
-            var all_days=_.without(_.flatten(calendar.calendar(year,month)),0,OVER_MONTH);
+        it('year selector',inject(function(eventCal,calendar,OVER_MONTH){
+            var all_days=calendar.calendar(year,month,true);
             expect(eventCal.execSelectors('year:'+(year+1),year,month)).toEqual([]);
             expect(eventCal.execSelectors('year:'+year,year,month)).toEqual(all_days);
             expect(eventCal.execSelectors('year:leap-year',year,month)).toEqual(all_days);
@@ -69,9 +68,8 @@ describe('test',function(){
         }));
     });//}}}
     describe('calendar.calendar()',function(){//{{{
-        var OVER_MONTH=64;
 
-        it('should be real calendar.',inject(function(calendar){
+        it('should be real calendar.',inject(function(calendar,OVER_MONTH){
             var c=calendar.calendar(2014,2-1);
             var exp=[[0,0,0,0,0,0,1],[2,3,4,5,6,7,8],[9,10,11,12,13,14,15],[16,17,18,19,20,21,22],[23,24,25,26,27,28,OVER_MONTH]];
             exp.year=2014;

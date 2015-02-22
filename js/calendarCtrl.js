@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('calendarCtrl',['$scope','calendar','mode',function($scope,calendar,mode){//{{{
+.controller('calendarCtrl',['$scope','calendar','mode','MEMO_LIMIT',function($scope,calendar,mode,MEMO_LIMIT){//{{{
     $scope.calendar=calendar;
     $scope.nextMonth=function(){//{{{
         calendar.month++;
@@ -8,7 +8,7 @@ angular.module(appName)
             calendar.year+=1;
             calendar.month-=12;
         }
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
     };//}}}
     $scope.lastMonth=function(){//{{{
         calendar.month--;
@@ -24,12 +24,12 @@ angular.module(appName)
                 calendar.year-=1;
             }
         }
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
     };//}}}
     $scope.nextYear=function(){//{{{
         calendar.year++;
         calendar.selected=null;
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
     };//}}}
     $scope.lastYear=function(){//{{{
         if(calendar.year-1<MEMO_LIMIT){
@@ -38,7 +38,7 @@ angular.module(appName)
             calendar.year--;
             calendar.selected=null;
         }
-        mode.editsEventForm=false;
+        mode.editsEvent=false;
     };//}}}
     $scope.dates=['日','月','火','水','木','金','土'];
 }])//}}}

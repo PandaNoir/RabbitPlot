@@ -1,9 +1,9 @@
-angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages'])
+angular.module(appName)
 .controller('mainCtrl',['$scope','_','calendar','eventCal','mode','$mdSidenav',function($scope,_,calendar,eventCal,mode,$mdSidenav){//{{{
     $scope._=_;
     $scope.mode=mode;
-    mode.editsEventForm=false;
-    mode.editsGroupForm=false;
+    mode.editsEvent=false;
+    mode.editsGroup=false;
     $scope.splitSelector=eventCal.splitSelector;
     $scope.openNav=function(){
         $mdSidenav('left').toggle();

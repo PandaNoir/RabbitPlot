@@ -4,7 +4,7 @@ angular.module(appName)
     groupForm.parentGroup=[null];
     groupForm.mode='add';
     $scope.group=group;
-    $scope.finishMakingAGroup=function(){mode.editsGroupForm=false;};
+    $scope.finishMakingAGroup=function(){mode.editsGroup=false;};
     $scope.addGroup=function(){
         var parentGroup=groupForm.parentGroup.reduce(function(a,b){
             if(a.indexOf(b)===-1) a[a.length]=angular.isNumber(b)?toInt(b):'';
@@ -26,6 +26,6 @@ angular.module(appName)
         groupForm.name='';
     };
     $scope.cancel=function(){
-        mode.editsGroupForm=false;
+        mode.editsGroup=false;
     };
 }]);

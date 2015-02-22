@@ -51,75 +51,9 @@ angular.module(appName)
     };
 })//}}}
 .factory('group',['_','$http',function(_,$http){//{{{
-    var o=[{//{{{
+    var o=[{
         id:0,
-        event:[
-            {name:'[mes]十五夜',year:1901,month:8,date:27},{name:'[mes]十五夜',year:1902,month:8,date:16},
-            {name:'[mes]十五夜',year:1903,month:9,date:5},{name:'[mes]十五夜',year:1904,month:8,date:24},
-            {name:'[mes]十五夜',year:1905,month:8,date:13},{name:'[mes]十五夜',year:1906,month:9,date:2},
-            {name:'[mes]十五夜',year:1907,month:8,date:22},{name:'[mes]十五夜',year:1908,month:8,date:10},
-            {name:'[mes]十五夜',year:1909,month:8,date:29},{name:'[mes]十五夜',year:1910,month:8,date:18},
-            {name:'[mes]十五夜',year:1911,month:9,date:6},{name:'[mes]十五夜',year:1912,month:8,date:25},
-            {name:'[mes]十五夜',year:1913,month:8,date:15},{name:'[mes]十五夜',year:1914,month:9,date:4},
-            {name:'[mes]十五夜',year:1915,month:8,date:23},{name:'[mes]十五夜',year:1916,month:8,date:12},
-            {name:'[mes]十五夜',year:1917,month:8,date:30},{name:'[mes]十五夜',year:1918,month:8,date:19},
-            {name:'[mes]十五夜',year:1919,month:9,date:8},{name:'[mes]十五夜',year:1920,month:8,date:26},
-            {name:'[mes]十五夜',year:1921,month:8,date:16},{name:'[mes]十五夜',year:1922,month:9,date:5},
-            {name:'[mes]十五夜',year:1923,month:8,date:25},{name:'[mes]十五夜',year:1924,month:8,date:13},
-            {name:'[mes]十五夜',year:1925,month:9,date:2},{name:'[mes]十五夜',year:1926,month:8,date:21},
-            {name:'[mes]十五夜',year:1927,month:8,date:10},{name:'[mes]十五夜',year:1928,month:8,date:28},
-            {name:'[mes]十五夜',year:1929,month:8,date:17},{name:'[mes]十五夜',year:1930,month:9,date:6},
-            {name:'[mes]十五夜',year:1931,month:8,date:26},{name:'[mes]十五夜',year:1932,month:8,date:15},
-            {name:'[mes]十五夜',year:1933,month:9,date:4},{name:'[mes]十五夜',year:1934,month:8,date:23},
-            {name:'[mes]十五夜',year:1935,month:8,date:12},{name:'[mes]十五夜',year:1936,month:8,date:30},
-            {name:'[mes]十五夜',year:1937,month:8,date:19},{name:'[mes]十五夜',year:1938,month:9,date:8},
-            {name:'[mes]十五夜',year:1939,month:8,date:27},{name:'[mes]十五夜',year:1940,month:8,date:16},
-            {name:'[mes]十五夜',year:1941,month:9,date:5},{name:'[mes]十五夜',year:1942,month:8,date:25},
-            {name:'[mes]十五夜',year:1943,month:8,date:14},{name:'[mes]十五夜',year:1944,month:9,date:1},
-            {name:'[mes]十五夜',year:1945,month:8,date:20},{name:'[mes]十五夜',year:1946,month:8,date:10},
-            {name:'[mes]十五夜',year:1947,month:8,date:29},{name:'[mes]十五夜',year:1948,month:8,date:17},
-            {name:'[mes]十五夜',year:1949,month:9,date:6},{name:'[mes]十五夜',year:1950,month:8,date:26},
-            {name:'[mes]十五夜',year:1951,month:8,date:15},{name:'[mes]十五夜',year:1952,month:9,date:3},
-            {name:'[mes]十五夜',year:1953,month:8,date:22},{name:'[mes]十五夜',year:1954,month:8,date:11},
-            {name:'[mes]十五夜',year:1955,month:8,date:30},{name:'[mes]十五夜',year:1956,month:8,date:19},
-            {name:'[mes]十五夜',year:1957,month:8,date:8},{name:'[mes]十五夜',year:1958,month:8,date:27},
-            {name:'[mes]十五夜',year:1959,month:8,date:17},{name:'[mes]十五夜',year:1960,month:9,date:5},
-            {name:'[mes]十五夜',year:1961,month:8,date:24},{name:'[mes]十五夜',year:1962,month:8,date:13},
-            {name:'[mes]十五夜',year:1963,month:9,date:2},{name:'[mes]十五夜',year:1964,month:8,date:20},
-            {name:'[mes]十五夜',year:1965,month:8,date:10},{name:'[mes]十五夜',year:1966,month:8,date:29},
-            {name:'[mes]十五夜',year:1967,month:8,date:18},{name:'[mes]十五夜',year:1968,month:9,date:6},
-            {name:'[mes]十五夜',year:1969,month:8,date:26},{name:'[mes]十五夜',year:1970,month:8,date:15},
-            {name:'[mes]十五夜',year:1971,month:9,date:3},{name:'[mes]十五夜',year:1972,month:8,date:22},
-            {name:'[mes]十五夜',year:1973,month:8,date:11},{name:'[mes]十五夜',year:1974,month:8,date:30},
-            {name:'[mes]十五夜',year:1975,month:8,date:20},{name:'[mes]十五夜',year:1976,month:8,date:8},
-            {name:'[mes]十五夜',year:1977,month:8,date:27},{name:'[mes]十五夜',year:1978,month:8,date:17},
-            {name:'[mes]十五夜',year:1979,month:9,date:5},{name:'[mes]十五夜',year:1980,month:8,date:23},
-            {name:'[mes]十五夜',year:1981,month:8,date:12},{name:'[mes]十五夜',year:1982,month:9,date:1},
-            {name:'[mes]十五夜',year:1983,month:8,date:21},{name:'[mes]十五夜',year:1984,month:8,date:10},
-            {name:'[mes]十五夜',year:1985,month:8,date:29},{name:'[mes]十五夜',year:1986,month:8,date:18},
-            {name:'[mes]十五夜',year:1987,month:9,date:7},{name:'[mes]十五夜',year:1988,month:8,date:25},
-            {name:'[mes]十五夜',year:1989,month:8,date:14},{name:'[mes]十五夜',year:1990,month:9,date:3},
-            {name:'[mes]十五夜',year:1991,month:8,date:22},{name:'[mes]十五夜',year:1992,month:8,date:11},
-            {name:'[mes]十五夜',year:1993,month:8,date:30},{name:'[mes]十五夜',year:1994,month:8,date:20},
-            {name:'[mes]十五夜',year:1995,month:8,date:9},{name:'[mes]十五夜',year:1996,month:8,date:27},
-            {name:'[mes]十五夜',year:1997,month:8,date:16},{name:'[mes]十五夜',year:1998,month:9,date:5},
-            {name:'[mes]十五夜',year:1999,month:8,date:24},{name:'[mes]十五夜',year:2000,month:8,date:12},
-            {name:'[mes]十五夜',year:2001,month:9,date:1},{name:'[mes]十五夜',year:2002,month:8,date:21},
-            {name:'[mes]十五夜',year:2003,month:8,date:11},{name:'[mes]十五夜',year:2004,month:8,date:28},
-            {name:'[mes]十五夜',year:2005,month:8,date:18},{name:'[mes]十五夜',year:2006,month:9,date:6},
-            {name:'[mes]十五夜',year:2007,month:8,date:25},{name:'[mes]十五夜',year:2008,month:8,date:14},
-            {name:'[mes]十五夜',year:2009,month:9,date:3},{name:'[mes]十五夜',year:2010,month:8,date:22},
-            {name:'[mes]十五夜',year:2011,month:8,date:12},{name:'[mes]十五夜',year:2012,month:8,date:30},
-            {name:'[mes]十五夜',year:2013,month:8,date:19},{name:'[mes]十五夜',year:2014,month:8,date:8},
-            {name:'[mes]十五夜',year:2015,month:8,date:27},{name:'[mes]十五夜',year:2016,month:8,date:15},
-            {name:'[mes]十五夜',year:2017,month:9,date:4},{name:'[mes]十五夜',year:2018,month:8,date:24},
-            {name:'[mes]十五夜',year:2019,month:8,date:13},{name:'[mes]十五夜',year:2020,month:9,date:1},
-            {name:'[mes]十五夜',year:2021,month:8,date:21},{name:'[mes]十五夜',year:2022,month:8,date:10},
-            {name:'[mes]十五夜',year:2023,month:8,date:29},{name:'[mes]十五夜',year:2024,month:8,date:17},
-            {name:'[mes]十五夜',year:2025,month:9,date:6},{name:'[mes]十五夜',year:2026,month:8,date:25},
-            {name:'[mes]十五夜',year:2027,month:8,date:15},{name:'[mes]十五夜',year:2028,month:9,date:3},
-            {name:'[mes]十五夜',year:2029,month:8,date:22},{name:'[mes]十五夜',year:2030,month:8,date:12}
-        ],
+        event:[],
         habit:[
             {name:'[mes]元旦',selector:'range:1948/7/20.. month:1 date:1'},
             {name:'[mes]成人の日',selector:'range:1948/7/20..1999/12/31 month:1 date:15'},
@@ -144,31 +78,68 @@ angular.module(appName)
         ],
         name:'祝日',
         updated:true
-    }];//}}}
-    var shuubun={name:'[mes]秋分の日',month:8};
-    var shuubunDates=[23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23];//1948年からのもの
-    _.each(shuubunDates,function(date,year){
-        o[0].event[o[0].event.length]=_.extend(_.clone(shuubun),{year:1948+year,date:date});
-    });
+    }];
+    var shuubunDates=[
+        23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,
+        23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23
+    ];//1948年からのもの
+    for(var i=0,_i=shuubunDates.length;i<_i;i++){
+        var shuubun={name:'[mes]秋分の日',month:8,year:1948+i,date:shuubunDates[i]};
+        o[0].event[o[0].event.length]=shuubun;
+        shuubun=null;
+    };
+    shuubunDates=null;
 
-    var shunbun={name:'[mes]春分の日',month:2};
-var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20]//1949年からのもの
-    _.each(shunbunDates,function(date,year){
-        o[0].event[o[0].event.length]=_.extend(_.clone(shunbun),{year:1949+year,date:date});
-    });
+    var shunbunDates=[
+        21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,
+        21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20
+    ];//1949年からのもの
+    for(var i=0,_i=shunbunDates.length;i<_i;i++){
+        var shunbun={name:'[mes]春分の日',month:2,year:1949+i,date:shunbunDates[i]};
+        o[0].event[o[0].event.length]=shunbun;
+        shunbun=null;
+    };
+    shunbunDates=null;
+    var Meigetsu=[
+        {date:27},{date:16},{month:9,date:5},{date:24},{date:13},{month:9,date:2},{date:22},{date:10},{date:29},
+        {date:18},{month:9,date:6},{date:25},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},{date:19},
+        {month:9,date:8},{date:26},{date:16},{month:9,date:5},{date:25},{date:13},{month:9,date:2},{date:21},{date:10},
+        {date:28},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},
+        {date:19},{month:9,date:8},{date:27},{date:16},{month:9,date:5},{date:25},{date:14},{month:9,date:1},{date:20},
+        {date:10},{date:29},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},{date:11},
+        {date:30},{date:19},{date:8},{date:27},{date:17},{month:9,date:5},{date:24},{date:13},{month:9,date:2},
+        {date:20},{date:10},{date:29},{date:18},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},
+        {date:11},{date:30},{date:20},{date:8},{date:27},{date:17},{month:9,date:5},{date:23},{date:12},
+        {month:9,date:1},{date:21},{date:10},{date:29},{date:18},{month:9,date:7},{date:25},{date:14},{month:9,date:3},
+        {date:22},{date:11},{date:30},{date:20},{date:9},{date:27},{date:16},{month:9,date:5},{date:24},
+        {date:12},{month:9,date:1},{date:21},{date:11},{date:28},{date:18},{month:9,date:6},{date:25},{date:14},
+        {month:9,date:3},{date:22},{date:12},{date:30},{date:19},{date:8},{date:27},{date:15},{month:9,date:4},
+        {date:24},{date:13},{month:9,date:1},{date:21},{date:10},{date:29},{date:17},{month:9,date:6},{date:25},
+        {date:15},{month:9,date:3},{date:22},{date:12}
+    ];
+    for(var i=0,_i=Meigetsu.length;i<_i;i++){
+        Meigetsu[i].year=1901+i;
+        Meigetsu[i].name='[mes]十五夜';
+        Meigetsu[i].month=Meigetsu[i].month||8;
+        o[0].event[o[0].event.length]=Meigetsu[i];
+    };
+    Meigetsu=null;
     return o;
 }])//}}}
-.factory('calendar',['_',function(_){//{{{
+.factory('calendar',['_','OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',function(_,OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE){//{{{
     var today=new Date();
     var memo=[];
-    function calendar(year,month){
+    function calendar(year,month,isFlatten){
+        isFlatten=isFlatten||false;
         //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
-        if(memo[year-MEMO_LIMIT]){
-            if(memo[year-MEMO_LIMIT][month]){
-                return memo[year-MEMO_LIMIT][month];
+        if(!isFlatten){
+            if(memo[year-MEMO_LIMIT]){
+                if(memo[year-MEMO_LIMIT][month]){
+                    return memo[year-MEMO_LIMIT][month];
+                }
+            }else{
+                memo[year-MEMO_LIMIT]=[];
             }
-        }else{
-            memo[year-MEMO_LIMIT]=[];
         }
         var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
         if(month===1 && isLeapYear(year)){
@@ -182,24 +153,34 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
         var i=0;
         var day=(new Date(year,month,1)).getDay();
         var row=[];
-        for(var i=day;i>0;i--){
-            row[row.length]=0;
-        }
-        for(var i=1;i<=lastDate;i++){
-            if(day>6){
-                day=0;
-                res[res.length]=row;
-                row=[];
+        if(isFlatten){
+            for(var i=1;i<=lastDate;i++){
+                res[res.length]=i;
             }
-            row[row.length]=i;//日付が今月の範囲に収まっている
-            day++;
-        }
-        for(var i=day;i<7;i++){
-            row[row.length]=OVER_MONTH;
+        }else{
+            for(var i=day;i>0;i--){
+                row[row.length]=0;
+            }
+            for(var i=1;i<=lastDate;i++){
+                if(day>6){
+                    day=0;
+                    res[res.length]=row;
+                    row=[];
+                }
+                row[row.length]=i;//日付が今月の範囲に収まっている
+                day++;
+            }
+            for(var i=day;i<7;i++){
+                row[row.length]=OVER_MONTH;
+            }
         }
         if(row.length>0) res[res.length]=row;
         row=null;
-        return memo[year-MEMO_LIMIT][month]=res;
+        if(isFlatten){
+            return res;
+        }else{
+            return memo[year-MEMO_LIMIT][month]=res;
+        }
     };
     var res={
         year:today.getFullYear(),
@@ -216,7 +197,7 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
             if(this.selected==null) return '';
             else return ['日','月','火','水','木','金','土'][new Date(this.year,this.month,this.selected).getDay()];
         },
-        disableHoverEvent:isSmartPhone
+        disableHoverEvent:IS_SMART_PHONE
     };
     return res;
 }])//}}}
@@ -234,8 +215,8 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
 }])//}}}
 .factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
     return {
-        editsEventForm:false,
-        editsGroupForm:false,
+        editsEvent:false,
+        editsGroup:false,
         showsEventList:false,
         switchToEdit:function(){//{{{
             //event= eventのid:groupのid:eventのtype(event or habit)
@@ -283,7 +264,7 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
                 //この場合は、新規でyear/month/dateにイベントを作成する
                 _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: args[0], month: args[1]+1, date: args[2]});
             }//}}}
-            this.editsEventForm=true;
+            this.editsEvent=true;
             $mdSidenav('left').close();
         }//}}}
     };
@@ -325,7 +306,7 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
         getNameList:getNameList
     };
 }])//}}}
-.factory('eventCal',['_','group','user','calendar','error',function(_,group,user,calendar,myError){//{{{
+.factory('eventCal',['_','group','user','calendar','error','MEMO_LIMIT',function(_,group,user,calendar,myError,MEMO_LIMIT){//{{{
     function last(arr){return arr[arr.length-1];};
     var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
     var OPERATOR=0;
@@ -496,12 +477,7 @@ var shunbunDates=[21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
             var allDays=function(){
-                var res=_.flatten(cal);
-                var first=_.lastIndexOf(res,0,true);
-                var last=_.indexOf(res,OVER_MONTH,true);
-                first+=1;//みつからない場合もこれでOK。firstが0になることで頭から抜き取ってこれるから。
-                if(last===-1) last=res.length;
-                return res.slice(first,last);
+                return calendar.calendar(year,month,true);
             };
             var meansPublicHoliday=function(s){
                 //sが祝日を表しているか判定
