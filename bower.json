@@ -15,7 +15,8 @@
     "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip"
   },
   "exportsOverride": {
-    "angular-material": {
+    "angular-material":{
+      "js": ["**/angular-material.min.js","**/angular-material.min.js.map"],
       "css": "**/angular-material.min.css"
     },
     "*": {
