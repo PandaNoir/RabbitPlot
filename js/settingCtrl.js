@@ -73,7 +73,7 @@ angular.module(appName)
         }
         return res;
     }
-    $scope.makeAGroup=function(){
+    $scope.makeGroup=function(){
         mode.editsGroup=true;
         $mdSidenav('left').close();
     };
