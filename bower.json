@@ -46,9 +46,6 @@
         "**/angular-messages.min.js.map"
       ]
     },
-    "angular-mocks": {
-      "js": "**/angular-mocks.js"
-    },
     "angular-touch": {
       "js": [
         "**/angular-touch.min.js",
@@ -62,7 +59,6 @@
       ]
     }
   },
-  "homepage": "https://github.com/PandaNoir/RabbitPlot",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -70,9 +66,7 @@
     "test",
     "tests"
   ],
-  "license": "MIT",
-  "main": "index.js",
   "name": "Rabbit Plot",
   "private": true,
-  "version": "10"
+  "version": "1"
 }
