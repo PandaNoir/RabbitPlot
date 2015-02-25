@@ -1,7 +1,4 @@
 angular.module(appName)
-.factory('_',function(){//{{{
-    return _;
-})//}}}
 .factory('user',['_','$rootScope','$mdDialog','group',function(_,$rootScope,$mdDialog,group){//{{{
     if(localStorage&&angular.fromJson(localStorage.getItem('private'))){
         var user=angular.fromJson(localStorage.getItem('private'));
@@ -20,7 +17,11 @@ angular.module(appName)
             hiddenGroup:[],
             id:uuid()
         };
-        $mdDialog.show($mdDialog.alert().title('[重要]ユーザー情報を生成しました。').content('これはあなたのパソコンにのみ保存されるもので、データベースに登録されたり、どこかへ送られたりしません。ただし、なにかの拍子にデータが消去されてidが変更されてしまうとグループの権限が消えてしまいます。だから、次の文字列を保存しておいてください。'+angular.toJson(user)).ok('ok'));
+        $mdDialog.show(
+            $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+            .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+            .ok('ok')
+        );
     }
     user.isHiddenGroup=function(id){
         return _.indexOf(this.hiddenGroup,id,true)!==-1;
@@ -148,8 +149,6 @@ angular.module(appName)
         }
 
         var res=[];//カレンダー用配列
-        res.year=year;
-        res.month=month;
         var i=0;
         var day=(new Date(year,month,1)).getDay();
         var row=[];
@@ -306,13 +305,16 @@ angular.module(appName)
         getNameList:getNameList
     };
 }])//}}}
-.factory('eventCal',['_','group','user','calendar','error','MEMO_LIMIT',function(_,group,user,calendar,myError,MEMO_LIMIT){//{{{
+.factory('eventCal',['_','group','user','calendar','error','MEMO_LIMIT','ATTRIBUTE',function(_,group,user,calendar,myError,MEMO_LIMIT,ATTRIBUTE){//{{{
     function last(arr){return arr[arr.length-1];};
-    var constDic=['OPERATOR','OTHERS','LPARENTHESES','RPARENTHESES'];
-    var OPERATOR=0;
-    var OTHERS=1;
-    var LPARENTHESES=2;
-    var RPARENTHESES=3;
+    var constDic=[];
+    for(var key in ATTRIBUTE){
+        constDic[ATTRIBUTE[key]]=key;
+    }
+    var OPERATOR=ATTRIBUTE.OPERATOR;
+    var OTHERS=ATTRIBUTE.OTHERS;
+    var LPARENTHESES=ATTRIBUTE.LPARENTHESES;
+    var RPARENTHESES=ATTRIBUTE.RPARENTHESES;
     var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;
