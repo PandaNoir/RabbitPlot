@@ -14,27 +14,28 @@
 
 
 ##用語
-*event:日付によって指定された予定です。  
-*habit:ルールによって指定された予定です。  
-*ルール:柔軟な日付の指定方法です。セレクタというものをつなげて書きます。Googleと同様のand/orを備えているためGoogleに親しみがあるとわかりやすいです。
-*セレクタ:日付を選択(セレクト)するものです。
+
+* event:日付によって指定された予定です。  
+* habit:ルールによって指定された予定です。  
+* ルール:柔軟な日付の指定方法です。セレクタというものをつなげて書きます。Googleと同様のand/orを備えているためGoogleに親しみがあるとわかりやすいです。
+* セレクタ:日付を選択\(セレクト\)するものです。
 
 ##ルールの書き方
-セレクタ一覧
-not -否定を表すセレクタです。例: not:public-holiday  
-is -英語のis、つまり「である」セレクタです(説明が下手ですみません)。例: is:public-holiday  
-yesterday -前日に関するセレクタです。例: yesterday:public-holiday  
-range -範囲を表すセレクタです。例: range:1999/1/1...1999/12/31  
-date -日付を表すセレクタです(注意:dateとdayは似ていますが役割が全く違うセレクタです)。例: date:20  
-month -月を表すセレクタです。例: month:2  
-day -曜日を表すセレクタです(注意:dateとdayは似ていますが役割が全く違うセレクタです)。例: day:wednesday  
-year -年を表すセレクタです。例 year:2015  
+セレクタ一覧  
+* not -否定を表すセレクタです。例: `not:public-holiday`
+* is -英語のis、つまり「である」セレクタです\(説明が下手ですみません\)。例: `is:public-holiday`
+* yesterday -前日に関するセレクタです。例: `yesterday:public-holiday`
+* range -範囲を表すセレクタです。例: `range:1999/1/1...1999/12/31`
+* date -日付を表すセレクタです\(注意:dateとdayは似ていますが役割が全く違うセレクタです\)。例: `date:20`
+* month -月を表すセレクタです。例: `month:2`
+* day -曜日を表すセレクタです\(注意:dateとdayは似ていますが役割が全く違うセレクタです\)。例: `day:wednesday`
+* year -年を表すセレクタです。例: `year:2015`  
 
 セレクタを組み合わせるのに、and/orを使います。かっこを使うことも可能です。  
 
-例: day:friday and date:13  
+例: `day:friday and date:13`  
 13日の金曜日を表します。  
 
-例: (day:saturday or day:sunday) and date:20  
+例: `\(day:saturday or day:sunday\) and date:20`  
 土曜日か日曜日の20日を表します。今適当に考えたので意味はありません。  
 
