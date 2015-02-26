@@ -1,7 +1,7 @@
 angular.module(appName)
-.factory('user',['_','$rootScope','$mdDialog','group',function(_,$rootScope,$mdDialog,group){//{{{
-    if(localStorage&&angular.fromJson(localStorage.getItem('private'))){
-        var user=angular.fromJson(localStorage.getItem('private'));
+.factory('user',['_','$rootScope','$mdDialog','group','localStorageService',function(_,$rootScope,$mdDialog,group,localStorageService){//{{{
+    if(localStorageService.get('private')){
+        var user=angular.fromJson(localStorageService.get('private'));
         if(!user.id){
             user.id=uuid();
         }
@@ -28,7 +28,7 @@ angular.module(appName)
     };
     user.save=function(){
         $rootScope.$broadcast('updated');
-        localStorage.setItem('private',angular.toJson(this));
+        localStorageService.set('private',angular.toJson(this));
     };
     user.hasPermission=function(groupID){
         return groupID==='private'||_.indexOf(group[groupID].permission,user.id)!==-1;

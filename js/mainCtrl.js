@@ -54,11 +54,11 @@ angular.module(appName)
         return res;
     };
 }])//}}}
-.run(['_','db','group','$rootScope',function(_,db,group,$rootScope){//{{{
+.run(['_','db','group','$rootScope','localStorageService',function(_,db,group,$rootScope,localStorageService){//{{{
     var o=_.clone(group)[0];
-    if(localStorage&&localStorage.getItem('group')){
+    if(localStorageService.get('group')){
         group.length=0;
-        Array.prototype.push.apply(group,angular.fromJson(localStorage.getItem('group')));
+        Array.prototype.push.apply(group,angular.fromJson(localStorageService.get('group')));
         group[0]=_.clone(o);
     }
     db.list().then(function(mes){
@@ -76,7 +76,7 @@ angular.module(appName)
         }
         group[0]=_.clone(o);
         $rootScope.$broadcast('updated');
-        localStorage.setItem('group',angular.toJson(group));
+        localStorageService.set('group',angular.toJson(group));
         db.getNameList().then(function(mes){
             for(var i=0,i2=mes.data[0].length;i<i2;i++){
                 if(!group[i]){
@@ -89,7 +89,7 @@ angular.module(appName)
                 }
             }
             group[0]=_.clone(o);
-            localStorage.setItem('group',angular.toJson(group));
+            localStorageService.set('group',angular.toJson(group));
         });
     });
 }])//}}}

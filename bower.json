@@ -7,7 +7,8 @@
     "angular-material": "~0.8.1",
     "angular-messages": "~1.3.14",
     "angular-touch": "~1.3.14",
-    "lodash": "~3.1.0"
+    "lodash": "~3.1.0",
+    "angular-local-storage": "~0.1.5"
   },
   "description": "test",
   "devDependencies": {
@@ -15,15 +16,21 @@
     "closure-compiler": "http://dl.google.com/closure-compiler/compiler-latest.zip"
   },
   "exportsOverride": {
-    "angular-material":{
-      "js": ["**/angular-material.min.js","**/angular-material.min.js.map"],
+    "angular-material": {
+      "js": [
+        "**/angular-material.min.js",
+        "**/angular-material.min.js.map"
+      ],
       "css": "**/angular-material.min.css"
     },
-    "angular-mocks":{
-        "js":"**/angular-mocks.js"
+    "angular-mocks": {
+      "js": "**/angular-mocks.js"
     },
     "*": {
-      "js": ["**/*.min.js","**/*.min.js.map"]
+      "js": [
+        "**/*.min.js",
+        "**/*.min.js.map"
+      ]
     }
   },
   "ignore": [
