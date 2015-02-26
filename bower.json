@@ -19,6 +19,9 @@
       "js": ["**/angular-material.min.js","**/angular-material.min.js.map"],
       "css": "**/angular-material.min.css"
     },
+    "angular-mocks":{
+        "js":"**/angular-mocks.js"
+    },
     "*": {
       "js": ["**/*.min.js","**/*.min.js.map"]
     }

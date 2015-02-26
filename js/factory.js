@@ -75,56 +75,14 @@ angular.module(appName)
             {name:'[mes]体育の日',selector:'range:2000/1/1.. month:10 day:2nd-mon'},
             {name:'[mes]文化の日',selector:'range:1948/7/20.. month:11 date:3'},
             {name:'[mes]勤労感謝の日',selector:'range:1948/7/20.. month:11 date:23'},
-            {name:'[mes]天皇誕生日',selector:'range:1989/1/1.. month:12 date:23'}
+            {name:'[mes]天皇誕生日',selector:'range:1989/1/1.. month:12 date:23'},
+            {name:'[mes]春分の日',selector:'range:1949/1/1.. date:vernal-equinox-day'},
+            {name:'[mes]秋分の日',selector:'range:1948/1/1.. date:autumnal-equinox-day'},
+            {name:'[mes]十五夜',selector:'range:1901/1/1.. date:full-moon-night'}
         ],
         name:'祝日',
         updated:true
     }];
-    var shuubunDates=[
-        23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,
-        23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23
-    ];//1948年からのもの
-    for(var i=0,_i=shuubunDates.length;i<_i;i++){
-        var shuubun={name:'[mes]秋分の日',month:8,year:1948+i,date:shuubunDates[i]};
-        o[0].event[o[0].event.length]=shuubun;
-        shuubun=null;
-    };
-    shuubunDates=null;
-
-    var shunbunDates=[
-        21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,
-        21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20
-    ];//1949年からのもの
-    for(var i=0,_i=shunbunDates.length;i<_i;i++){
-        var shunbun={name:'[mes]春分の日',month:2,year:1949+i,date:shunbunDates[i]};
-        o[0].event[o[0].event.length]=shunbun;
-        shunbun=null;
-    };
-    shunbunDates=null;
-    var Meigetsu=[
-        {date:27},{date:16},{month:9,date:5},{date:24},{date:13},{month:9,date:2},{date:22},{date:10},{date:29},
-        {date:18},{month:9,date:6},{date:25},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},{date:19},
-        {month:9,date:8},{date:26},{date:16},{month:9,date:5},{date:25},{date:13},{month:9,date:2},{date:21},{date:10},
-        {date:28},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},
-        {date:19},{month:9,date:8},{date:27},{date:16},{month:9,date:5},{date:25},{date:14},{month:9,date:1},{date:20},
-        {date:10},{date:29},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},{date:11},
-        {date:30},{date:19},{date:8},{date:27},{date:17},{month:9,date:5},{date:24},{date:13},{month:9,date:2},
-        {date:20},{date:10},{date:29},{date:18},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},
-        {date:11},{date:30},{date:20},{date:8},{date:27},{date:17},{month:9,date:5},{date:23},{date:12},
-        {month:9,date:1},{date:21},{date:10},{date:29},{date:18},{month:9,date:7},{date:25},{date:14},{month:9,date:3},
-        {date:22},{date:11},{date:30},{date:20},{date:9},{date:27},{date:16},{month:9,date:5},{date:24},
-        {date:12},{month:9,date:1},{date:21},{date:11},{date:28},{date:18},{month:9,date:6},{date:25},{date:14},
-        {month:9,date:3},{date:22},{date:12},{date:30},{date:19},{date:8},{date:27},{date:15},{month:9,date:4},
-        {date:24},{date:13},{month:9,date:1},{date:21},{date:10},{date:29},{date:17},{month:9,date:6},{date:25},
-        {date:15},{month:9,date:3},{date:22},{date:12}
-    ];
-    for(var i=0,_i=Meigetsu.length;i<_i;i++){
-        Meigetsu[i].year=1901+i;
-        Meigetsu[i].name='[mes]十五夜';
-        Meigetsu[i].month=Meigetsu[i].month||8;
-        o[0].event[o[0].event.length]=Meigetsu[i];
-    };
-    Meigetsu=null;
     return o;
 }])//}}}
 .factory('calendar',['_','OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',function(_,OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE){//{{{
@@ -199,111 +157,6 @@ angular.module(appName)
         disableHoverEvent:IS_SMART_PHONE
     };
     return res;
-}])//}}}
-.factory('eventListToEdit',function(){//{{{
-    return {
-        id:''
-    };
-})//}}}
-.factory('error',['$mdToast',function($mdToast){//{{{
-    var ErrorConstructor = ErrorConstructor || Error;
-    return function(mes){
-        $mdToast.show($mdToast.simple().content(mes).position('top right').hideDelay(3000));
-        return new ErrorConstructor(mes);
-    };
-}])//}}}
-.factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
-    return {
-        editsEvent:false,
-        editsGroup:false,
-        showsEventList:false,
-        switchToEdit:function(){//{{{
-            //event= eventのid:groupのid:eventのtype(event or habit)
-            var args=slice.call(arguments);
-            if(args.length===1||args.length===2&&args[1]===true){//{{{
-                //switchToEdit(event [,isEdit])の場合
-                var event=args[0].split(':');// event=[eventID,groupID,eventType];
-                eventForm.mode=args.length===1?'edit':'add';
-
-                _.extend(eventForm,{
-                    type: event[2],
-                    id: args.length===1? toInt(event[0]): 0
-                });
-
-                if(event[1]!=='private'){
-                    eventForm.selectedGroup=toInt(event[1]);
-                }else{
-                    eventForm.selectedGroup='private';//event[1]==='private'
-                }
-                if(event[2]==='event'){
-                    _.map(['year','month','date','name'],function(key){
-                        if(event[1]==='private'){
-                            eventForm[key]=user['private'].event[event[0]][key];
-                        }else{
-                            eventForm[key]=group[event[1]].event[event[0]][key];
-                        }
-                    });
-                    eventForm.month+=1;
-                }else if(event[2]==='habit'){
-                    if(event[1]==='private'){
-                        eventForm.rule=user['private'].habit[event[0]].selector;
-                        eventForm.name=user['private'].habit[event[0]].name;
-                    }else{
-                        eventForm.rule=group[event[1]].habit[event[0]].selector;
-                        eventForm.name=group[event[1]].habit[event[0]].name;
-                    }
-                }
-                eventForm.isMessage=(eventForm.name.slice(0,'[mes]'.length)==='[mes]');
-                if(eventForm.isMessage){
-                    eventForm.name=eventForm.name.slice('[mes]'.length);
-                }
-                //}}}
-            }else if(args.length===3){//{{{
-                //switchToEdit(year,month,date)の場合
-                //この場合は、新規でyear/month/dateにイベントを作成する
-                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: args[0], month: args[1]+1, date: args[2]});
-            }//}}}
-            this.editsEvent=true;
-            $mdSidenav('left').close();
-        }//}}}
-    };
-}])//}}}
-.factory('db',['_','group','user','$http','$rootScope','$log',function(_,group,user,$http,$rootScope,$log){//{{{
-    var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
-    function post(group,id,type){
-        //データベースにpostする汎用メソッド
-        //typeにupdateとかinsertとか指定することで動作変えている
-        //下のlist()及びgetNameList()はこれを使用していないため注意
-        var o=_.clone(group);
-        o.id=id;
-        o.permission=o.permission||[];
-        o.parents=o.parents||'';
-        delete o.updated;
-        for(var key in o) o[key]=toOneByte(angular.toJson(o[key]));
-        o.type=type;
-        $rootScope.$broadcast('updated');
-        return $http.post(database,o).success(function(mes){
-            $log.log('updated');
-            $log.log(mes);
-        }).error(function(mes){
-            $log.log(mes);
-        });
-    };
-    function list(){
-        //データベースから指定idのデータを取得する
-        return $http.post(database,{type:'list',groupID:user.following.join(',')}).success(function(data){return data}).error(function(mes){
-            $log.log(mes);
-        });
-    };
-    function getNameList(){
-        //データベースからグループ一覧を取得する
-        return $http.post(database,{type:'namelist'}).success(function(data){return data});
-    };
-    return {
-        post:post,
-        list:list,
-        getNameList:getNameList
-    };
 }])//}}}
 .factory('eventCal',['_','group','user','calendar','error','MEMO_LIMIT','ATTRIBUTE',function(_,group,user,calendar,myError,MEMO_LIMIT,ATTRIBUTE){//{{{
     function last(arr){return arr[arr.length-1];};
@@ -486,6 +339,21 @@ angular.module(appName)
                 // publicHoliday || public-holiday || 祝日を想定
                 s=s.toLowerCase();
                 return s==='public-holiday'||s==='publicholiday'||s==='祝日';
+            };
+            var meansVernalEquinoxDay=function(s){
+                //sが春分の日を表しているか判定
+                s=s.toLowerCase();
+                return s==='vernal-equinox-day'||s==='vernalequinoxday'||s==='春分'||s==='春分の日';
+            };
+            var meansAutumnalEquinoxDay=function(s){
+                //sが秋分の日を表しているか判定
+                s=s.toLowerCase();
+                return s==='autumnal-equinox-day'||s==='autumnalequinoxday'||s==='秋分'||s==='秋分の日';
+            };
+            var meansFullMoonNight=function(s){
+                //sが十五夜を表しているか判定
+                s=s.toLowerCase();
+                return s==='full-moon-night'||s==='fullmoonnight'||s==='十五夜'||s==='中秋の名月';
             };
             var cal=calendar.calendar(year,month);
             var dayDic={
@@ -722,7 +590,67 @@ angular.module(appName)
                     throw myError('invalid selector "'+key+':'+val+'" in '+group[groupID].name+'.');
                 }//}}}//}}}
             }else if(key==='date'){//{{{
-                tmpRes[tmpRes.length]=toInt(val);//}}}
+                if(meansAutumnalEquinoxDay(val)){
+                    //1948年以降の秋分
+                    //1948年以前は祝日ではなかった
+                    if(year<1948||year>2030){
+                        tmpRes=[];
+                    }else{
+                        if(month!==8){
+                            tmpRes=[];
+                        }else{
+                            tmpRes=[[
+                                23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,
+                                23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23
+                            ][year-1948]];
+                        }
+                    }
+                }else if(meansVernalEquinoxDay(val)){
+                    //1949年以降の春分の日
+                    //1949年以前は祝日ではなかった
+                    if(year<1949||year>2030){
+                        tmpRes=[];
+                    }else{
+                        if(month!==2){
+                            tmpRes=[];
+                        }else{
+                            tmpRes=[[
+                                21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,
+                                21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20
+                            ][year-1949]];
+                        }
+                    }
+                }else if(meansFullMoonNight(val)){
+                    var Meigetsu=[
+                        {date:27},{date:16},{month:9,date:5},{date:24},{date:13},{month:9,date:2},{date:22},{date:10},{date:29},
+                        {date:18},{month:9,date:6},{date:25},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},{date:19},
+                        {month:9,date:8},{date:26},{date:16},{month:9,date:5},{date:25},{date:13},{month:9,date:2},{date:21},{date:10},
+                        {date:28},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:4},{date:23},{date:12},{date:30},
+                        {date:19},{month:9,date:8},{date:27},{date:16},{month:9,date:5},{date:25},{date:14},{month:9,date:1},{date:20},
+                        {date:10},{date:29},{date:17},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},{date:11},
+                        {date:30},{date:19},{date:8},{date:27},{date:17},{month:9,date:5},{date:24},{date:13},{month:9,date:2},
+                        {date:20},{date:10},{date:29},{date:18},{month:9,date:6},{date:26},{date:15},{month:9,date:3},{date:22},
+                        {date:11},{date:30},{date:20},{date:8},{date:27},{date:17},{month:9,date:5},{date:23},{date:12},
+                        {month:9,date:1},{date:21},{date:10},{date:29},{date:18},{month:9,date:7},{date:25},{date:14},{month:9,date:3},
+                        {date:22},{date:11},{date:30},{date:20},{date:9},{date:27},{date:16},{month:9,date:5},{date:24},
+                        {date:12},{month:9,date:1},{date:21},{date:11},{date:28},{date:18},{month:9,date:6},{date:25},{date:14},
+                        {month:9,date:3},{date:22},{date:12},{date:30},{date:19},{date:8},{date:27},{date:15},{month:9,date:4},
+                        {date:24},{date:13},{month:9,date:1},{date:21},{date:10},{date:29},{date:17},{month:9,date:6},{date:25},
+                        {date:15},{month:9,date:3},{date:22},{date:12}
+                    ];
+                    if(year<1901||year>2030){
+                        tmpRes=[];
+                    }else{
+                        if((!Meigetsu[year-1901].month&&month===8) || (Meigetsu[year-1901].month===month)){
+                            tmpRes=[Meigetsu[year-1901].date];
+                        }else{
+                            tmpRes=[];
+                        }
+                    }
+                }else{
+                    tmpRes=[toInt(val)];
+                }
+                //}}}
             }else if(key==='month'){//{{{
                 if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!=month)
                     tmpRes=[];//違う月の時
@@ -861,6 +789,111 @@ angular.module(appName)
         eventCalendar:eventCalendar,
         splitSelector:splitSelector,
         execSelectors:execSelectors//テスト用
+    };
+}])//}}}
+.factory('eventListToEdit',function(){//{{{
+    return {
+        id:''
+    };
+})//}}}
+.factory('error',['$mdToast',function($mdToast){//{{{
+    var ErrorConstructor = ErrorConstructor || Error;
+    return function(mes){
+        $mdToast.show($mdToast.simple().content(mes).position('top right').hideDelay(3000));
+        return new ErrorConstructor(mes);
+    };
+}])//}}}
+.factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
+    return {
+        editsEvent:false,
+        editsGroup:false,
+        showsEventList:false,
+        switchToEdit:function(){//{{{
+            //event= eventのid:groupのid:eventのtype(event or habit)
+            var args=slice.call(arguments);
+            if(args.length===1||args.length===2&&args[1]===true){//{{{
+                //switchToEdit(event [,isEdit])の場合
+                var event=args[0].split(':');// event=[eventID,groupID,eventType];
+                eventForm.mode=args.length===1?'edit':'add';
+
+                _.extend(eventForm,{
+                    type: event[2],
+                    id: args.length===1? toInt(event[0]): 0
+                });
+
+                if(event[1]!=='private'){
+                    eventForm.selectedGroup=toInt(event[1]);
+                }else{
+                    eventForm.selectedGroup='private';//event[1]==='private'
+                }
+                if(event[2]==='event'){
+                    _.map(['year','month','date','name'],function(key){
+                        if(event[1]==='private'){
+                            eventForm[key]=user['private'].event[event[0]][key];
+                        }else{
+                            eventForm[key]=group[event[1]].event[event[0]][key];
+                        }
+                    });
+                    eventForm.month+=1;
+                }else if(event[2]==='habit'){
+                    if(event[1]==='private'){
+                        eventForm.rule=user['private'].habit[event[0]].selector;
+                        eventForm.name=user['private'].habit[event[0]].name;
+                    }else{
+                        eventForm.rule=group[event[1]].habit[event[0]].selector;
+                        eventForm.name=group[event[1]].habit[event[0]].name;
+                    }
+                }
+                eventForm.isMessage=(eventForm.name.slice(0,'[mes]'.length)==='[mes]');
+                if(eventForm.isMessage){
+                    eventForm.name=eventForm.name.slice('[mes]'.length);
+                }
+                //}}}
+            }else if(args.length===3){//{{{
+                //switchToEdit(year,month,date)の場合
+                //この場合は、新規でyear/month/dateにイベントを作成する
+                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: args[0], month: args[1]+1, date: args[2]});
+            }//}}}
+            this.editsEvent=true;
+            $mdSidenav('left').close();
+        }//}}}
+    };
+}])//}}}
+.factory('db',['_','group','user','$http','$rootScope','$log',function(_,group,user,$http,$rootScope,$log){//{{{
+    var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
+    function post(group,id,type){
+        //データベースにpostする汎用メソッド
+        //typeにupdateとかinsertとか指定することで動作変えている
+        //下のlist()及びgetNameList()はこれを使用していないため注意
+        var o=_.clone(group);
+        o.id=id;
+        o.permission=o.permission||[];
+        o.parents=o.parents||'';
+        delete o.updated;
+        for(var key in o) o[key]=toOneByte(angular.toJson(o[key]));
+        o.type=type;
+        $rootScope.$broadcast('updated');
+        return $http.post(database,o).success(function(mes){
+            $log.log('updated');
+            $log.log(mes);
+        }).error(function(mes){
+            $log.log(mes);
+        });
+    };
+    function list(){
+        //データベースから指定idのデータを取得する
+        return $http.post(database,{type:'list',groupID:user.following.join(',')}).success(function(data){return data}).error(function(mes){
+            $log.log(mes);
+        });
+    };
+    function getNameList(){
+        //データベースからグループ一覧を取得する
+        return $http.post(database,{type:'namelist'}).success(function(data){return data});
+    };
+    return {
+        post:post,
+        list:list,
+        getNameList:getNameList
     };
 }])//}}}
 .run(['calendar','$timeout',function(calendar,$timeout){//{{{

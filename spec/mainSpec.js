@@ -15,6 +15,9 @@ describe('test',function(){
         }));
         it('date selector',function(){
             expect(eventCal.execSelectors('date:3',year,month)).toEqual([3]);
+            expect(eventCal.execSelectors('date:vernal-equinox-day',year,2)).toEqual([20]);
+            expect(eventCal.execSelectors('date:autumnal-equinox-day',year,8)).toEqual([22]);
+            expect(eventCal.execSelectors('date:full-moon-night',year,8)).toEqual([30]);
         });
         it('day selector',function(){
             expect(eventCal.execSelectors('day:wed',year,month)).toEqual([1,8,15,22,29]);
@@ -90,8 +93,15 @@ describe('test',function(){
         }));
     });//}}}
     describe('switchToEdit()',function(){//{{{
-        it('should initialize eventForm correctly when switching to edit with add mode with date.',inject(function(mode,eventForm){
-            mode.switchToEdit(2015,1,14);
+        var mode,eventForm,group;
+        beforeEach(inject(function(_mode_,_eventForm_,_group_){
+            mode=_mode_;
+            eventForm=_eventForm_;
+            group=_group_;
+            group[0].event=[{year:2015,month:1,date:14,name:'[mes]バレンタイン'}];
+        }));
+        it('should initialize eventForm correctly when switching to edit with add mode with date.',function(){
+            mode.switchToEdit(2015,2-1,14);
             expect(eventForm).toEqual({
                 name : '',
                 year : 2015,
@@ -102,8 +112,8 @@ describe('test',function(){
                 mode : 'add',
                 id : 0
             });
-        }));
-        it('should initialize eventForm correctly when switching to edit mode with edit event mode.',inject(function(mode,eventForm,group){
+        });
+        it('should initialize eventForm correctly when switching to edit mode with edit event mode.',function(){
             mode.switchToEdit('0:0:event');
             expect(eventForm).toEqual({
                 name: group[0].event[0].name.replace(/^\[mes\]/,''),
@@ -117,8 +127,8 @@ describe('test',function(){
                 selectedGroup: 0,
                 isMessage: true
             });
-        }));
-        it('should initialize eventForm correctly when switching to edit mode with edit event mode.',inject(function(mode,eventForm,group){
+        });
+        it('should initialize eventForm correctly when switching to edit mode with edit event mode.',function(){
             mode.switchToEdit('0:0:event',true);
             expect(eventForm).toEqual({
                 name: group[0].event[0].name.replace(/^\[mes\]/,''),
@@ -132,7 +142,7 @@ describe('test',function(){
                 selectedGroup: 0,
                 isMessage: true
             });
-        }));
+        });
     });//}}}
     describe('add group',function(){
         var settingScope,groupScope,SettingCtrl,GroupEditorCtrl,$httpBackend;
@@ -162,7 +172,7 @@ describe('test',function(){
             $httpBackend.flush();
             expect(group.length).toBe(2);
 
-            settingScope.makeAGroup();
+            settingScope.makeGroup();
             expect(mode.editsGroup).toBe(true);
 
             groupForm.name='hoge';

@@ -31,7 +31,6 @@ module.exports = function(grunt) {
                            return 'js';
                        }
                     },
-                    // layout: 'byType',
                     install: true,
                     verbose: false,
                     cleanTargetDir: true,
