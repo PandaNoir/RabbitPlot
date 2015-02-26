@@ -1,6 +1,6 @@
 # Rabbit Plot
 ## Rabbit Plotとは
-Rabbit Plotとは最新型カレンダーアプリです。  
+[Rabbit Plot](http://pandanoir.web.fc2.com/RabbitPlot)とは最新型カレンダーアプリです。  
 予定をグループをフォローすることで管理します。  
 例えばxx学校をフォローすれば、xx学校の体育祭、文化祭などが自分のカレンダーにも表示されます。  
 つまり、グループをフォローする以外に特別なことをしなくても予定が管理できます。  
