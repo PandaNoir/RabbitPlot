@@ -36,6 +36,6 @@
 例: `day:friday and date:13`  
 13日の金曜日を表します。  
 
-例: `\(day:saturday or day:sunday\) and date:20`  
+例: `(day:saturday or day:sunday) and date:20`  
 土曜日か日曜日の20日を表します。今適当に考えたので意味はありません。  
 
