@@ -85,7 +85,7 @@ angular.module(appName)
     }];
     return o;
 }])//}}}
-.factory('calendar',['_','OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',function(_,OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE){//{{{
+.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',function(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE){//{{{
     var today=new Date();
     var memo=[];
     function calendar(year,month,isFlatten){
