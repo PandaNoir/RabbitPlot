@@ -2,8 +2,17 @@ var gulp=require('gulp'),concat=require('gulp-concat'),minifyCss=require('gulp-m
 
 var path = {
     js: [
-        './js/global.js','./js/mainCtrl.js','./js/calendarCtrl.js','./js/eventEditorCtrl.js','./js/groupEditorCtrl.js',
-        './js/detailCtrl.js','./js/settingCtrl.js','./js/eventListCtrl.js','./js/factory.js','./js/directive.js'
+        './js/calendar.js',
+        './js/global.js',
+        './js/mainCtrl.js',
+        './js/calendarCtrl.js',
+        './js/eventEditorCtrl.js',
+        './js/groupEditorCtrl.js',
+        './js/detailCtrl.js',
+        './js/settingCtrl.js',
+        './js/eventListCtrl.js',
+        './js/factory.js',
+        './js/directive.js'
     ],
     lib: [
         './lib/js/angular.min.js',

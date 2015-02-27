@@ -85,79 +85,7 @@ angular.module(appName)
     }];
     return o;
 }])//}}}
-.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',function(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE){//{{{
-    var today=new Date();
-    var memo=[];
-    function calendar(year,month,isFlatten){
-        isFlatten=isFlatten||false;
-        //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
-        if(!isFlatten){
-            if(memo[year-MEMO_LIMIT]){
-                if(memo[year-MEMO_LIMIT][month]){
-                    return memo[year-MEMO_LIMIT][month];
-                }
-            }else{
-                memo[year-MEMO_LIMIT]=[];
-            }
-        }
-        var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
-        if(month===1 && isLeapYear(year)){
-            //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
-            lastDate=29;//うるう年だから
-        }
-
-        var res=[];//カレンダー用配列
-        var i=0;
-        var day=(new Date(year,month,1)).getDay();
-        var row=[];
-        if(isFlatten){
-            for(var i=1;i<=lastDate;i++){
-                res[res.length]=i;
-            }
-        }else{
-            for(var i=day;i>0;i--){
-                row[row.length]=0;
-            }
-            for(var i=1;i<=lastDate;i++){
-                if(day>6){
-                    day=0;
-                    res[res.length]=row;
-                    row=[];
-                }
-                row[row.length]=i;//日付が今月の範囲に収まっている
-                day++;
-            }
-            for(var i=day;i<7;i++){
-                row[row.length]=OVER_MONTH;
-            }
-        }
-        if(row.length>0) res[res.length]=row;
-        row=null;
-        if(isFlatten){
-            return res;
-        }else{
-            return memo[year-MEMO_LIMIT][month]=res;
-        }
-    };
-    var res={
-        year:today.getFullYear(),
-        month:today.getMonth(),
-        date:today.getDate(),
-        calendar:calendar,
-        today:{
-            year:today.getFullYear(),
-            month:today.getMonth(),
-            date:today.getDate()
-        },
-        selected:today.getDate(),
-        selectedDay:function(){
-            if(this.selected==null) return '';
-            else return ['日','月','火','水','木','金','土'][new Date(this.year,this.month,this.selected).getDay()];
-        },
-        disableHoverEvent:IS_SMART_PHONE
-    };
-    return res;
-}])//}}}
+.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE',calendar])//}}}
 .factory('eventCal',['_','group','user','calendar','error','MEMO_LIMIT','ATTRIBUTE',function(_,group,user,calendar,myError,MEMO_LIMIT,ATTRIBUTE){//{{{
     function last(arr){return arr[arr.length-1];};
     var constDic=[];
@@ -168,7 +96,6 @@ angular.module(appName)
     var OTHERS=ATTRIBUTE.OTHERS;
     var LPARENTHESES=ATTRIBUTE.LPARENTHESES;
     var RPARENTHESES=ATTRIBUTE.RPARENTHESES;
-    var GHLMemo=[];//getHabitListMemo;
     var SSMemo={};//splitSelectorMemo;
     var ECMemo=[];//eventCalendarMemo;
     var beforeGroups='';//非表示表示切り替えに対応するため
@@ -381,16 +308,6 @@ angular.module(appName)
             };
             //セレクタを実行する
             //注意:nowSelectorはnowSelector[0]が代入されている。この関数内ではnowSelector[0]しか使用されていなかったからだ。変更がある場合注意せよ
-            if(GHLMemo[year-MEMO_LIMIT]){
-                if(GHLMemo[year-MEMO_LIMIT][month]){
-                    if(GHLMemo[year-MEMO_LIMIT][month][nowSelector]){
-                        return _.clone(GHLMemo[year-MEMO_LIMIT][month][nowSelector]);
-                    }
-                }else GHLMemo[year-MEMO_LIMIT][month]={};
-            }else{
-                GHLMemo[year-MEMO_LIMIT]=[];
-                GHLMemo[year-MEMO_LIMIT][month]={};
-            }
             var key=nowSelector.split(':')[0];
             var val=nowSelector.split(':').slice(1).join(':');
             var tmpRes=[];
@@ -405,7 +322,6 @@ angular.module(appName)
                     var publicHolidays=getEvents(0,year,month);//getEvents(0,year,month);で祝日を取得できる
                     for(var i=0,j=publicHolidays.length;i<j;i++) publicHolidays[i]=publicHolidays[i].date;
                     tmpRes=_.difference(tmpRes,publicHolidays);
-                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 }else if(val.indexOf('year')===0||val.indexOf('month')===0||val.indexOf('date')===0||val.indexOf('day')===0){
                     //not:month=3 もしくは not:month:3
                     val=val.replace(/=/,':');//not:month=3をnot:month:3に揃える
@@ -441,7 +357,7 @@ angular.module(appName)
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);//}}}
+                //}}}
             }else if(key==='yesterday'){//{{{
                 tmpRes=allDays();
                 var key2=val.split(':')[0];
@@ -449,14 +365,12 @@ angular.module(appName)
                 if(meansPublicHoliday(val)){
                     tmpRes=_.intersection(tmpRes,_.map(execSelector('is:'+val,year,month),function(n){return n+1;}));
                     // 12/32日みたいな日があるかもしれないからこういう処理
-                    GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 }else if(key2==='day'||key2==='date'){
                     //この辺は代用できる気がするし、いらないとおもう。一応つけるけど
                     tmpRes=_.intersection(allDays(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
                 //}}}
             }else if(key==='range'){//{{{
                 if(val.slice(0,2)==='..'){//{{{
@@ -693,10 +607,6 @@ angular.module(appName)
                 }else tmpRes=allDays();//}}}
             }else{
                 throw myError('undefined key "'+key+'".');
-            }
-            if(key==='day'){
-                //not,from,toは不可能、date、month,yearはメモ化するほうが無駄だから
-                GHLMemo[year-MEMO_LIMIT][month][nowSelector]=_.clone(tmpRes);
             }
             return tmpRes;
         }//}}}
