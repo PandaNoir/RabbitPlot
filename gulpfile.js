@@ -5,7 +5,16 @@ var path = {
         './js/global.js','./js/mainCtrl.js','./js/calendarCtrl.js','./js/eventEditorCtrl.js','./js/groupEditorCtrl.js',
         './js/detailCtrl.js','./js/settingCtrl.js','./js/eventListCtrl.js','./js/factory.js','./js/directive.js'
     ],
-    lib: ['./lib/js/angular.min.js','./lib/js/angular-touch.min.js','./lib/js/angular-animate.min.js','./lib/js/angular-aria.min.js','./lib/js/angular-messages.min.js','./lib/js/angular-material.min.js','./lib/js/lodash.min.js'],
+    lib: [
+        './lib/js/angular.min.js',
+        './lib/js/angular-aria.min.js',
+        './lib/js/angular-animate.min.js',
+        './lib/js/angular-material.min.js',
+        './lib/js/angular-touch.min.js',
+        './lib/js/angular-messages.min.js',
+        './lib/js/angular-local-storage.min.js',
+        './lib/js/lodash.min.js'
+    ],
     libcss: ['./lib/css/angular-material.min.css'],
     css: ['./css/style.css']
 };
@@ -14,8 +23,7 @@ function wrap(files,name){
     files.unshift('./js/'+name+'.prefix');
     files.push('./js/'+name+'.suffix');
     return files;
-}
-
+};
 gulp.task('concat', function() {
     return gulp.src(wrap(path.js,'rabbit'))
     .pipe(concat(mainRawJS))
@@ -56,6 +64,7 @@ gulp.task('minify',['concat'],function(cb){
 });
 gulp.task('dev',function(){
     gulp.src('templateIndex.html')
+    .pipe(replace(/<!--liblist-->/,_.map(path.lib,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--scriptlist-->/,_.map(path.js,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--css-->/,'<link rel="stylesheet" href="css/style.css">'))
     .pipe(replace(/<div flex class="">Rabbit Plot<\/div>/,'<div flex class="">Rabbit Plot ver.dev</div>'))
@@ -64,6 +73,7 @@ gulp.task('dev',function(){
 });
 gulp.task('release',function(){
     gulp.src(['templateIndex.html'])
+    .pipe(replace(/<!--liblist-->/,_.map(path.lib,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--scriptlist-->/,'<script src="js/'+mainJS+'" defer></script>'))
     .pipe(replace(/<!--css-->/,'<link rel="stylesheet" href="css/style.min.css">'))
     .pipe(minifyHtml({
