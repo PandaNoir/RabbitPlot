@@ -4,9 +4,8 @@ describe('test',function(){
     describe('execSelector()',function(){//{{{
         var year,month;
         var f;
-        var eventCal,calendar,OVER_MONTH;
-        beforeEach(inject(function(_eventCal_,_calendar_,_OVER_MONTH_){
-            eventCal=_eventCal_;
+        var calendar,OVER_MONTH;
+        beforeEach(inject(function(_calendar_,_OVER_MONTH_){
             calendar=_calendar_;
             OVER_MONTH=_OVER_MONTH_;
             // selectors list:'date', 'day', 'is', 'month', 'not', 'range', 'year', 'yesterday'
@@ -14,41 +13,41 @@ describe('test',function(){
             month=2-1;// 2012/2
         }));
         it('date selector',function(){
-            expect(eventCal.execSelectors('date:3',year,month)).toEqual([3]);
-            expect(eventCal.execSelectors('date:vernal-equinox-day',year,2)).toEqual([20]);
-            expect(eventCal.execSelectors('date:autumnal-equinox-day',year,8)).toEqual([22]);
-            expect(eventCal.execSelectors('date:full-moon-night',year,8)).toEqual([30]);
+            expect(calendar.execSelectors('date:3',year,month)).toEqual([3]);
+            expect(calendar.execSelectors('date:vernal-equinox-day',year,2)).toEqual([20]);
+            expect(calendar.execSelectors('date:autumnal-equinox-day',year,8)).toEqual([22]);
+            expect(calendar.execSelectors('date:full-moon-night',year,8)).toEqual([30]);
         });
         it('day selector',function(){
-            expect(eventCal.execSelectors('day:wed',year,month)).toEqual([1,8,15,22,29]);
-            expect(eventCal.execSelectors('day:2nd-wed',year,month)).toEqual([8]);
-            expect(eventCal.execSelectors('day:last-wed',year,month)).toEqual([29]);
+            expect(calendar.execSelectors('day:wed',year,month)).toEqual([1,8,15,22,29]);
+            expect(calendar.execSelectors('day:2nd-wed',year,month)).toEqual([8]);
+            expect(calendar.execSelectors('day:last-wed',year,month)).toEqual([29]);
         });
         it('is selector',function(){
-            expect(eventCal.execSelectors('is:public-holiday',year,month)).toEqual([11]);
+            expect(calendar.execSelectors('is:public-holiday',year,month)).toEqual([11]);
         });
         it('month selector',function(){
             var all_days=calendar.calendar(year,month,true);
-            expect(eventCal.execSelectors('month:2',year,month)).toEqual(all_days);
-            expect(eventCal.execSelectors('month:3',year,month)).toEqual([]);
+            expect(calendar.execSelectors('month:2',year,month)).toEqual(all_days);
+            expect(calendar.execSelectors('month:3',year,month)).toEqual([]);
         });
         it('range selector',function(){
-            expect(eventCal.execSelectors('range:'+year+'/2/11..'+year+'/2/14',year,month)).toEqual([11,12,13,14]);//range:y/m/d...y/m/d
-            expect(eventCal.execSelectors('range:'+(year+1)+'/2/11..'+(year+1)+'/2/14',year,month)).toEqual([]);//range:y/m/d...y/m/d
-            expect(eventCal.execSelectors('range:2/11...2/14',year,month)).toEqual([11,12,13,14]);
-            expect(eventCal.execSelectors('range:2/11..2/14',year,month)).toEqual([11,12,13,14]);
-            expect(eventCal.execSelectors('range:12/29...1/3',year,12-1)).toEqual([29,30,31]);
-            expect(eventCal.execSelectors('range:12/29...1/3',year,1-1)).toEqual([1,2,3]);
+            expect(calendar.execSelectors('range:'+year+'/2/11..'+year+'/2/14',year,month)).toEqual([11,12,13,14]);//range:y/m/d...y/m/d
+            expect(calendar.execSelectors('range:'+(year+1)+'/2/11..'+(year+1)+'/2/14',year,month)).toEqual([]);//range:y/m/d...y/m/d
+            expect(calendar.execSelectors('range:2/11...2/14',year,month)).toEqual([11,12,13,14]);
+            expect(calendar.execSelectors('range:2/11..2/14',year,month)).toEqual([11,12,13,14]);
+            expect(calendar.execSelectors('range:12/29...1/3',year,12-1)).toEqual([29,30,31]);
+            expect(calendar.execSelectors('range:12/29...1/3',year,1-1)).toEqual([1,2,3]);
         });
         it('year selector',function(){
             var all_days=calendar.calendar(year,month,true);
-            expect(eventCal.execSelectors('year:'+(year+1),year,month)).toEqual([]);
-            expect(eventCal.execSelectors('year:'+year,year,month)).toEqual(all_days);
-            expect(eventCal.execSelectors('year:leap-year',year,month)).toEqual(all_days);
-            expect(eventCal.execSelectors('year:leap-year',year+1,month)).toEqual([]);
+            expect(calendar.execSelectors('year:'+(year+1),year,month)).toEqual([]);
+            expect(calendar.execSelectors('year:'+year,year,month)).toEqual(all_days);
+            expect(calendar.execSelectors('year:leap-year',year,month)).toEqual(all_days);
+            expect(calendar.execSelectors('year:leap-year',year+1,month)).toEqual([]);
         });
         it('yesterday selector',function(){
-            expect(eventCal.execSelectors('yesterday:date:4',year,month)).toEqual([5]);
+            expect(calendar.execSelectors('yesterday:date:4',year,month)).toEqual([5]);
         });
     });//}}}
     describe('splitSelector()',function(){//{{{
@@ -56,30 +55,30 @@ describe('test',function(){
         var OTHERS;
         var LPARENTHESES;
         var RPARENTHESES;
-        var eventCal;
-        beforeEach(inject(function(_eventCal_,_ATTRIBUTE_){
+        var calendar;
+        beforeEach(inject(function(_calendar_,_ATTRIBUTE_){
             OPERATOR=_ATTRIBUTE_.OPERATOR;
             OTHERS=_ATTRIBUTE_.OTHERS;
             LPARENTHESES=_ATTRIBUTE_.LPARENTHESES;
             RPARENTHESES=_ATTRIBUTE_.RPARENTHESES;
-            eventCal=_eventCal_;
+            calendar=_calendar_;
         }));
         it('should attach OTHERS to "key:value"',function(){
-            expect(eventCal.splitSelector('key:value')).toEqual([['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value')).toEqual([['key:value',OTHERS]]);
         });
         it('should attach OPERATOR to "and"',function(){
-            expect(eventCal.splitSelector('key:value かつ key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
-            expect(eventCal.splitSelector('key:value && key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
-            expect(eventCal.splitSelector('key:value and key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
-            expect(eventCal.splitSelector('key:value key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value かつ key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value && key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value and key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value key:value')).toEqual([['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS]]);
         });
         it('should attach OPERATOR to "or"',function(){
-            expect(eventCal.splitSelector('key:value または key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
-            expect(eventCal.splitSelector('key:value || key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
-            expect(eventCal.splitSelector('key:value or key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value または key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value || key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('key:value or key:value')).toEqual([['key:value',OTHERS],['||',OPERATOR],['key:value',OTHERS]]);
         });
         it('should attach LPARENTHESES to "(" and attach RPARENTHESES to ")"',function(){
-            expect(eventCal.splitSelector('(key:value and key:value) and key:value')).toEqual([['(',LPARENTHESES],['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS],[')',RPARENTHESES],['&&',OPERATOR],['key:value',OTHERS]]);
+            expect(calendar.splitSelector('(key:value and key:value) and key:value')).toEqual([['(',LPARENTHESES],['key:value',OTHERS],['&&',OPERATOR],['key:value',OTHERS],[')',RPARENTHESES],['&&',OPERATOR],['key:value',OTHERS]]);
         });
     });//}}}
     describe('calendar.calendar()',function(){//{{{

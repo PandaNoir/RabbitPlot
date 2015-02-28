@@ -4,7 +4,7 @@ angular.module(appName)
     $scope.mode=mode;
     mode.editsEvent=false;
     mode.editsGroup=false;
-    $scope.splitSelector=eventCal.splitSelector;
+    $scope.splitSelector=calendar.splitSelector;
     $scope.openNav=function(){
         $mdSidenav('left').toggle();
     };
