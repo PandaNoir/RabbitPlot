@@ -18,14 +18,14 @@ var path = {
         './lib/js/angular.min.js',
         './lib/js/angular-aria.min.js',
         './lib/js/angular-animate.min.js',
-        './lib/js/angular-material.min.js',
         './lib/js/angular-touch.min.js',
         './lib/js/angular-messages.min.js',
         './lib/js/angular-local-storage.min.js',
+        './lib/js/angular-material.min.js',
         './lib/js/lodash.min.js'
     ],
     libcss: ['./lib/css/angular-material.min.css'],
-    css: ['./css/style.css']
+    css: ['./css/style.css','./css/angular-material.css']
 };
 var mainJS='main.js',mainRawJS='main.raw.js',mainPrettyJS='main.pretty.js';
 function wrap(files,name){
