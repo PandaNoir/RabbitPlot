@@ -23,6 +23,7 @@ function toHiragana(str){
     var zenkaku=['ガ','ギ','グ','ゲ','ゴ','ザ','ジ','ズ','ゼ','ゾ','ダ','ヂ','ヅ','デ','ド','バ','パ','ビ','ピ','ブ','プ','ベ','ペ','ボ','ポ','ヴ','ァ','ア','ィ','イ','ゥ','ウ','ェ','エ','ォ','オ','カ','キ','ク','ケ','コ','サ','シ','ス','セ','ソ','タ','チ','ッ','ツ','テ','ト','ナ','ニ','ヌ','ネ','ノ','ハ','ヒ','フ','ヘ','ホ','マ','ミ','ム','メ','モ','ャ','ヤ','ュ','ユ','ョ','ヨ','ラ','リ','ル','レ','ロ','ワ','ヲ','ン','。','「','」','、','・','ー','゛','゜'];
 	//変換開始
     var index=0;
+    str=toOneByte(str);
 	for (var i=0;i<=88;i++){//89文字あるのでその分だけ繰り返す
         index=0;
 		while(str.indexOf(hankaku[i],index)>=0){
@@ -30,6 +31,9 @@ function toHiragana(str){
 			str=str.replace(hankaku[i],zenkaku[i]); //半角カナに対応する全角カナに置換する
 		}
 	}
+    str = str.replace(/[ァ-ン]/g, function(s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0x60);
+    });
     return str;
 };
 function isLeapYear(year){
