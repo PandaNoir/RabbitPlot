@@ -1,6 +1,21 @@
 'use strict';
 describe('test',function(){
+    var $httpBackend;
     beforeEach(module('rabbit'));
+    beforeEach(inject(function(_$httpBackend_){
+        $httpBackend = _$httpBackend_;
+        var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
+
+        $httpBackend.whenPOST(database,function(s){return s.indexOf('type=list')!==-1})
+        .respond('[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]');
+
+        $httpBackend.whenPOST(database,function(s){return s.indexOf('id=2')!==-1;})
+        .respond(201,'');
+
+        $httpBackend.whenPOST(database,'type=namelist')
+        .respond('[["\\"test group\\"","\\"test group2\\""]]');
+
+    }));
     describe('execSelector()',function(){//{{{
         var year,month;
         var f;
@@ -143,21 +158,8 @@ describe('test',function(){
             });
         });
     });//}}}
-    describe('add group',function(){
-        var settingScope,groupScope,SettingCtrl,GroupEditorCtrl,$httpBackend;
-        beforeEach(inject(function($controller,$rootScope,_$httpBackend_){
-            $httpBackend = _$httpBackend_;
-            var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
-
-            $httpBackend.whenPOST(database,function(s){return s.indexOf('type=list')!==-1})
-            .respond('[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]');
-
-            $httpBackend.whenPOST(database,function(s){return s.indexOf('id=2')!==-1;})
-            .respond(201,'');
-
-            $httpBackend.whenPOST(database,'type=namelist')
-            .respond('[["\\"test group\\"","\\"test group2\\""]]');
-
+    describe('add group',function(){//{{{
+        beforeEach(inject(function($controller,$rootScope){
             settingScope=$rootScope.$new();
             SettingCtrl=$controller('settingCtrl',{
                 $scope:settingScope
@@ -167,6 +169,7 @@ describe('test',function(){
                 $scope:groupScope
             });
         }));
+        var settingScope,groupScope,SettingCtrl,GroupEditorCtrl;
         it('start group making.',inject(function(mode,groupForm,group){
             $httpBackend.flush();
             expect(group.length).toBe(2);
@@ -180,5 +183,32 @@ describe('test',function(){
             expect(group.length).toBe(3);
             expect(group[2].name).toBe('hoge');
         }));
-    });
+    });//}}}
+    describe('directive',function(){//{{{
+        describe('appDate',function(){
+            var $compile,$rootScope,calendar;
+            beforeEach(inject(function(_$compile_, _$rootScope_,_calendar_){
+                $compile = _$compile_;
+                $rootScope = _$rootScope_;
+                calendar=_calendar_;
+                calendar.selected=21;
+                calendar.year=2015;
+                calendar.month=2-1;
+                calendar.date=14;
+                calendar.today={
+                    year:2015,
+                    month:2-1,
+                    date:14
+                };
+            }));
+            it('select',function(){
+                var element = $compile('<span app-date="0" app-row="[1,2,3,4,5,6,7]"></span>')($rootScope);
+                $rootScope.$digest();
+                expect(element.text()).toBe('1');
+                expect(element.attr('class').split(' ')).not.toContain('selected');
+                element.triggerHandler('click');
+                expect(element.attr('class').split(' ')).toContain('selected');
+            });
+        });
+    });//}}}
 });
