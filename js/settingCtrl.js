@@ -86,9 +86,10 @@ angular.module(appName)
         if(!group){
             return res;
         }
+        var keyword=toHiragana($scope.search_keyword);
         for(var i=0,j=group.length;i<j;i++){
             if(res.length>30) break;
-            if(group[i]&&group[i].name&&group[i].name.indexOf($scope.search_keyword)!==-1){
+            if(group[i] && group[i].name && toHiragana(group[i].name).indexOf(keyword)!==-1){
                 res[res.length]=i;
             }
         }
