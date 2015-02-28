@@ -59,7 +59,7 @@ angular.module(appName)
     var o=[holiday];
     return o;
 }])//}}}
-.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',calendar])//}}}
+.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',calendar])
 .factory('eventCal',['_','group','user','calendar',function(_,group,user,calendar){//{{{
     var ECMemo=[];//eventCalendarMemo;
     var beforeGroups='';//非表示表示切り替えに対応するため
@@ -268,7 +268,7 @@ angular.module(appName)
         }//}}}
     };
 }])//}}}
-.factory('db',['_','group','user','$http','$rootScope','$log',function(_,group,user,$http,$rootScope,$log){//{{{
+.factory('db',['_','user','$http','$rootScope','$log',function(_,user,$http,$rootScope,$log){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
