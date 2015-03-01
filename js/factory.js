@@ -14,6 +14,7 @@ angular.module(appName)
                 habit:[],
                 name:'プライベート'
             },
+            permission:[],
             hiddenGroup:[],
             id:uuid()
         };
@@ -31,11 +32,17 @@ angular.module(appName)
         localStorageService.set('private',angular.toJson(this));
     };
     user.hasPermission=function(groupID){
-        return groupID==='private'||_.indexOf(group[groupID].permission,user.id)!==-1;
+        return groupID==='private'||_.indexOf(user.permission,groupID)!==-1;
     };
     user.save();
     return user;
 }])//}}}
+.run(['user','db',function(user,db){
+    db.permission().then(function(mes){
+        mes=mes.data;
+        user.permission=mes;
+    });
+}])
 .factory('eventForm',function(){//{{{
     return {
         name:'',
@@ -340,10 +347,16 @@ angular.module(appName)
         //データベースからグループ一覧を取得する
         return $http.post(database,{type:'namelist'}).success(function(data){return data});
     };
+    function permission(list){
+        return $http.post(database,{type:'permission',groupID:user.following.join(','),userID:user.id}).success(function(data){return data}).error(function(mes){
+            $log.log(mes);
+        });
+    };
     return {
         post:post,
         list:list,
-        getNameList:getNameList
+        getNameList:getNameList,
+        permission:permission
     };
 }])//}}}
 .run(['calendar','$timeout',function(calendar,$timeout){//{{{
