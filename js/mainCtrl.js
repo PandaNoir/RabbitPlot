@@ -54,43 +54,4 @@ angular.module(appName)
         return res;
     };
 }])//}}}
-.run(['_','db','group','$rootScope','localStorageService',function(_,db,group,$rootScope,localStorageService){//{{{
-    var o=_.clone(group)[0];
-    if(localStorageService.get('group')){
-        group.length=0;
-        Array.prototype.push.apply(group,angular.fromJson(localStorageService.get('group')));
-        group[0]=_.clone(o);
-    }
-    db.list().then(function(mes){
-        mes=mes.data;
-        for(var i=0,i2=mes.length;i<i2;i++){
-            for(var key in mes[i]){
-                mes[i][key]=angular.fromJson(mes[i][key]);
-            }
-            mes[i].updated=true;
-        }
-        mes.sort(function(a,b){return a.id-b.id});
-        group.length=0;
-        for(var i=0,i2=mes.length;i<i2;i++){
-            group[mes[i].id]=mes[i];
-        }
-        group[0]=_.clone(o);
-        $rootScope.$broadcast('updated');
-        localStorageService.set('group',angular.toJson(group));
-        db.getNameList().then(function(mes){
-            for(var i=0,i2=mes.data[0].length;i<i2;i++){
-                if(!group[i]){
-                    group[i]={
-                        name:angular.fromJson(mes.data[0][i])
-                    };
-                    if(mes.data[1][i]){
-                        group[i].parents=angular.fromJson(mes.data[1][i]);
-                    }
-                }
-            }
-            group[0]=_.clone(o);
-            localStorageService.set('group',angular.toJson(group));
-        });
-    });
-}])//}}}
 ;

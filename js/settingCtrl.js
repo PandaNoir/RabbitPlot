@@ -23,7 +23,6 @@ angular.module(appName)
         }
         return true;
     };//}}}
-
     $scope.toggleNav=function(){
         $mdSidenav('left').close();
     };
@@ -89,7 +88,7 @@ angular.module(appName)
         var keyword=toHiragana($scope.search_keyword);
         for(var i=0,j=group.length;i<j;i++){
             if(res.length>30) break;
-            if(group[i] && group[i].name && toHiragana(group[i].name).indexOf(keyword)!==-1){
+            if(group[i] && (group[i].name && toHiragana(group[i].name).indexOf(keyword)!==-1 || group[i].description && toHiragana(group[i].description).indexOf(keyword)!==-1)){
                 res[res.length]=i;
             }
         }
@@ -99,7 +98,7 @@ angular.module(appName)
         //ランダム検索
         var res=[];
         if(group.length<5){
-            Array.prototype.push.apply(res,group);
+            res.push.apply(res,group);
         }else{
             while(res.length<5){
                 var elm=(Math.random()*group.length)|0;

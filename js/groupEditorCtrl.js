@@ -1,6 +1,7 @@
 angular.module(appName)
-.controller('groupEditorCtrl',['$scope','group','groupForm','db','$mdToast','mode',function($scope,group,groupForm,db,$mdToast,mode){
+.controller('groupEditorCtrl',['$scope','group','user','groupForm','db','$mdToast','mode',function($scope,group,user,groupForm,db,$mdToast,mode){
     $scope.groupForm=groupForm;
+    $scope.user=user;
     groupForm.parentGroup=[null];
     groupForm.mode='add';
     $scope.group=group;
@@ -14,6 +15,7 @@ angular.module(appName)
             event:[],
             habit:[],
             name:groupForm.name,
+            description:groupForm.description,
             updated:true
         }
         if(parentGroup.join('')!==''){
@@ -24,6 +26,7 @@ angular.module(appName)
         $mdToast.show($mdToast.simple().content('グループ '+groupForm.name+' を作成しました').position('top right').hideDelay(3000));
 
         groupForm.name='';
+        groupForm.description='';
     };
     $scope.cancel=function(){
         mode.editsGroup=false;

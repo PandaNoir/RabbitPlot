@@ -45,6 +45,7 @@
       <md-button class="md-raised md-primary" ng-click="search()">検索</md-button>
       <md-button class="md-raised md-primary" ng-click="randomSearch()">ランダム</md-button>
       <ul class="search-list">
+        <li ng-if="searchResult.length===0">ヒットしませんでした。</li>
         <li ng-repeat="id in searchResult">
           {{group[id].name}}
           <md-button class="md-raised md-primary" ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</md-button>
@@ -223,6 +224,9 @@
         グループを追加します<br>
         <md-input-container>
         <label>名称</label><input type="text" ng-model="groupForm.name">
+        </md-input-container>
+        <md-input-container>
+        <label>説明</label><textarea ng-model="groupForm.description"></textarea>
         </md-input-container>
 
         親グループ:

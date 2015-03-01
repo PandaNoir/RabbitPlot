@@ -21,7 +21,7 @@ var path = {
         './lib/js/angular-touch.min.js',
         './lib/js/angular-messages.min.js',
         './lib/js/angular-local-storage.min.js',
-        './lib/js/angular-material.min.js',
+        './js/angular-material.min.js',
         './lib/js/lodash.min.js'
     ],
     libcss: ['./lib/css/angular-material.min.css'],
