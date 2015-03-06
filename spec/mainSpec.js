@@ -20,56 +20,58 @@
       $httpBackend.whenPOST(database, 'type=namelist').respond('[["\\"test group\\"","\\"test group2\\""]]');
     }));
     describe('execSelector()', function() {
-      var OVER_MONTH, calendar, f, month, year;
+      var OVER_MONTH, calendar, execSelectors, f, month, year;
       year = void 0;
       month = void 0;
       f = void 0;
       calendar = void 0;
       OVER_MONTH = void 0;
+      execSelectors = void 0;
       beforeEach(inject(function(_calendar_, _OVER_MONTH_) {
         calendar = _calendar_;
         OVER_MONTH = _OVER_MONTH_;
+        execSelectors = calendar.execSelectors;
         year = 2012;
         month = 2 - 1;
       }));
       it('date selector', function() {
-        expect(calendar.execSelectors('date:3', year, month)).toEqual([3]);
-        expect(calendar.execSelectors('date:vernal-equinox-day', year, 2)).toEqual([20]);
-        expect(calendar.execSelectors('date:autumnal-equinox-day', year, 8)).toEqual([22]);
-        expect(calendar.execSelectors('date:full-moon-night', year, 8)).toEqual([30]);
+        expect(execSelectors('date:3', year, month)).toEqual([3]);
+        expect(execSelectors('date:vernal-equinox-day', year, 2)).toEqual([20]);
+        expect(execSelectors('date:autumnal-equinox-day', year, 8)).toEqual([22]);
+        expect(execSelectors('date:full-moon-night', year, 8)).toEqual([30]);
       });
       it('day selector', function() {
-        expect(calendar.execSelectors('day:wed', year, month)).toEqual([1, 8, 15, 22, 29]);
-        expect(calendar.execSelectors('day:2nd-wed', year, month)).toEqual([8]);
-        expect(calendar.execSelectors('day:last-wed', year, month)).toEqual([29]);
+        expect(execSelectors('day:wed', year, month)).toEqual([1, 8, 15, 22, 29]);
+        expect(execSelectors('day:2nd-wed', year, month)).toEqual([8]);
+        expect(execSelectors('day:last-wed', year, month)).toEqual([29]);
       });
       it('is selector', function() {
-        expect(calendar.execSelectors('is:public-holiday', year, month)).toEqual([11]);
+        expect(execSelectors('is:public-holiday', year, month)).toEqual([11]);
       });
       it('month selector', function() {
         var all_days;
         all_days = calendar.calendar(year, month, true);
-        expect(calendar.execSelectors('month:2', year, month)).toEqual(all_days);
-        expect(calendar.execSelectors('month:3', year, month)).toEqual([]);
+        expect(execSelectors('month:2', year, month)).toEqual(all_days);
+        expect(execSelectors('month:3', year, month)).toEqual([]);
       });
       it('range selector', function() {
-        expect(calendar.execSelectors("range:" + year + "/2/11.." + year + "/2/14", year, month)).toEqual([11, 12, 13, 14]);
-        expect(calendar.execSelectors("range:" + (year + 1) + "/2/11.." + (year + 1) + "/2/14", year, month)).toEqual([]);
-        expect(calendar.execSelectors('range:2/11...2/14', year, month)).toEqual([11, 12, 13, 14]);
-        expect(calendar.execSelectors('range:2/11..2/14', year, month)).toEqual([11, 12, 13, 14]);
-        expect(calendar.execSelectors('range:12/29...1/3', year, 12 - 1)).toEqual([29, 30, 31]);
-        expect(calendar.execSelectors('range:12/29...1/3', year, 1 - 1)).toEqual([1, 2, 3]);
+        expect(execSelectors("range:" + year + "/2/11.." + year + "/2/14", year, month)).toEqual([11, 12, 13, 14]);
+        expect(execSelectors("range:" + (year + 1) + "/2/11.." + (year + 1) + "/2/14", year, month)).toEqual([]);
+        expect(execSelectors('range:2/11...2/14', year, month)).toEqual([11, 12, 13, 14]);
+        expect(execSelectors('range:2/11..2/14', year, month)).toEqual([11, 12, 13, 14]);
+        expect(execSelectors('range:12/29...1/3', year, 12 - 1)).toEqual([29, 30, 31]);
+        expect(execSelectors('range:12/29...1/3', year, 1 - 1)).toEqual([1, 2, 3]);
       });
       it('year selector', function() {
         var all_days;
         all_days = calendar.calendar(year, month, true);
-        expect(calendar.execSelectors("year:" + (year + 1), year, month)).toEqual([]);
-        expect(calendar.execSelectors("year:" + year, year, month)).toEqual(all_days);
-        expect(calendar.execSelectors('year:leap-year', year, month)).toEqual(all_days);
-        expect(calendar.execSelectors('year:leap-year', year + 1, month)).toEqual([]);
+        expect(execSelectors("year:" + (year + 1), year, month)).toEqual([]);
+        expect(execSelectors("year:" + year, year, month)).toEqual(all_days);
+        expect(execSelectors('year:leap-year', year, month)).toEqual(all_days);
+        expect(execSelectors('year:leap-year', year + 1, month)).toEqual([]);
       });
       it('yesterday selector', function() {
-        expect(calendar.execSelectors('yesterday:date:4', year, month)).toEqual([5]);
+        expect(execSelectors('yesterday:date:4', year, month)).toEqual([5]);
       });
     });
     describe('splitSelector()', function() {
