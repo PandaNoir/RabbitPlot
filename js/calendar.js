@@ -76,10 +76,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             var sundayHoliday=_.intersection(res,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
             res.push.apply(res,_.map(sundayHoliday,function(n){
                 var k=1;
-                while(_.indexOf(res,n+k,true)!==-1){
-                    //振替先が祝日
-                    k+=1;
-                }
+                while(_.indexOf(res,n+k,true)!==-1) k+=1;//振替先が祝日でなくなるまで進める
                 return n+k;
             }));
             res.sort();
@@ -88,9 +85,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             //国民の休日が制定されたあと
             var beforeDay=0;
             _.each(res,function(n){
-                if(n-beforeDay===2){
-                    res.push(n-1);
-                }
+                if(n-beforeDay===2) res.push(n-1);
                 beforeDay=n;
             });
             res.sort();
@@ -102,9 +97,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
         if(!isFlatten){
             if(memo[year-MEMO_LIMIT]){
-                if(memo[year-MEMO_LIMIT][month]){
-                    return memo[year-MEMO_LIMIT][month];
-                }
+                if(memo[year-MEMO_LIMIT][month]) return memo[year-MEMO_LIMIT][month];
             }else{
                 memo[year-MEMO_LIMIT]=[];
             }
@@ -123,30 +116,28 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             for(var i=1;i<=lastDate;i++){
                 res[res.length]=i;
             }
-        }else{
-            for(var i=day;i>0;i--){
-                row[row.length]=0;
+            return res;
+        }
+
+        //!isFlatten
+        for(var i=day;i>0;i--){
+            row[row.length]=0;
+        }
+        for(var i=1;i<=lastDate;i++){
+            if(day>6){
+                day=0;
+                res[res.length]=row;
+                row=[];
             }
-            for(var i=1;i<=lastDate;i++){
-                if(day>6){
-                    day=0;
-                    res[res.length]=row;
-                    row=[];
-                }
-                row[row.length]=i;//日付が今月の範囲に収まっている
-                day++;
-            }
-            for(var i=day;i<7;i++){
-                row[row.length]=OVER_MONTH;
-            }
+            row[row.length]=i;//日付が今月の範囲に収まっている
+            day++;
+        }
+        for(var i=day;i<7;i++){
+            row[row.length]=OVER_MONTH;
         }
         if(row.length>0) res[res.length]=row;
         row=null;
-        if(isFlatten){
-            return res;
-        }else{
-            return memo[year-MEMO_LIMIT][month]=res;
-        }
+        return memo[year-MEMO_LIMIT][month]=res;
     };//}}}
     function execSelectors(selectors,year,month,eventListRes){//{{{
         //セレクタを適応させて返す
@@ -164,13 +155,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 stack[stack.length]=execSelector(nowSelector[0],year,month,eventListRes);
             }else if(nowSelector[1]===OPERATOR){
                 //演算子の時
-                if(nowSelector[0]==='&&') //セレクタのand処理部分
-                    stack.push(_.intersection(stack.pop(),stack.pop()));//[重要]stack.pop()しているため、stack.pushを直してはいけない
-                else if(nowSelector[0]==='||')
-                    stack.push(_.union(stack.pop(),stack.pop()));//同上
-                else{
-                    throw myError('undefined operator '+nowSelector[0]);
-                }
+                if(nowSelector[0]==='&&') stack.push(_.intersection(stack.pop(),stack.pop()));//[重要]stack.pop()しているため、stack.pushを直してはいけない
+                else if(nowSelector[0]==='||') stack.push(_.union(stack.pop(),stack.pop()));//同上
+                else throw myError('undefined operator '+nowSelector[0]);
             }
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
@@ -254,9 +241,8 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 }//}}}
             }else if(key==='is'){//{{{
                 // is:public-holidayと言った感じ
-                tmpRes=allDays();
                 if(meansPublicHoliday(val)){
-                    tmpRes=_.intersection(tmpRes,getHolidays(year,month));
+                    tmpRes=_.intersection(allDays(),getHolidays(year,month));
                 }else if(val==='last'){
                     //======================
                     var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];
@@ -417,32 +403,24 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 if(meansAutumnalEquinoxDay(val)){
                     //1948年以降の秋分
                     //1948年以前は祝日ではなかった
-                    if(year<1948||year>2030){
+                    if(year<1948||year>2030||year>=1948&&year<=2030&&month!==0){
                         tmpRes=[];
                     }else{
-                        if(month!==8){
-                            tmpRes=[];
-                        }else{
-                            tmpRes=[[
-                                23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,
-                                23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23
-                            ][year-1948]];
-                        }
+                        tmpRes=[[
+                            23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,24,23,23,23,23,23,23,23,23,23,
+                            23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23,23,22,23,23
+                        ][year-1948]];
                     }
                 }else if(meansVernalEquinoxDay(val)){
                     //1949年以降の春分の日
                     //1949年以前は祝日ではなかった
-                    if(year<1949||year>2030){
+                    if(year<1949||year>2030||year>=1949&&year<=2030&&month!==2){
                         tmpRes=[];
                     }else{
-                        if(month!==2){
-                            tmpRes=[];
-                        }else{
-                            tmpRes=[[
-                                21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,
-                                21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20
-                            ][year-1949]];
-                        }
+                        tmpRes=[[
+                            21,21,21,21,21,21,21,21,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,21,21,20,21,
+                            21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,21,21,20,20,20,21,20,20,20
+                        ][year-1949]];
                     }
                 }else if(meansFullMoonNight(val)){
                     var Meigetsu=[
