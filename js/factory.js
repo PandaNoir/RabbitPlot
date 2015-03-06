@@ -91,14 +91,15 @@ angular.module(appName)
         localStorageService.set('group',angular.toJson(group));
         db.getNameList().then(function(mes){
             for(var i=0,i2=mes.data[0].length;i<i2;i++){
-                if(!group[i]){
-                    group[i]={
-                        name:angular.fromJson(mes.data[0][i]),
-                        description:angular.fromJson(mes.data[1][i])
-                    };
-                    if(mes.data[2][i]){
-                        group[i].parents=angular.fromJson(mes.data[2][i]);
-                    }
+                if(group[i]){
+                    continue;
+                }
+                group[i]={
+                    name:angular.fromJson(mes.data[0][i]),
+                    description:angular.fromJson(mes.data[1][i])
+                };
+                if(mes.data[2][i]){
+                    group[i].parents=angular.fromJson(mes.data[2][i]);
                 }
             }
             group[0]=_.clone(o);
@@ -120,14 +121,13 @@ angular.module(appName)
             monthOfEC=calendar.month;
             ECMemo=[];
         }else{
-            if(groups.join(',')!==beforeGroups||user.updated||_.any(groups,function(item){return item.updated===true;})){
-                //どれか1つでもupdateされたものがあったらメモを使用しない
-                ECMemo=[];
-                beforeGroups=groups.join(',');
-            }else{
+            if(groups.join(',')===beforeGroups && !user.updated && _.every(groups,function(item){return item.updated===false;})){
                 //条件が変わっていないからそのまま使用
                 return ECMemo[date]||[];
             }
+            //どれか1つでもupdateされたものがあったらメモを使用しない
+            ECMemo=[];
+            beforeGroups=groups.join(',');
         }
         for(var i=0,i2=groups.length;i<i2;i++){
             events[events.length]=getEvents(groups[i],calendar.year,calendar.month);
@@ -140,9 +140,7 @@ angular.module(appName)
         for(var i=0,i2=events.length;i<i2;i++){
             for(var j=0,j2=events[i].length;j<j2;j++){
                 var d=events[i][j].date;
-                if(!eventCalendar[d]){
-                    eventCalendar[d]=[];
-                }
+                if(!eventCalendar[d]) eventCalendar[d]=[];
                 //eventsをeventCalendarへ変換
                 //eventCalendar=[['id:group:type', ...], ...];
                 eventCalendar[d][eventCalendar[d].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
@@ -178,34 +176,33 @@ angular.module(appName)
             res = res.concat(getHabitList(group[groupID].habit,y,m,groupID,parentRes));
             group[groupID].updated=false;
         }
-        if(groupID===0){
-            //振替休日の選定
-            if(!(y<1973||y==1973&&m<4)){
-                //振替休日が制定されたあと
-                var holidays=_.map(res,function(n){return n.date});
-                var sundayHoliday=_.intersection(holidays,calendar.execSelectors('day:sun',y,m,[]));//日曜かつ祝日
-                res.push.apply(res,_.map(sundayHoliday,function(n){
-                    var k=1;
-                    while(_.indexOf(holidays,n+k,true)!==-1){
-                        //振替先が祝日
-                        k+=1;
-                    }
-                    return {year:y,month:m,date:n+k,name:'[mes]振替休日',group:0,id:-1,type:'habit'};
-                }));
-                res.sort();
-            }
-            if(y>=1985||y==1985&&m==12&&d>=27){
-                //国民の休日が制定されたあと
-                var holidays=_.map(res,function(n){return n.date});
-                var beforeDay=0;
-                _.each(holidays,function(n){
-                    if(n-beforeDay===2){
-                        res.push({year:y,month:m,date:n-1,name:'[mes]国民の休日',group:0,id:-2,type:'habit'});
-                    }
-                    beforeDay=n;
-                });
-                res.sort();
-            }
+        if(groupID!==0) return res;
+        //振替休日の選定
+        if(!(y<1973||y==1973&&m<4)){
+            //振替休日が制定されたあと
+            var holidays=_.map(res,function(n){return n.date});
+            var sundayHoliday=_.intersection(holidays,calendar.execSelectors('day:sun',y,m,[]));//日曜かつ祝日
+            res.concat(_.map(sundayHoliday,function(n){
+                var k=1;
+                while(_.indexOf(holidays,n+k,true)!==-1){
+                    //振替先が祝日
+                    k+=1;
+                }
+                return {year:y,month:m,date:n+k,name:'[mes]振替休日',group:0,id:-1,type:'habit'};
+            }));
+            res.sort();
+        }
+        if(y>=1985||y==1985&&m==12&&d>=27){
+            //国民の休日が制定されたあと
+            var holidays=_.map(res,function(n){return n.date});
+            var beforeDay=0;
+            _.each(holidays,function(n){
+                if(n-beforeDay===2){
+                    res.push({year:y,month:m,date:n-1,name:'[mes]国民の休日',group:0,id:-2,type:'habit'});
+                }
+                beforeDay=n;
+            });
+            res.sort();
         }
         return res;
     };//}}}
@@ -215,14 +212,15 @@ angular.module(appName)
         var res=[];
         if(!arr) return res;
         for(var i=0,j=arr.length;i<j;i++){
-            if(arr[i].year===y && arr[i].month===m){
-                var tmpRes=_.clone(arr[i]);
-                tmpRes.group=groupID;
-                tmpRes.type='event';
-                tmpRes.id=i;
-                res[res.length]=tmpRes;
-                tmpRes=null;
+            if(arr[i].year!==y || arr[i].month!==m){
+                continue;
             }
+            var tmpRes=_.clone(arr[i]);
+            tmpRes.group=groupID;
+            tmpRes.type='event';
+            tmpRes.id=i;
+            res[res.length]=tmpRes;
+            tmpRes=null;
         }
         return res;
     }//}}}
@@ -260,58 +258,58 @@ angular.module(appName)
     };
 }])//}}}
 .factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
+    function switchToEdit(){//{{{
+        //event= eventのid:groupのid:eventのtype(event or habit)
+        if(arguments.length===1||arguments.length===2&&arguments[1]===true){
+            //switchToEdit(event [,isEdit])の場合
+            var event=arguments[0].split(':');// event=[eventID,groupID,eventType];
+            eventForm.mode=arguments.length===1?'edit':'add';
+
+            _.extend(eventForm,{
+                type: event[2],
+                id: arguments.length===1? toInt(event[0]): 0
+            });
+
+            if(event[1]!=='private') eventForm.selectedGroup=toInt(event[1]);
+            else eventForm.selectedGroup='private';//event[1]==='private'
+
+            var targetGroup= event[1]==='private' ? user['private'] : group[event[1]];
+            if(event[2]==='event'){
+                targetGroup=targetGroup.event[event[0]];
+
+                _.map(['year','month','date','name'],function(key){
+                    eventForm[key]=targetGroup[key];
+                });
+
+                eventForm.month+=1;
+                targetGroup=null;
+            }else if(event[2]==='habit'){
+                targetGroup=targetGroup.habit[event[0]];
+
+                eventForm.rule=targetGroup.selector;
+                eventForm.name=targetGroup.name;
+
+                targetGroup=null;
+            }
+
+            eventForm.isMessage=(eventForm.name.slice(0,'[mes]'.length)==='[mes]');
+            if(eventForm.isMessage){
+                eventForm.name=eventForm.name.slice('[mes]'.length);
+            }
+
+        }else if(arguments.length===3){
+            //switchToEdit(year,month,date)の場合
+            //この場合は、新規でyear/month/dateにイベントを作成する
+            _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: arguments[0], month: arguments[1]+1, date: arguments[2]});
+        }
+        this.editsEvent=true;
+        $mdSidenav('left').close();
+    }//}}}
     return {
         editsEvent:false,
         editsGroup:false,
         showsEventList:false,
-        switchToEdit:function(){//{{{
-            //event= eventのid:groupのid:eventのtype(event or habit)
-            if(arguments.length===1||arguments.length===2&&arguments[1]===true){//{{{
-                //switchToEdit(event [,isEdit])の場合
-                var event=arguments[0].split(':');// event=[eventID,groupID,eventType];
-                eventForm.mode=arguments.length===1?'edit':'add';
-
-                _.extend(eventForm,{
-                    type: event[2],
-                    id: arguments.length===1? toInt(event[0]): 0
-                });
-
-                if(event[1]!=='private'){
-                    eventForm.selectedGroup=toInt(event[1]);
-                }else{
-                    eventForm.selectedGroup='private';//event[1]==='private'
-                }
-                if(event[2]==='event'){
-                    _.map(['year','month','date','name'],function(key){
-                        if(event[1]==='private'){
-                            eventForm[key]=user['private'].event[event[0]][key];
-                        }else{
-                            eventForm[key]=group[event[1]].event[event[0]][key];
-                        }
-                    });
-                    eventForm.month+=1;
-                }else if(event[2]==='habit'){
-                    if(event[1]==='private'){
-                        eventForm.rule=user['private'].habit[event[0]].selector;
-                        eventForm.name=user['private'].habit[event[0]].name;
-                    }else{
-                        eventForm.rule=group[event[1]].habit[event[0]].selector;
-                        eventForm.name=group[event[1]].habit[event[0]].name;
-                    }
-                }
-                eventForm.isMessage=(eventForm.name.slice(0,'[mes]'.length)==='[mes]');
-                if(eventForm.isMessage){
-                    eventForm.name=eventForm.name.slice('[mes]'.length);
-                }
-                //}}}
-            }else if(arguments.length===3){//{{{
-                //switchToEdit(year,month,date)の場合
-                //この場合は、新規でyear/month/dateにイベントを作成する
-                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: arguments[0], month: arguments[1]+1, date: arguments[2]});
-            }//}}}
-            this.editsEvent=true;
-            $mdSidenav('left').close();
-        }//}}}
+        switchToEdit:switchToEdit
     };
 }])//}}}
 .factory('db',['_','user','$http','$rootScope','$log',function(_,user,$http,$rootScope,$log){//{{{
