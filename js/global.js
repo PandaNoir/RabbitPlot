@@ -1,5 +1,4 @@
 var appName='rabbit';
-var slice=Array.prototype.slice;
 function sortByNumber(a,b){
     return a-b;
 };

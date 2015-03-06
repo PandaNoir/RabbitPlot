@@ -266,15 +266,14 @@ angular.module(appName)
         showsEventList:false,
         switchToEdit:function(){//{{{
             //event= eventのid:groupのid:eventのtype(event or habit)
-            var args=slice.call(arguments);
-            if(args.length===1||args.length===2&&args[1]===true){//{{{
+            if(arguments.length===1||arguments.length===2&&arguments[1]===true){//{{{
                 //switchToEdit(event [,isEdit])の場合
-                var event=args[0].split(':');// event=[eventID,groupID,eventType];
-                eventForm.mode=args.length===1?'edit':'add';
+                var event=arguments[0].split(':');// event=[eventID,groupID,eventType];
+                eventForm.mode=arguments.length===1?'edit':'add';
 
                 _.extend(eventForm,{
                     type: event[2],
-                    id: args.length===1? toInt(event[0]): 0
+                    id: arguments.length===1? toInt(event[0]): 0
                 });
 
                 if(event[1]!=='private'){
@@ -305,10 +304,10 @@ angular.module(appName)
                     eventForm.name=eventForm.name.slice('[mes]'.length);
                 }
                 //}}}
-            }else if(args.length===3){//{{{
+            }else if(arguments.length===3){//{{{
                 //switchToEdit(year,month,date)の場合
                 //この場合は、新規でyear/month/dateにイベントを作成する
-                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: args[0], month: args[1]+1, date: args[2]});
+                _.extend(eventForm,{mode: 'add', type: 'event', rule: '', id: 0, name: '', year: arguments[0], month: arguments[1]+1, date: arguments[2]});
             }//}}}
             this.editsEvent=true;
             $mdSidenav('left').close();
