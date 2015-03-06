@@ -3,8 +3,7 @@ describe 'test', ->
   $httpBackend = undefined
   beforeEach module('rabbit')
   beforeEach inject((_$httpBackend_, _user_) -># {{{
-    user = _user_
-    $httpBackend = _$httpBackend_
+    (user, $httpBackend ) = (_user_, _$httpBackend_)
     database = 'http://www40.atpages.jp/chatblanc/genderC/database.php'
     $httpBackend.whenPOST(database, "type=permission&groupID=&userID=#{user.id}").respond '[]'
     $httpBackend.whenPOST(database, (s) ->
