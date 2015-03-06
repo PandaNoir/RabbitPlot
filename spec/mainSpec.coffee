@@ -2,7 +2,7 @@
 describe 'test', ->
   $httpBackend = undefined
   beforeEach module('rabbit')
-  beforeEach inject((_$httpBackend_, _user_) ->
+  beforeEach inject((_$httpBackend_, _user_) -># {{{
     user = _user_
     $httpBackend = _$httpBackend_
     database = 'http://www40.atpages.jp/chatblanc/genderC/database.php'
@@ -15,14 +15,13 @@ describe 'test', ->
     ).respond 201, ''
     $httpBackend.whenPOST(database, 'type=namelist').respond '[["\\"test group\\"","\\"test group2\\""]]'
     return
-  )
-  describe 'execSelector()', ->
-    (year, month, f, calendar, OVER_MONTH, execSelectors)=(undefined,undefined,undefined,undefined,undefined,undefined)
+  )# }}}
+  describe 'execSelector()', -># {{{
+    (year, month, f, calendar, OVER_MONTH, execSelectors)=undefined
 
     beforeEach inject((_calendar_, _OVER_MONTH_) ->
-      calendar = _calendar_
-      OVER_MONTH = _OVER_MONTH_
-      execSelectors=calendar.execSelectors
+      (calendar, OVER_MONTH) = (_calendar_, _OVER_MONTH_)
+      execSelectors = calendar.execSelectors
       # selectors list:'date', 'day', 'is', 'month', 'not', 'range', 'year', 'yesterday'
       year = 2012
       month = 2 - 1
@@ -66,15 +65,12 @@ describe 'test', ->
     it 'yesterday selector', ->
       expect(execSelectors('yesterday:date:4', year, month)).toEqual [ 5 ]
       return
-    return
-  describe 'splitSelector()', ->
-    (OPERATOR, OTHERS, LPARENTHESES, RPARENTHESES, calendar)=(undefined,undefined,undefined,undefined,undefined)
+    return# }}}
+  describe 'splitSelector()', -># {{{
+    (OPERATOR, OTHERS, LPARENTHESES, RPARENTHESES, calendar)=undefined
 
     beforeEach inject((_calendar_, _ATTRIBUTE_) ->
-      OPERATOR = _ATTRIBUTE_.OPERATOR
-      OTHERS = _ATTRIBUTE_.OTHERS
-      LPARENTHESES = _ATTRIBUTE_.LPARENTHESES
-      RPARENTHESES = _ATTRIBUTE_.RPARENTHESES
+      {OPERATOR, OTHERS, LPARENTHESES, RPARENTHESES}=_ATTRIBUTE_
       calendar = _calendar_
       return
     )
@@ -95,20 +91,9 @@ describe 'test', ->
     it 'should attach LPARENTHESES to "(" and attach RPARENTHESES to ")"', ->
       expect(calendar.splitSelector('(key:value and key:value) and key:value')).toEqual [ [ '(', LPARENTHESES ], [ 'key:value', OTHERS ], [ '&&', OPERATOR ], [ 'key:value', OTHERS ], [ ')', RPARENTHESES ], [ '&&', OPERATOR ], [ 'key:value', OTHERS ] ]
       return
-    return
-  #
-  describe 'calendar.calendar()', ->
-    #
+    return# }}}
+  describe 'calendar.calendar()', -># {{{
     it 'should be real calendar.', inject((calendar, OVER_MONTH) ->
-      c = calendar.calendar(2014, 2 - 1)
-      exp = [
-        [ 0, 0, 0, 0, 0, 0, 1 ]
-        [ 2, 3, 4, 5, 6, 7, 8 ]
-        [ 9, 10, 11, 12, 13, 14, 15 ]
-        [ 16, 17, 18, 19, 20, 21, 22 ]
-        [ 23, 24, 25, 26, 27, 28, OVER_MONTH ]
-      ]
-      expect(c).toEqual exp
       expect(JSON.stringify(calendar.calendar(2014, 2 - 1))).toEqual JSON.stringify([
         [ 0, 0, 0, 0, 0, 0, 1 ]
         [ 2, 3, 4, 5, 6, 7, 8 ]
@@ -116,19 +101,16 @@ describe 'test', ->
         [ 16, 17, 18, 19, 20, 21, 22 ]
         [ 23, 24, 25, 26, 27, 28, OVER_MONTH ]
       ])
-      expect(_.flatten(calendar.calendar(2014, 2 - 1))).toEqual [
-        0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, OVER_MONTH
-      ]
+      expect(_.flatten(calendar.calendar(2014, 2 - 1))).toEqual [ 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, OVER_MONTH ]
+      expect(calendar.calendar(2014, 2 - 1, true)).toEqual [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ]
       return
     )
-    return
-  describe 'switchToEdit()', ->
-    (mode, eventForm, group)=(undefined,undefined,undefined)
+    return# }}}
+  describe 'switchToEdit()', -># {{{
+    (mode, eventForm, group)=undefined
 
     beforeEach inject((_mode_, _eventForm_, _group_) ->
-      mode = _mode_
-      eventForm = _eventForm_
-      group = _group_
+      (mode, eventForm, group ) = (_mode_, _eventForm_, _group_ )
       group[0].event = [ {
         year: 2015
         month: 1
@@ -177,13 +159,15 @@ describe 'test', ->
         selectedGroup: 0
         isMessage: true
       return
-    return
-  describe 'add group', ->
+    return# }}}
+  describe 'add group', -># {{{
     (settingScope, groupScope, SettingCtrl, GroupEditorCtrl)=(undefined,undefined,undefined,undefined)
 
     beforeEach inject(($controller, $rootScope, user) ->
+
       settingScope = $rootScope.$new()
       SettingCtrl = $controller('settingCtrl', $scope: settingScope)
+
       groupScope = $rootScope.$new()
       GroupEditorCtrl = $controller('groupEditorCtrl', $scope: groupScope)
       return
@@ -193,21 +177,21 @@ describe 'test', ->
       $httpBackend.flush()
       expect(group.length).toBe 2
       settingScope.makeGroup()
+
       expect(mode.editsGroup).toBe true
       groupForm.name = 'hoge'
       groupScope.addGroup()
+
       expect(group.length).toBe 3
       expect(group[2].name).toBe 'hoge'
       return
     )
-    return
-  describe 'directive', ->
+    return# }}}
+  describe 'directive', -># {{{
     describe 'appDate', ->
       ($compile, $rootScope, calendar)=(undefined,undefined,undefined)
       beforeEach inject((_$compile_, _$rootScope_, _calendar_) ->
-        $compile = _$compile_
-        $rootScope = _$rootScope_
-        calendar = _calendar_
+        ($compile, $rootScope, calendar ) = (_$compile_, _$rootScope_, _calendar_)
         calendar.selected = 21
         calendar.year = 2015
         calendar.month = 2 - 1
@@ -227,5 +211,5 @@ describe 'test', ->
         expect(element.attr('class').split(' ')).toContain 'selected'
         return
       return
-    return
+    return# }}}
   return
