@@ -2,10 +2,14 @@
 describe('test',function(){
     var $httpBackend;
     beforeEach(module('rabbit'));
-    beforeEach(inject(function(_$httpBackend_){
+    beforeEach(inject(function(_$httpBackend_,_user_){
+        var user=_user_;
+
         $httpBackend = _$httpBackend_;
         var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
 
+        $httpBackend.whenPOST(database,'type=permission&groupID=&userID='+user.id)
+        .respond('[]');
         $httpBackend.whenPOST(database,function(s){return s.indexOf('type=list')!==-1})
         .respond('[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]');
 
@@ -14,7 +18,6 @@ describe('test',function(){
 
         $httpBackend.whenPOST(database,'type=namelist')
         .respond('[["\\"test group\\"","\\"test group2\\""]]');
-
     }));
     describe('execSelector()',function(){//{{{
         var year,month;
@@ -159,7 +162,7 @@ describe('test',function(){
         });
     });//}}}
     describe('add group',function(){//{{{
-        beforeEach(inject(function($controller,$rootScope){
+        beforeEach(inject(function($controller,$rootScope,user){
             settingScope=$rootScope.$new();
             SettingCtrl=$controller('settingCtrl',{
                 $scope:settingScope

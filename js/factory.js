@@ -37,12 +37,12 @@ angular.module(appName)
     user.save();
     return user;
 }])//}}}
-.run(['user','db',function(user,db){
+.run(['user','db',function(user,db){//{{{
     db.permission().then(function(mes){
         mes=mes.data;
         user.permission=mes;
     });
-}])
+}])//}}}
 .factory('eventForm',function(){//{{{
     return {
         name:'',

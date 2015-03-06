@@ -403,7 +403,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 if(meansAutumnalEquinoxDay(val)){
                     //1948年以降の秋分
                     //1948年以前は祝日ではなかった
-                    if(year<1948||year>2030||year>=1948&&year<=2030&&month!==0){
+                    if(year<1948||year>2030||year>=1948&&year<=2030&&month!==8){
                         tmpRes=[];
                     }else{
                         tmpRes=[[
