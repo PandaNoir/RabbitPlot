@@ -16,13 +16,6 @@ md-sidenav{
     height: 24px;
     color: #f00;
 }
-.ng-cloak, .x-ng-cloak{
-  display: none !important;
-}
-
-[ng-cloak],[ng:cloak], [data-ng-cloak], [x-ng-cloak]{
-  display: none !important;
-}
 html,body,.main{
     background:#fcfcfc;
     font-family:monospace;

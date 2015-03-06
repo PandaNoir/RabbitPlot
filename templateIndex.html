@@ -16,6 +16,7 @@
     <meta property="og:site_name" content="Rabbit Plot"/>
     <meta content="summary" name="twitter:card" />
     <meta content="@twitter_acount" name="twitter:site" />
+    <style>.ng-cloak,.x-ng-cloak{display:none!important}[ng-cloak],[ng:cloak],[data-ng-cloak],[x-ng-cloak]{display:none!important}</style>
 
     <!--liblist-->
     <!--scriptlist-->
@@ -47,7 +48,8 @@
       <ul class="search-list">
         <li ng-if="searchResult.length===0">ヒットしませんでした。</li>
         <li ng-repeat="id in searchResult">
-          {{group[id].name}}
+          {{group[id].name}}<br>
+          <s>{{group[id].description}}</s><br>
           <md-button class="md-raised md-primary" ng-disabled="user.following.indexOf(id)!==-1||followsParent(id)!==true" ng-click="follow(id)">フォローする</md-button>
           <span class="error-message" ng-if="followsParent(id)!==true">
             このグループはグループ"{{group[followsParent(id)].name}}"の子グループです。

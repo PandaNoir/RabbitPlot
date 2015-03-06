@@ -114,14 +114,14 @@ angular.module(appName)
     var yearOfEC=-1,monthOfEC=-1;//ECMemoの年と月
     function eventCalendar(date){//{{{
         var events=[];
-        var eventCalendar=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
+        var res=[]//日付と対応させているイベントカレンダー.フォーマットはcalendar()とは違うから注意
         var groups=_.difference(user.following,user.hiddenGroup);
         if(calendar.year!==yearOfEC||calendar.month!==monthOfEC){
             yearOfEC=calendar.year;
             monthOfEC=calendar.month;
             ECMemo=[];
         }else{
-            if(groups.join(',')===beforeGroups && !user.updated && _.every(groups,function(item){return item.updated===false;})){
+            if(groups.join(',')===beforeGroups && !user.updated && _.every(groups,function(id){return group[id].updated===false;})){
                 //条件が変わっていないからそのまま使用
                 return ECMemo[date]||[];
             }
@@ -140,13 +140,13 @@ angular.module(appName)
         for(var i=0,i2=events.length;i<i2;i++){
             for(var j=0,j2=events[i].length;j<j2;j++){
                 var d=events[i][j].date;
-                if(!eventCalendar[d]) eventCalendar[d]=[];
+                if(!res[d]) res[d]=[];
                 //eventsをeventCalendarへ変換
-                //eventCalendar=[['id:group:type', ...], ...];
-                eventCalendar[d][eventCalendar[d].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
+                //res=[['id:group:type', ...], ...];
+                res[d][res[d].length]=events[i][j].id+':'+events[i][j].group+':'+events[i][j].type;
             }
         }
-        ECMemo=_.clone(eventCalendar);
+        ECMemo=_.clone(res);
         beforeGroups=groups.join(',');
         return ECMemo[date]||[];
     };//}}}
