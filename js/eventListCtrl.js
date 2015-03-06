@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('eventListCtrl',['$scope','group','user','eventListToEdit','mode',function($scope,group,user,eventListToEdit,mode){//{{{
+.controller('eventListCtrl',function($scope,group,user,eventListToEdit,mode){//{{{
     $scope.eventListToEdit=eventListToEdit;
     $scope.group=group;
     $scope.user=user;
@@ -11,4 +11,4 @@ angular.module(appName)
         $scope.eventList=user['private'].event;
     }
     $scope.mode=mode;
-}]);
+});

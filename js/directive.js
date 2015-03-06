@@ -5,7 +5,7 @@ angular.module(appName)
         restrict:'A',
         template:'<span class="date"></span>',
         replace:true,
-        controller:['$scope','calendar','eventCal','$filter','OVER_MONTH','IS_SMART_PHONE',function($scope,calendar,eventCal,$filter,OVER_MONTH,IS_SMART_PHONE){
+        controller:function($scope,calendar,eventCal,$filter,OVER_MONTH,IS_SMART_PHONE){
             $scope.OVER_MONTH=OVER_MONTH;
             $scope.IS_SMART_PHONE=IS_SMART_PHONE;
             $scope.calendar=calendar;
@@ -31,7 +31,7 @@ angular.module(appName)
                 }
                 return [];
             };
-        }],
+        },
         link:function(scope,elm,attrs){
             var date=scope.row[attrs['appDate']];
             function updateClass(){
@@ -82,7 +82,7 @@ angular.module(appName)
         scope: {event:'=appEvent'},
         template: '<div class="md-item-content event-item" layout="row"><div flex>{{event|format}}</div><div flex><md-button ng-click="mode.switchToEdit(event)">編集</md-button><md-button ng-click="mode.switchToEdit(event,true)">コピー</md-button><md-button ng-click="deleteEvent(event)" ng-if="user.hasPermission(event.split(\':\')[1])">削除</md-button></div></div>',
         replace:true,
-        controller: ['$scope','mode','user','db',function($scope,mode,user,db){
+        controller: function($scope,mode,user,db){
             $scope.mode=mode;
             $scope.user=user;
             $scope.deleteEvent=function(event){
@@ -103,7 +103,7 @@ angular.module(appName)
                     return;
                 }
             };
-        }],
+        },
         link: function(scope,elm,attrs){
         }
     };

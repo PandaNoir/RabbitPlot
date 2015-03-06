@@ -1,4 +1,4 @@
-var gulp=require('gulp'),concat=require('gulp-concat'),minifyCss=require('gulp-minify-css'),closureCompiler=require('gulp-closure-compiler'),gzip=require('gulp-gzip'),karma=require('gulp-karma'),minifyHtml=require('gulp-minify-html'),replace=require('gulp-replace'),rimraf=require('rimraf'),rename=require('gulp-rename'),_=require('lodash');
+var gulp=require('gulp'),concat=require('gulp-concat'),minifyCss=require('gulp-minify-css'),closureCompiler=require('gulp-closure-compiler'),gzip=require('gulp-gzip'),karma=require('gulp-karma'),minifyHtml=require('gulp-minify-html'),replace=require('gulp-replace'),rimraf=require('rimraf'),rename=require('gulp-rename'),ngAnnotate=require('gulp-ng-annotate'),_=require('lodash');
 
 var path = {
     js: [
@@ -51,6 +51,7 @@ gulp.task('karma',['concat'], function() {
 });
 gulp.task('minify',['concat'],function(cb){
     gulp.src('./js/main.raw.js')
+    .pipe(ngAnnotate())
     .pipe(closureCompiler({
         compilerPath: './bower_components/closure-compiler/compiler.jar',
         fileName: 'main.js',

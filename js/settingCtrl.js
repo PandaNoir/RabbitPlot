@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('settingCtrl',['$scope','_','group','user','db','eventListToEdit','groupForm','mode','$mdSidenav','$mdToast','$mdDialog',function($scope,_,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
+.controller('settingCtrl',function($scope,_,group,user,db,eventListToEdit,groupForm,mode,$mdSidenav,$mdToast,$mdDialog){//{{{
     $scope.group=group;
     $scope.user=user;
     $scope.groupForm=groupForm;
@@ -118,12 +118,12 @@ angular.module(appName)
     };//}}}
     $scope.importSetting=function(){//{{{
        $mdDialog.show({
-           controller:['$scope','$mdDialog',function($scope,$mdDialog){
+           controller:function($scope,$mdDialog){
                $scope.text='';
                $scope.answer=function(answer){
                    $mdDialog.hide(answer);
                };
-           }],
+           },
            template:'<md-dialog><md-content>コピーしたデータを貼り付けてください。<br><input ng-model="text"><md-button ng-click="answer(text)">ok</md-button></md-content></md-dialog>'
        }).then(function(value){
            value=JSON.parse(value);
@@ -136,4 +136,4 @@ angular.module(appName)
     $scope.exportSetting=function(){
         $mdDialog.show($mdDialog.alert().title('').content('これをコピーして移行先で貼り付けてください。'+angular.toJson(user)).ok('ok'))
     };
-}]);//}}}
+});//}}}

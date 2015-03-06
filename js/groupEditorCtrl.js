@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('groupEditorCtrl',['$scope','group','user','groupForm','db','$mdToast','mode',function($scope,group,user,groupForm,db,$mdToast,mode){
+.controller('groupEditorCtrl',function($scope,group,user,groupForm,db,$mdToast,mode){
     $scope.groupForm=groupForm;
     $scope.user=user;
     groupForm.parentGroup=[null];
@@ -31,4 +31,4 @@ angular.module(appName)
     $scope.cancel=function(){
         mode.editsGroup=false;
     };
-}]);
+});

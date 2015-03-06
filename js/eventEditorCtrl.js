@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('eventEditorCtrl',['$scope','group','user','eventForm','calendar','db','mode','$mdToast',function($scope,group,user,eventForm,calendar,db,mode,$mdToast){
+.controller('eventEditorCtrl',function($scope,group,user,eventForm,calendar,db,mode,$mdToast){
     var today=new Date();
     var faseHistory=[];
     var rule=[];
@@ -115,4 +115,4 @@ angular.module(appName)
             db.post(group[groupID],groupID,'update');
         }
     };
-}]);
+});

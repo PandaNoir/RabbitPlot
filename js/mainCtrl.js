@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('mainCtrl',['$scope','_','calendar','eventCal','mode','$mdSidenav',function($scope,_,calendar,eventCal,mode,$mdSidenav){//{{{
+.controller('mainCtrl',function($scope,_,calendar,eventCal,mode,$mdSidenav){//{{{
     $scope._=_;
     $scope.mode=mode;
     mode.editsEvent=false;
@@ -10,8 +10,8 @@ angular.module(appName)
     };
     calendar.selected=calendar.date;
     $scope.eventCalendar=eventCal.eventCalendar;
-}])//}}}
-.config(['$httpProvider',function ($httpProvider) {//{{{
+})//}}}
+.config(function ($httpProvider) {//{{{
     $httpProvider.defaults.transformRequest = function(data){
         function serializeData(data) { 
             // If this is not an object, defer to native stringification.
@@ -31,8 +31,8 @@ angular.module(appName)
         return serializeData(data);
     }
     $httpProvider.defaults.headers.post={'Content-Type': 'application/x-www-form-urlencoded'};
-}])//}}}
-.filter('format',['group','user',function(group,user){//{{{
+})//}}}
+.filter('format',function(group,user){//{{{
     return function(event,removeMes){
         event=event.split(':');
         //event[2]はhabit or eventだからこれでok
@@ -53,5 +53,5 @@ angular.module(appName)
         }
         return res;
     };
-}])//}}}
+})//}}}
 ;

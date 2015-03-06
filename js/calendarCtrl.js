@@ -1,5 +1,5 @@
 angular.module(appName)
-.controller('calendarCtrl',['$scope','calendar','mode','MEMO_LIMIT',function($scope,calendar,mode,MEMO_LIMIT){//{{{
+.controller('calendarCtrl',function($scope,calendar,mode,MEMO_LIMIT){//{{{
     $scope.calendar=calendar;
     $scope.nextMonth=function(){//{{{
         calendar.month++;
@@ -41,5 +41,5 @@ angular.module(appName)
         mode.editsEvent=false;
     };//}}}
     $scope.dates=['日','月','火','水','木','金','土'];
-}])//}}}
+})//}}}
 ;

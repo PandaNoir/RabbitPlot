@@ -1,5 +1,5 @@
 angular.module(appName)
-.factory('user',['_','$rootScope','$mdDialog','group','localStorageService',function(_,$rootScope,$mdDialog,group,localStorageService){//{{{
+.factory('user',function(_,$rootScope,$mdDialog,group,localStorageService){//{{{
     if(localStorageService.get('private')){
         var user=angular.fromJson(localStorageService.get('private'));
         if(!user.id){
@@ -41,13 +41,13 @@ angular.module(appName)
     };
     user.save();
     return user;
-}])//}}}
-.run(['user','db',function(user,db){//{{{
+})//}}}
+.run(function(user,db){//{{{
     db.permission().then(function(mes){
         mes=mes.data;
         user.permission=mes;
     });
-}])//}}}
+})//}}}
 .factory('eventForm',function(){//{{{
     return {
         name:'',
@@ -63,15 +63,15 @@ angular.module(appName)
         name:''
     };
 })//}}}
-.factory('group',['_','calendar',function(_,calendar){//{{{
+.factory('group',function(_,calendar){//{{{
     var holiday=_.clone(calendar.holiday);
     holiday.id=0;
     holiday.name='祝日';
     holiday.updated=true;
     var o=[holiday];
     return o;
-}])//}}}
-.run(['_','db','group','$rootScope','localStorageService',function(_,db,group,$rootScope,localStorageService){//{{{
+})//}}}
+.run(function(_,db,group,$rootScope,localStorageService){//{{{
     var o=_.clone(group)[0];
     if(localStorageService.get('group')){
         group.length=0;
@@ -79,9 +79,9 @@ angular.module(appName)
         group[0]=_.clone(o);
     }
     db.list();
-}])//}}}
+})//}}}
 .factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',calendar])
-.factory('eventCal',['_','group','user','calendar',function(_,group,user,calendar){//{{{
+.factory('eventCal',function(_,group,user,calendar){//{{{
     var ECMemo=[];//eventCalendarMemo;
     var beforeGroups='';//非表示表示切り替えに対応するため
     var yearOfEC=-1,monthOfEC=-1;//ECMemoの年と月
@@ -217,20 +217,20 @@ angular.module(appName)
     return {
         eventCalendar:eventCalendar
     };
-}])//}}}
+})//}}}
 .factory('eventListToEdit',function(){//{{{
     return {
         id:''
     };
 })//}}}
-.factory('error',['$mdToast',function($mdToast){//{{{
+.factory('error',function($mdToast){//{{{
     var ErrorConstructor = ErrorConstructor || Error;
     return function(mes){
         $mdToast.show($mdToast.simple().content(mes).position('top right').hideDelay(3000));
         return new ErrorConstructor(mes);
     };
-}])//}}}
-.factory('mode',['_','eventForm','$mdSidenav','user','group',function(_,eventForm,$mdSidenav,user,group){//{{{
+})//}}}
+.factory('mode',function(_,eventForm,$mdSidenav,user,group){//{{{
     function switchToEdit(){//{{{
         //event= eventのid:groupのid:eventのtype(event or habit)
         if(arguments.length===1||arguments.length===2&&arguments[1]===true){
@@ -284,8 +284,8 @@ angular.module(appName)
         showsEventList:false,
         switchToEdit:switchToEdit
     };
-}])//}}}
-.factory('db',['_','user','group','$http','$rootScope','$log','localStorageService',function(_,user,group,$http,$rootScope,$log,localStorageService){//{{{
+})//}}}
+.factory('db',function(_,user,group,$http,$rootScope,$log,localStorageService){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
@@ -366,8 +366,8 @@ angular.module(appName)
         getNameList:getNameList,
         permission:permission
     };
-}])//}}}
-.run(['calendar','$timeout',function(calendar,$timeout){//{{{
+})//}}}
+.run(function(calendar,$timeout){//{{{
     var tomorrow=new Date();
     tomorrow.setDate(tomorrow.getDate()+1);
     tomorrow.setHours(0);
@@ -388,14 +388,14 @@ angular.module(appName)
         $timeout(setTomorrow,tomorrow-(new Date()));
     }
     $timeout(setTomorrow,tomorrow-(new Date()));
-}])//}}}
-.config(['$locationProvider',function($locationProvider){
+})//}}}
+.config(function($locationProvider){
     $locationProvider.html5Mode({
         enabled:true,
         requireBase:false
     });
-}])
-.run(['user','group','$location',function(user,group,$location){
+})
+.run(function(user,group,$location){
     var getParams=$location.search();
     //console.log(user.following);
     if(angular.isDefined(getParams.id)){
@@ -416,5 +416,5 @@ angular.module(appName)
             user.save();
         }
     }
-}])
+})
 ;//factoryとか追加するときに便利なようにここにセミコロン
