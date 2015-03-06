@@ -29,9 +29,9 @@ angular.module(appName)
     $scope.addEvent=function(){//{{{
         var type=eventForm.type;
         if(eventForm.selectedGroup==='private'){
-            saveEvent($scope.user['private'][type].length, eventForm.selectedGroup);
+            saveEvent(user['private'][type].length, eventForm.selectedGroup);
         }else if(eventForm.selectedGroup!==null){
-            saveEvent($scope.group[eventForm.selectedGroup][type].length, eventForm.selectedGroup);
+            saveEvent(group[eventForm.selectedGroup][type].length, eventForm.selectedGroup);
         }
     };//}}}
     $scope.editEvent=function(){//{{{
@@ -112,7 +112,7 @@ angular.module(appName)
         if(groupID==='private'){
             user.save();
         }else{
-            db.post($scope.group[groupID],groupID,'update');
+            db.post(group[groupID],groupID,'update');
         }
     };
 }]);

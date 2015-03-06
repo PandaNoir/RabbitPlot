@@ -34,6 +34,11 @@ angular.module(appName)
     user.hasPermission=function(groupID){
         return groupID==='private'||_.indexOf(user.permission,groupID)!==-1;
     };
+    user.follow=function(groupID){
+        user.following[user.following.length]=toInt(groupID);
+        user.following.sort(sortByNumber);
+        user.save();
+    };
     user.save();
     return user;
 }])//}}}
@@ -73,39 +78,7 @@ angular.module(appName)
         Array.prototype.push.apply(group,angular.fromJson(localStorageService.get('group')));
         group[0]=_.clone(o);
     }
-    db.list().then(function(mes){
-        mes=mes.data;
-        for(var i=0,i2=mes.length;i<i2;i++){
-            for(var key in mes[i]){
-                mes[i][key]=angular.fromJson(mes[i][key]||'""');
-            }
-            mes[i].updated=true;
-        }
-        mes.sort(function(a,b){return a.id-b.id});
-        group.length=0;
-        for(var i=0,i2=mes.length;i<i2;i++){
-            group[mes[i].id]=mes[i];
-        }
-        group[0]=_.clone(o);
-        $rootScope.$broadcast('updated');
-        localStorageService.set('group',angular.toJson(group));
-        db.getNameList().then(function(mes){
-            for(var i=0,i2=mes.data[0].length;i<i2;i++){
-                if(group[i]){
-                    continue;
-                }
-                group[i]={
-                    name:angular.fromJson(mes.data[0][i]),
-                    description:angular.fromJson(mes.data[1][i])
-                };
-                if(mes.data[2][i]){
-                    group[i].parents=angular.fromJson(mes.data[2][i]);
-                }
-            }
-            group[0]=_.clone(o);
-            localStorageService.set('group',angular.toJson(group));
-        });
-    });
+    db.list();
 }])//}}}
 .factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',calendar])
 .factory('eventCal',['_','group','user','calendar',function(_,group,user,calendar){//{{{
@@ -121,7 +94,7 @@ angular.module(appName)
             monthOfEC=calendar.month;
             ECMemo=[];
         }else{
-            if(groups.join(',')===beforeGroups && !user.updated && _.every(groups,function(id){return group[id].updated===false;})){
+            if(groups.join(',')===beforeGroups && !user.updated && _.every(groups,function(id){return !group[id]||group[id].updated===false;})){
                 //条件が変わっていないからそのまま使用
                 return ECMemo[date]||[];
             }
@@ -312,7 +285,7 @@ angular.module(appName)
         switchToEdit:switchToEdit
     };
 }])//}}}
-.factory('db',['_','user','$http','$rootScope','$log',function(_,user,$http,$rootScope,$log){//{{{
+.factory('db',['_','user','group','$http','$rootScope','$log','localStorageService',function(_,user,group,$http,$rootScope,$log,localStorageService){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
@@ -334,11 +307,46 @@ angular.module(appName)
             $log.log(mes);
         });
     };
-    function list(){
+    function list(_list_){
+        var o=_.clone(group)[0];
+        var list=_list_;
+        list=list||user.following.join(',');
         //データベースから指定idのデータを取得する
-        return $http.post(database,{type:'list',groupID:user.following.join(',')}).success(function(data){return data}).error(function(mes){
+        return $http.post(database,{type:'list',groupID:list}).success(function(data){return data}).error(function(mes){
             $log.log(mes);
+        }).then(function(mes){
+        mes=mes.data;
+        for(var i=0,i2=mes.length;i<i2;i++){
+            for(var key in mes[i]){
+                mes[i][key]=angular.fromJson(mes[i][key]||'""');
+            }
+            mes[i].updated=true;
+        }
+        mes.sort(function(a,b){return a.id-b.id});
+        group.length=0;
+        for(var i=0,i2=mes.length;i<i2;i++){
+            group[mes[i].id]=mes[i];
+        }
+        group[0]=_.clone(o);
+        $rootScope.$broadcast('updated');
+        localStorageService.set('group',angular.toJson(group));
+        getNameList().then(function(mes){
+            for(var i=0,i2=mes.data[0].length;i<i2;i++){
+                if(group[i]){
+                    continue;
+                }
+                group[i]={
+                    name:angular.fromJson(mes.data[0][i]),
+                    description:angular.fromJson(mes.data[1][i])
+                };
+                if(mes.data[2][i]){
+                    group[i].parents=angular.fromJson(mes.data[2][i]);
+                }
+            }
+            group[0]=_.clone(o);
+            localStorageService.set('group',angular.toJson(group));
         });
+    });
     };
     function getNameList(){
         //データベースからグループ一覧を取得する
@@ -349,6 +357,9 @@ angular.module(appName)
             $log.log(mes);
         });
     };
+    $rootScope.$watch('user.following',function(){
+        list();
+    });
     return {
         post:post,
         list:list,
@@ -378,4 +389,32 @@ angular.module(appName)
     }
     $timeout(setTomorrow,tomorrow-(new Date()));
 }])//}}}
+.config(['$locationProvider',function($locationProvider){
+    $locationProvider.html5Mode({
+        enabled:true,
+        requireBase:false
+    });
+}])
+.run(['user','group','$location',function(user,group,$location){
+    var getParams=$location.search();
+    //console.log(user.following);
+    if(angular.isDefined(getParams.id)){
+        var groupID=toInt(getParams.id);
+        if(_.indexOf(user.following,groupID,true)===-1){
+            console.log(group,groupID);
+            if(angular.isUndefined(group[groupID])){
+                group[groupID]={
+                    name:'',
+                    description:'',
+                    event:[],
+                    habit:[],
+                    updated:false,
+                    id:groupID
+                };
+            }
+            user.follow(getParams.id);
+            user.save();
+        }
+    }
+}])
 ;//factoryとか追加するときに便利なようにここにセミコロン

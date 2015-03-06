@@ -11,7 +11,7 @@ angular.module(appName)
         user.save();
     };//}}}
     $scope.show=function(id){//{{{
-        user.hiddenGroup=_.without($scope.user.hiddenGroup,id);
+        user.hiddenGroup=_.without(user.hiddenGroup,id);
         user.save();
     };//}}}
     $scope.followsParent=function followsParent(groupID){//{{{
@@ -26,28 +26,24 @@ angular.module(appName)
     $scope.toggleNav=function(){
         $mdSidenav('left').close();
     };
-    function follows(id){return $scope.user.following.indexOf(id)!==-1;};
+    function follows(id){return user.following.indexOf(id)!==-1;};
     $scope.follows=follows;
     $scope.follow=function(id){//{{{
         //フォロー処理。一応ソートかけておく
-        $scope.user.following[$scope.user.following.length]=id;
-        $scope.user.following.sort(sortByNumber);
-        user.save();
+        user.follow(id);
         $mdToast.show($mdToast.simple().content(group[id].name+'をフォローしました').position('top right').hideDelay(3000));
-
-
     };//}}}
     $scope.unfollow=function(id){//{{{
         //フォロー解除する。親グループが解除されそうになったら、確認取る。確認取れたら子グループも解除する。確認取れなかったら親の解除もキャンセル
         var unfollowList=[];
-        unfollowList[unfollowList.length]=$scope.user.following.indexOf(id);
-        for(var i=0,j=$scope.user.following.length;i<j;i++){
+        unfollowList[unfollowList.length]=user.following.indexOf(id);
+        for(var i=0,j=user.following.length;i<j;i++){
             //フォローしているものを回す
-            if(group[$scope.user.following[i]].parents){
+            if(group[user.following[i]].parents){
                 //親要素がある
-                if(parentsList($scope.user.following[i]).indexOf(id)!=-1){
+                if(parentsList(user.following[i]).indexOf(id)!=-1){
                     //親にidが含まれている
-                    if(!confirm('このグループの子グループ('+group[$scope.user.following[i]].name+')をフォローしています。このグループをフォロー解除するとこちらも解除になります。よろしいですか?')){
+                    if(!confirm('このグループの子グループ('+group[user.following[i]].name+')をフォローしています。このグループをフォロー解除するとこちらも解除になります。よろしいですか?')){
                         return;
                     }
                     unfollowList[unfollowList.length]=i;
@@ -56,7 +52,7 @@ angular.module(appName)
         }
         unfollowList.sort(function(a,b){return (b-a);});
         for(var i=0,j=unfollowList.length;i<j;i++){
-            $scope.user.following.splice(unfollowList[i],1);
+            user.following.splice(unfollowList[i],1);
         }
         user.save();
     };//}}}
