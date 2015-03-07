@@ -43,8 +43,8 @@ angular.module(appName)
     return user;
 })//}}}
 .run(function(user,db){//{{{
-    db.permission().then(function(mes){
-        mes=mes.data;
+    db.permission().then(function(_mes_){
+        var mes=_mes_.data;
         user.permission=mes;
     });
 })//}}}
@@ -314,8 +314,8 @@ angular.module(appName)
         //データベースから指定idのデータを取得する
         return $http.post(database,{type:'list',groupID:list}).success(function(data){return data}).error(function(mes){
             $log.log(mes);
-        }).then(function(mes){
-        mes=mes.data;
+        }).then(function(_mes_){
+        var mes=_mes_.data;
         for(var i=0,i2=mes.length;i<i2;i++){
             for(var key in mes[i]){
                 mes[i][key]=angular.fromJson(mes[i][key]||'""');

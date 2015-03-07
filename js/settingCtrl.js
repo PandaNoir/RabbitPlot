@@ -125,8 +125,8 @@ angular.module(appName)
                };
            },
            template:'<md-dialog><md-content>コピーしたデータを貼り付けてください。<br><input ng-model="text"><md-button ng-click="answer(text)">ok</md-button></md-content></md-dialog>'
-       }).then(function(value){
-           value=JSON.parse(value);
+       }).then(function(_value_){
+           var value=JSON.parse(_value_);
            for(var key in value){
                user[key]=value[key];
            }

@@ -1,4 +1,9 @@
-function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
+function calendar(_OVER_MONTH_,_MEMO_LIMIT_,_IS_SMART_PHONE_,_ATTRIBUTE_,_myError_){
+    var OVER_MONTH=_OVER_MONTH_,
+    MEMO_LIMIT=_MEMO_LIMIT_,
+    IS_SMART_PHONE=_IS_SMART_PHONE_,
+    ATTRIBUTE=_ATTRIBUTE_,
+    myError=_myError_;
     if(OVER_MONTH===undefined) OVER_MONTH=64;
     if(MEMO_LIMIT===undefined) MEMO_LIMIT=1950;
     if(IS_SMART_PHONE===undefined) IS_SMART_PHONE=false;
