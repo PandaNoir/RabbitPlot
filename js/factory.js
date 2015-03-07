@@ -151,7 +151,7 @@ angular.module(appName)
         }
         if(groupID!==0) return res;
         //振替休日の選定
-        if(!(y<1973||y==1973&&m<4)){
+        if(!(y<1973||y===1973&&m<4)){
             //振替休日が制定されたあと
             var holidays=_.map(res,function(n){return n.date});
             var sundayHoliday=_.intersection(holidays,calendar.execSelectors('day:sun',y,m,[]));//日曜かつ祝日
@@ -165,7 +165,7 @@ angular.module(appName)
             }));
             res.sort();
         }
-        if(y>=1985||y==1985&&m==12&&d>=27){
+        if(y>=1985||y===1985&&m===12&&d>=27){
             //国民の休日が制定されたあと
             var holidays=_.map(res,function(n){return n.date});
             var beforeDay=0;

@@ -41,7 +41,7 @@ angular.module(appName)
             //フォローしているものを回す
             if(group[user.following[i]].parents){
                 //親要素がある
-                if(parentsList(user.following[i]).indexOf(id)!=-1){
+                if(parentsList(user.following[i]).indexOf(id)!==-1){
                     //親にidが含まれている
                     if(!confirm('このグループの子グループ('+group[user.following[i]].name+')をフォローしています。このグループをフォロー解除するとこちらも解除になります。よろしいですか?')){
                         return;
@@ -75,7 +75,7 @@ angular.module(appName)
     $scope.search=function(){//{{{
         //キーワードで検索する。例えば「新潟」で新潟高校がでるみたいな
         var res=[];
-        if($scope.search_keyword==''){
+        if($scope.search_keyword===''){
             return res;
         }
         if(!group){

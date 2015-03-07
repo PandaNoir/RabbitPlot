@@ -15,13 +15,13 @@ angular.module(appName)
     $httpProvider.defaults.transformRequest = function(data){
         function serializeData(data) { 
             // If this is not an object, defer to native stringification.
-            if (! angular.isObject(data)) {return((data == null) ? "" : data.toString());}
+            if (! angular.isObject(data)) {return((data === null) ? "" : data.toString());}
             var buffer = [];
             // Serialize each key in the object.
             for (var name in data) { 
                 if (!data.hasOwnProperty(name)) {continue;}
                 var value = data[name];
-                buffer[buffer.length]=encodeURIComponent(name)+"="+encodeURIComponent((value == null) ? "" : value); 
+                buffer[buffer.length]=encodeURIComponent(name)+"="+encodeURIComponent((value === null) ? "" : value); 
             }
             // Serialize the buffer and clean it up for transportation.
             var source = buffer.join("&").replace(/%20/g, "+"); 
@@ -37,7 +37,7 @@ angular.module(appName)
         event=event.split(':');
         //event[2]はhabit or eventだからこれでok
         var res='';
-        if(event[1]=='private'){
+        if(event[1]==='private'){
             res=user['private'][event[2]][event[0]].name;
         }else{
             if(toInt(event[1])===0&&toInt(event[0])===-1){

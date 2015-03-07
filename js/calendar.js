@@ -71,7 +71,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         for(var i=0,i2=holiday.habit.length;i<i2;i++){
             res.push.apply(res,execSelectors(holiday.habit[i].selector,y,m,res));
         }
-        if(!(y<1973||y==1973&&m<4)){
+        if(!(y<1973||y===1973&&m<4)){
             //振替休日が制定されたあと
             var sundayHoliday=_.intersection(res,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
             res.push.apply(res,_.map(sundayHoliday,function(n){
@@ -81,7 +81,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }));
             res.sort();
         }
-        if(y>=1985||y==1985&&m==12&&d>=27){
+        if(y>=1985||y===1985&&m===12&&d>=27){
             //国民の休日が制定されたあと
             var beforeDay=0;
             _.each(res,function(n){
@@ -284,10 +284,10 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                     if(!isValidDate(val[0],val[1]-1,val[2])){
                         throw myError('invalid range selector.'+key+':'+val);
                     }
-                    if(to.getFullYear()<year || to.getFullYear()==year && to.getMonth()<month){
+                    if(to.getFullYear()<year || to.getFullYear()===year && to.getMonth()<month){
                         //明らかにto以降だからtmpResは空
                         tmpRes=[];
-                    }else if(to.getFullYear()==year && to.getMonth()==month){
+                    }else if(to.getFullYear()===year && to.getMonth()===month){
                         //toがかぶっているであろう時
                         tmpRes=allDays();
                         tmpRes=tmpRes.slice(0,_.lastIndexOf(tmpRes,to.getDate(),true)+1);
@@ -305,10 +305,10 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                     if(!isValidDate(val[0],val[1]-1,val[2])){
                         throw myError('invalid range selector.'+key+':'+val);
                     }
-                    if(from.getFullYear()>year || from.getFullYear()==year && from.getMonth()>month){
+                    if(from.getFullYear()>year || from.getFullYear()===year && from.getMonth()>month){
                         //fromよりも明らかに以前
                         tmpRes=[];
-                    }else if(from.getFullYear()==year && from.getMonth()==month){
+                    }else if(from.getFullYear()===year && from.getMonth()===month){
                         //fromの境目あたり。
                         tmpRes=allDays();
                         tmpRes=tmpRes.slice(_.indexOf(tmpRes,from.getDate(),true));
@@ -340,10 +340,10 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                         froms.push(new Date(year-1,from[0]-1,from[1]),new Date(year,from[0]-1,from[1]));
                     }
                     _.each(froms,function(fromItem){
-                        if(fromItem.getFullYear()>year || fromItem.getFullYear()==year && fromItem.getMonth()>month){
+                        if(fromItem.getFullYear()>year || fromItem.getFullYear()===year && fromItem.getMonth()>month){
                             //fromよりも明らかに以前
                             fromRes=[];
-                        }else if(fromItem.getFullYear()==year&&fromItem.getMonth()==month){
+                        }else if(fromItem.getFullYear()===year&&fromItem.getMonth()===month){
                             //fromの境目あたり。
                             fromRes=allDays();
                             fromRes=fromRes.slice(_.indexOf(fromRes,fromItem.getDate(),true));
@@ -384,10 +384,10 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                                 }
                             }
                         }
-                        if(nowTo.getFullYear()<year || nowTo.getFullYear()==year && nowTo.getMonth()<month){
+                        if(nowTo.getFullYear()<year || nowTo.getFullYear()===year && nowTo.getMonth()<month){
                             //明らかにto以降だからtoResは空
                             toRes=[];
-                        }else if(nowTo.getFullYear()==year && nowTo.getMonth()==month){
+                        }else if(nowTo.getFullYear()===year && nowTo.getMonth()===month){
                             //toがかぶっているであろう時
                             toRes=allDays();
                             toRes=toRes.slice(0,_.lastIndexOf(toRes,nowTo.getDate(),true)+1);//toより前
@@ -454,7 +454,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 }
                 //}}}
             }else if(key==='month'){//{{{
-                if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!=month)
+                if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!==month)
                     tmpRes=[];//違う月の時
                 else
                     tmpRes=allDays();//同じ月の時//}}}
@@ -498,7 +498,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }
             return tmpRes;
         }//}}}
-        if(stack.length!=1){
+        if(stack.length!==1){
             console.log(stack,selectors);
             throw myError('unexpected error in execSelectors().');
         }
@@ -565,7 +565,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }else if(formula[i][1]===LPARENTHESES){
                 stack[stack.length]=formula[i];
             }else if(formula[i][1]===RPARENTHESES){
-                while(last(stack)[1]!=LPARENTHESES){
+                while(last(stack)[1]!==LPARENTHESES){
                     output[output.length]=stack.pop();
                     if(stack.length===0){
                         throw myError('found mismatched parentheses');
@@ -595,7 +595,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         },
         selected:today.getDate(),
         selectedDay:function(){
-            if(this.selected==null) return '';
+            if(this.selected===null) return '';
             else return ['日','月','火','水','木','金','土'][new Date(this.year,this.month,this.selected).getDay()];
         },
         holiday:holiday,
