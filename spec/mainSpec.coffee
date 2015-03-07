@@ -1,9 +1,9 @@
 'use strict'
 describe 'test', ->
-  $httpBackend = undefined
+  $httpBackend = "unknown"
   beforeEach module('rabbit')
   beforeEach inject((_$httpBackend_, _user_) -># {{{
-    (user, $httpBackend ) = (_user_, _$httpBackend_)
+    [ user, $httpBackend  ] = [ _user_, _$httpBackend_ ]
     database = 'http://www40.atpages.jp/chatblanc/genderC/database.php'
     $httpBackend.whenPOST(database, "type=permission&groupID=&userID=#{user.id}").respond '[]'
     $httpBackend.whenPOST(database, (s) ->
@@ -16,10 +16,10 @@ describe 'test', ->
     return
   )# }}}
   describe 'execSelector()', -># {{{
-    (year, month, f, calendar, OVER_MONTH, execSelectors)=undefined
+    year = month = f = calendar = OVER_MONTH = execSelectors = "unknown"
 
     beforeEach inject((_calendar_, _OVER_MONTH_) ->
-      (calendar, OVER_MONTH) = (_calendar_, _OVER_MONTH_)
+      [ calendar, OVER_MONTH ] = [ _calendar_, _OVER_MONTH_ ]
       execSelectors = calendar.execSelectors
       # selectors list:'date', 'day', 'is', 'month', 'not', 'range', 'year', 'yesterday'
       year = 2012
@@ -66,7 +66,7 @@ describe 'test', ->
       return
     return# }}}
   describe 'splitSelector()', -># {{{
-    (OPERATOR, OTHERS, LPARENTHESES, RPARENTHESES, calendar)=undefined
+    OPERATOR = OTHERS = LPARENTHESES = RPARENTHESES = calendar= "unknown"
 
     beforeEach inject((_calendar_, _ATTRIBUTE_) ->
       {OPERATOR, OTHERS, LPARENTHESES, RPARENTHESES}=_ATTRIBUTE_
@@ -106,10 +106,10 @@ describe 'test', ->
     )
     return# }}}
   describe 'switchToEdit()', -># {{{
-    (mode, eventForm, group)=undefined
+    mode = eventForm = group = "unknown"
 
     beforeEach inject((_mode_, _eventForm_, _group_) ->
-      (mode, eventForm, group ) = (_mode_, _eventForm_, _group_ )
+      [ mode, eventForm, group  ] = [ _mode_, _eventForm_, _group_  ]
       group[0].event = [ {
         year: 2015
         month: 1
@@ -160,7 +160,7 @@ describe 'test', ->
       return
     return# }}}
   describe 'add group', -># {{{
-    (settingScope, groupScope, SettingCtrl, GroupEditorCtrl)=(undefined,undefined,undefined,undefined)
+    settingScope = groupScope = SettingCtrl = GroupEditorCtrl = "unknown"
 
     beforeEach inject(($controller, $rootScope, user) ->
 
@@ -188,9 +188,9 @@ describe 'test', ->
     return# }}}
   describe 'directive', -># {{{
     describe 'appDate', ->
-      ($compile, $rootScope, calendar)=(undefined,undefined,undefined)
+      $compile = $rootScope = calendar = "unknown"
       beforeEach inject((_$compile_, _$rootScope_, _calendar_) ->
-        ($compile, $rootScope, calendar ) = (_$compile_, _$rootScope_, _calendar_)
+        [ $compile, $rootScope, calendar  ] = [ _$compile_, _$rootScope_, _calendar_ ]
         calendar.selected = 21
         calendar.year = 2015
         calendar.month = 2 - 1

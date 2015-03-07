@@ -3,12 +3,11 @@
   'use strict';
   describe('test', function() {
     var $httpBackend;
-    $httpBackend = void 0;
+    $httpBackend = "unknown";
     beforeEach(module('rabbit'));
     beforeEach(inject(function(_$httpBackend_, _user_) {
-      var database, user;
-      user = _user_;
-      $httpBackend = _$httpBackend_;
+      var database, ref, user;
+      ref = [_user_, _$httpBackend_], user = ref[0], $httpBackend = ref[1];
       database = 'http://www40.atpages.jp/chatblanc/genderC/database.php';
       $httpBackend.whenPOST(database, "type=permission&groupID=&userID=" + user.id).respond('[]');
       $httpBackend.whenPOST(database, function(s) {
@@ -21,15 +20,10 @@
     }));
     describe('execSelector()', function() {
       var OVER_MONTH, calendar, execSelectors, f, month, year;
-      year = void 0;
-      month = void 0;
-      f = void 0;
-      calendar = void 0;
-      OVER_MONTH = void 0;
-      execSelectors = void 0;
+      year = month = f = calendar = OVER_MONTH = execSelectors = "unknown";
       beforeEach(inject(function(_calendar_, _OVER_MONTH_) {
-        calendar = _calendar_;
-        OVER_MONTH = _OVER_MONTH_;
+        var ref;
+        ref = [_calendar_, _OVER_MONTH_], calendar = ref[0], OVER_MONTH = ref[1];
         execSelectors = calendar.execSelectors;
         year = 2012;
         month = 2 - 1;
@@ -76,16 +70,9 @@
     });
     describe('splitSelector()', function() {
       var LPARENTHESES, OPERATOR, OTHERS, RPARENTHESES, calendar;
-      OPERATOR = void 0;
-      OTHERS = void 0;
-      LPARENTHESES = void 0;
-      RPARENTHESES = void 0;
-      calendar = void 0;
+      OPERATOR = OTHERS = LPARENTHESES = RPARENTHESES = calendar = "unknown";
       beforeEach(inject(function(_calendar_, _ATTRIBUTE_) {
-        OPERATOR = _ATTRIBUTE_.OPERATOR;
-        OTHERS = _ATTRIBUTE_.OTHERS;
-        LPARENTHESES = _ATTRIBUTE_.LPARENTHESES;
-        RPARENTHESES = _ATTRIBUTE_.RPARENTHESES;
+        OPERATOR = _ATTRIBUTE_.OPERATOR, OTHERS = _ATTRIBUTE_.OTHERS, LPARENTHESES = _ATTRIBUTE_.LPARENTHESES, RPARENTHESES = _ATTRIBUTE_.RPARENTHESES;
         calendar = _calendar_;
       }));
       it('should attach OTHERS to "key:value"', function() {
@@ -108,23 +95,22 @@
     });
     describe('calendar.calendar()', function() {
       it('should be real calendar.', inject(function(calendar, OVER_MONTH) {
-        var c, exp;
-        c = calendar.calendar(2014, 2 - 1);
-        exp = [[0, 0, 0, 0, 0, 0, 1], [2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22], [23, 24, 25, 26, 27, 28, OVER_MONTH]];
-        expect(c).toEqual(exp);
+        var i, results;
         expect(JSON.stringify(calendar.calendar(2014, 2 - 1))).toEqual(JSON.stringify([[0, 0, 0, 0, 0, 0, 1], [2, 3, 4, 5, 6, 7, 8], [9, 10, 11, 12, 13, 14, 15], [16, 17, 18, 19, 20, 21, 22], [23, 24, 25, 26, 27, 28, OVER_MONTH]]));
         expect(_.flatten(calendar.calendar(2014, 2 - 1))).toEqual([0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, OVER_MONTH]);
+        expect(calendar.calendar(2014, 2 - 1, true)).toEqual((function() {
+          results = [];
+          for (i = 1; i <= 28; i++){ results.push(i); }
+          return results;
+        }).apply(this));
       }));
     });
     describe('switchToEdit()', function() {
       var eventForm, group, mode;
-      mode = void 0;
-      eventForm = void 0;
-      group = void 0;
+      mode = eventForm = group = "unknown";
       beforeEach(inject(function(_mode_, _eventForm_, _group_) {
-        mode = _mode_;
-        eventForm = _eventForm_;
-        group = _group_;
+        var ref;
+        ref = [_mode_, _eventForm_, _group_], mode = ref[0], eventForm = ref[1], group = ref[2];
         group[0].event = [
           {
             year: 2015,
@@ -180,10 +166,7 @@
     });
     describe('add group', function() {
       var GroupEditorCtrl, SettingCtrl, groupScope, settingScope;
-      settingScope = void 0;
-      groupScope = void 0;
-      SettingCtrl = void 0;
-      GroupEditorCtrl = void 0;
+      settingScope = groupScope = SettingCtrl = GroupEditorCtrl = "unknown";
       beforeEach(inject(function($controller, $rootScope, user) {
         settingScope = $rootScope.$new();
         SettingCtrl = $controller('settingCtrl', {
@@ -210,13 +193,10 @@
     describe('directive', function() {
       describe('appDate', function() {
         var $compile, $rootScope, calendar;
-        $compile = void 0;
-        $rootScope = void 0;
-        calendar = void 0;
+        $compile = $rootScope = calendar = "unknown";
         beforeEach(inject(function(_$compile_, _$rootScope_, _calendar_) {
-          $compile = _$compile_;
-          $rootScope = _$rootScope_;
-          calendar = _calendar_;
+          var ref;
+          ref = [_$compile_, _$rootScope_, _calendar_], $compile = ref[0], $rootScope = ref[1], calendar = ref[2];
           calendar.selected = 21;
           calendar.year = 2015;
           calendar.month = 2 - 1;
