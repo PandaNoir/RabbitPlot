@@ -47,6 +47,9 @@ function uuid() {
     }
     return uuid;
 };
+function getHash(str){
+    return (new jsSHA(str,'TEXT')).getHash('SHA-384','HEX');
+};
 angular.module('lodash',[])
 .factory('_',function(){
     return _;
