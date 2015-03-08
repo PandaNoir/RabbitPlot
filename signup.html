@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja" ng-app="register">
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="js/sha512.js"></script>
+    <style>#waiting{display:none;width:20px;vertical-align:middle}button,input{background:#fff;border:1px solid #ccc;}button,input[type="submit"]{padding:1px 14px;border-bottom-color:#999;box-shadow:0px 1px 0 #f3f3f3;}input:not([type="submit"]){border-top-color:#999;}body{margin:30px;}.horizontal-headline{width:11em;color:#6a6958;font-size:30px;margin:-1em auto auto;text-align:center;text-shadow:1px 1px 1px #f6f5e8;background:#fff }.horizontal-line{border:1px solid #aeac93;box-shadow:1px 1px 1px #f6f5e8}.horizontal-headline:before,.horizontal-headline:after{position:relative;top:-3px;color:#7b7a65;font-size:20px;font-family:&amp;quot;Wingdings 2&amp;quot;}.horizontal-headline:before{content:&amp;quot;b&amp;quot;;margin-right:10px}.horizontal-headline:after{content:&amp;quot;a&amp;quot;;margin-left:10px}
+    </style>
+    <script src="js/signup.js"></script>
+  </head>
+  <body ng-controller="mainCtrl">
+    <hr class="horizontal-line">
+    <p class="horizontal-headline marks">ユーザー登録</p>
+    ユーザ名:<input type="text" id="username"><button id="confirm">使えるか確認する</button>
+    <span id="canUse"></span><img src="image/loading.gif" id="waiting"><br>
+    パスワード:<input type="password" id="password"><br>
+    <input type="submit" id="signup"><br>
+    本サービスではメールアドレスを使った登録はしません。だから、パスワードの再発行は基本的にできません。<br>
+    また、本サービスでは暗号化通信を行っておりませんが、パスワードは暗号化して送信するため情報が漏洩したとしても漏洩するのは暗号化されたデータのためパスワードは守られます。<br>
+    暗号化にはSHA-384というアルゴリズムを使っています。
+  </body>
+</html>
