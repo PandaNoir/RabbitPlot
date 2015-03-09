@@ -9,10 +9,12 @@ angular.module(appName)
         user.hiddenGroup[user.hiddenGroup.length]=id;
         user.hiddenGroup.sort(sortByNumber);
         user.save();
+        db.updateUser();
     };//}}}
     $scope.show=function(id){//{{{
         user.hiddenGroup=_.without(user.hiddenGroup,id);
         user.save();
+        db.updateUser();
     };//}}}
     $scope.followsParent=function followsParent(groupID){//{{{
         var parents=parentsList(groupID);
@@ -55,6 +57,7 @@ angular.module(appName)
             user.following.splice(unfollowList[i],1);
         }
         user.save();
+        db.updateUser();
     };//}}}
     $scope.showEventList=function(id){
         eventListToEdit.id=id;
@@ -111,10 +114,12 @@ angular.module(appName)
         user.hiddenGroup[user.hiddenGroup.length]=-1;//privateのidが-1
         user.hiddenGroup.sort(sortByNumber);
         user.save();
+        db.updateUser();
     };//}}}
     $scope.showAll=function(){//{{{
         user.hiddenGroup=[];
         user.save();
+        db.updateUser();
     };//}}}
     $scope.importSetting=function(){//{{{
        $mdDialog.show({

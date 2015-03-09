@@ -5,6 +5,7 @@ var path = {
         './js/calendar.js',
         './js/global.js',
         './js/mainCtrl.js',
+        './js/loginCtrl.js',
         './js/calendarCtrl.js',
         './js/eventEditorCtrl.js',
         './js/groupEditorCtrl.js',

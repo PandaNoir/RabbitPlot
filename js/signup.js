@@ -14,7 +14,11 @@ $(function(){
         });
     });
     $('#signup').on('click',function(e){
-        $.post(database+'signup.php',{'username':$('#username').val(),'password':(new jsSHA($('#password').val(),'TEXT')).getHash('SHA-384','HEX'),'id':uuid()},function(mes){
+        $.post(database+'signup.php',{
+            'username':JSON.stringify($('#username').val()),
+            'password':(new jsSHA($('#password').val(),'TEXT')).getHash('SHA-384','HEX'),
+            'id':JSON.stringify(uuid())
+        },function(mes){
             console.log(mes);
             if(mes==='OK'){
                 alert('登録完了しました.');

@@ -111,6 +111,7 @@ angular.module(appName)
     function save(groupID){
         if(groupID==='private'){
             user.save();
+            db.updateUser();
         }else{
             db.post(group[groupID],groupID,'update');
         }

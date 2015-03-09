@@ -94,6 +94,7 @@ angular.module(appName)
                         user['private'][type].splice(eventID,1);
                         user.updated=true;
                         user.save();
+                        db.updateUser();
                     }else{
                         group[groupID][type].splice(eventID,1);
                         group[groupID].updated=true;

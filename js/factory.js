@@ -38,6 +38,7 @@ angular.module(appName)
         user.following[user.following.length]=toInt(groupID);
         user.following.sort(sortByNumber);
         user.save();
+        db.updateUser();
     };
     user.save();
     return user;
@@ -286,7 +287,7 @@ angular.module(appName)
     };
 })//}}}
 .factory('db',function(_,user,group,$http,$rootScope,$log,localStorageService){//{{{
-    var database='http://www40.atpages.jp/chatblanc/genderC/database.php';
+    var database='http://www40.atpages.jp/chatblanc/genderC/';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
         //typeにupdateとかinsertとか指定することで動作変えている
@@ -300,21 +301,17 @@ angular.module(appName)
         for(var key in o) o[key]=toOneByte(angular.toJson(o[key]));
         o.type=type;
         $rootScope.$broadcast('updated');
-        return $http.post(database,o).success(function(mes){
+        return $http.post(database+'database.php',o).success(function(mes){
             $log.log('updated');
             $log.log(mes);
-        }).error(function(mes){
-            $log.log(mes);
-        });
+        }).error(error);
     };
     function list(_list_){
         var o=_.clone(group)[0];
         var list=_list_;
         list=list||user.following.join(',');
         //データベースから指定idのデータを取得する
-        return $http.post(database,{type:'list',groupID:list}).success(function(data){return data}).error(function(mes){
-            $log.log(mes);
-        }).then(function(_mes_){
+        return $http.post(database+'database.php',{type:'list',groupID:list}).success(success).error(error).then(function(_mes_){
         var mes=_mes_.data;
         for(var i=0,i2=mes.length;i<i2;i++){
             for(var key in mes[i]){
@@ -350,12 +347,22 @@ angular.module(appName)
     };
     function getNameList(){
         //データベースからグループ一覧を取得する
-        return $http.post(database,{type:'namelist'}).success(function(data){return data});
+        return $http.post(database+'database.php',{type:'namelist'}).success(success).error(error);
     };
     function permission(list){
-        return $http.post(database,{type:'permission',groupID:user.following.join(','),userID:user.id}).success(function(data){return data}).error(function(mes){
-            $log.log(mes);
-        });
+        return $http.post(database+'database.php',{type:'permission',groupID:user.following.join(','),userID:user.id}).success(success).error(error);
+    };
+    function login(opt){
+        return $http.post(database+'login.php',opt).success(success).error(error);
+    };
+    function updateUser(){
+        return $http.post(database+'database.php',{type:'updateUser',user:user}).success(success).error(error);
+    };
+    function success(data){
+        return data;
+    };
+    function error(mes){
+        $log.log(mes);
     };
     $rootScope.$watch('user.following',function(){
         list();
@@ -363,6 +370,8 @@ angular.module(appName)
     return {
         post:post,
         list:list,
+        login:login,
+        updateUser:updateUser,
         getNameList:getNameList,
         permission:permission
     };
@@ -389,7 +398,7 @@ angular.module(appName)
     }
     $timeout(setTomorrow,tomorrow-(new Date()));
 })//}}}
-.config(function($locationProvider){
+.config(function($locationProvider){//{{{
     $locationProvider.html5Mode({
         enabled:true,
         requireBase:false
@@ -414,7 +423,8 @@ angular.module(appName)
             }
             user.follow(getParams.id);
             user.save();
+            db.updateUser();
         }
     }
-})
+})//}}}
 ;//factoryとか追加するときに便利なようにここにセミコロン

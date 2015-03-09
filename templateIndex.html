@@ -37,6 +37,8 @@
     <div class="md-toolbar-tools">設定</div>
     </md-toolbar>
     <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
+      <md-button class="md-raised" ng-click="mode.login=true">ログイン</md-button>
+      <md-button class="md-raised" href="signup.html" target="_blank">登録</md-button><br>
       <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
       <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
       <md-button class="md-raised md-primary" ng-click="hideAll()">すべてのグループを非表示にする</md-button>
@@ -98,7 +100,7 @@
     </div><!--}}}-->
     </md-sidenav><!--}}}-->
 
-    <md-content class="main md-padding ng-cloak" ng-cloak>
+    <md-content class="main md-padding ng-cloak" ng-cloak ng-if="!mode.login">
       <div class="calendar" ng-controller="calendarCtrl"><!--{{{-->
 
         <div class="calendar-header cf">
@@ -245,6 +247,12 @@
       </form>
       </md-whiteframe><!--}}}-->
       </div>
+    </md-content>
+    <md-content class="main md-padding ng-cloak login" ng-controller="loginCtrl" ng-cloak ng-if="mode.login">
+    ログイン<br>
+    ユーザ名:<input type="text" ng-model="username"><br>
+    パスワード:<input type="password" ng-model="password"><br>
+    <input type="submit" value="ログイン" ng-click="login()"><br>
     </md-content>
   </body>
 </html>
