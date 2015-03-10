@@ -13,11 +13,6 @@ angular.module(appName)
         updated:true,
         id:uuid()
     };
-    $mdDialog.show(
-        $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
-        .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
-        .ok('ok')
-    );
     user.isHiddenGroup=function(groupID){
         return _.indexOf(this.hiddenGroup,groupID,true)!==-1;
     };
@@ -46,7 +41,7 @@ angular.module(appName)
         user.permission=mes;
     });
 })//}}}
-.run(function(user,localStorageService,db,_){//{{{
+.run(function(user,localStorageService,db,_,$mdToast){//{{{
     if(localStorageService.get('private')){
         _.extend(user,angular.fromJson(localStorageService.get('private')));
         if(user.isLoggedIn){
@@ -65,6 +60,12 @@ angular.module(appName)
                 user.isLoggedIn=true;
             });
         }
+    }else{
+        $mdDialog.show(
+            $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+            .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+            .ok('ok')
+        );
     }
     user.save();
 })//}}}
