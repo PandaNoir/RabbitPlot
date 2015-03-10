@@ -37,7 +37,7 @@
     <div class="md-toolbar-tools">設定</div>
     </md-toolbar>
     <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
-      <md-button class="md-raised" ng-click="mode.login=true">ログイン</md-button>
+      <md-button class="md-raised" ng-click="loginMode()">ログイン</md-button>
       <md-button class="md-raised" href="signup.html" target="_blank">登録</md-button><br>
       <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
       <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>

@@ -55,8 +55,6 @@ angular.module(appName)
                 for(var key in mes){
                     user[key]=angular.fromJson(mes[key]);
                 }
-                localStorageService.set('username',$scope.username);
-                localStorageService.set('password',getHash($scope.password));
                 user.isLoggedIn=true;
             });
         }
@@ -376,11 +374,18 @@ angular.module(appName)
         return $http.post(database+'login.php',opt).success(success).error(error);
     };
     function updateUser(){
-        var copiedUser=_.clone(user);
-        delete copiedUser.isLoggedIn;
-        delete copiedUser.permission;
-        delete copiedUser.updated;
-        return $http.post(database+'database.php',{type:'updateUser',user:copiedUser}).success(success).error(error);
+        var o=_.clone(user);
+        delete o.permission;
+        delete o.updated;
+        delete o.isLoggedIn;
+        delete o.isHiddenGroup;
+        delete o.save;
+        delete o.hasPermission;
+        delete o.follow;
+        o.username=localStorageService.get('username');
+        for(var key in o) o[key]=toOneByte(angular.toJson(o[key]));
+        o.type='updateUser';
+        return $http.post(database+'database.php',o).success(success).error(error);
     };
     function success(data){
         return data;
@@ -427,11 +432,9 @@ angular.module(appName)
 })
 .run(function(user,group,$location){
     var getParams=$location.search();
-    //console.log(user.following);
     if(angular.isDefined(getParams.id)){
         var groupID=toInt(getParams.id);
         if(_.indexOf(user.following,groupID,true)===-1){
-            console.log(group,groupID);
             if(angular.isUndefined(group[groupID])){
                 group[groupID]={
                     name:'',
