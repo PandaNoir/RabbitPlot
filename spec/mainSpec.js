@@ -23,11 +23,11 @@
       }).respond('');
     }));
     describe('execSelector()', function() {
-      var OVER_MONTH, calendar, execSelectors, f, month, year;
-      year = month = f = calendar = OVER_MONTH = execSelectors = "unknown";
-      beforeEach(inject(function(_calendar_, _OVER_MONTH_) {
+      var OVER_MONTH, _, calendar, execSelectors, f, month, year;
+      year = month = f = calendar = OVER_MONTH = execSelectors = _ = "unknown";
+      beforeEach(inject(function(_calendar_, _OVER_MONTH_, ___) {
         var ref;
-        ref = [_calendar_, _OVER_MONTH_], calendar = ref[0], OVER_MONTH = ref[1];
+        ref = [_calendar_, _OVER_MONTH_, ___], calendar = ref[0], OVER_MONTH = ref[1], _ = ref[2];
         execSelectors = calendar.execSelectors;
         year = 2012;
         month = 2 - 1;
@@ -71,6 +71,23 @@
       it('yesterday selector', function() {
         expect(execSelectors('yesterday:date:4', year, month)).toEqual([5]);
       });
+      return it('national holiday', inject(function(_eventCal_) {
+        var eventCal, i, len, val, years;
+        eventCal = _eventCal_;
+        expect(_.map(eventCal.getEvents(0, 1986, 5 - 1), function(item) {
+          return item.name;
+        })).not.toContain('[mes]国民の休日');
+        expect(_.map(eventCal.getEvents(0, 1987, 5 - 1), function(item) {
+          return item.name;
+        })).not.toContain('[mes]国民の休日');
+        years = [1988, 1989, 1990, 1991, 1993, 1994, 1995, 1996, 1999, 2000, 2001, 2002, 2004, 2005, 2006];
+        for (i = 0, len = years.length; i < len; i++) {
+          val = years[i];
+          expect(_.map(eventCal.getEvents(0, val, 5 - 1), function(item) {
+            return item.name;
+          })).toContain('[mes]国民の休日');
+        }
+      }));
     });
     describe('splitSelector()', function() {
       var LPARENTHESES, OPERATOR, OTHERS, RPARENTHESES, calendar;
