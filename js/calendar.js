@@ -66,7 +66,7 @@ function calendar(_OVER_MONTH_,_MEMO_LIMIT_,_IS_SMART_PHONE_,_ATTRIBUTE_,_myErro
     var LPARENTHESES=ATTRIBUTE.LPARENTHESES;
     var RPARENTHESES=ATTRIBUTE.RPARENTHESES;
     function last(arr){return arr[arr.length-1];};
-    function getHolidays(y,m,substitute,national){//{{{
+    function getHolidays(y,m){//{{{
         var res=[];
         for(var i=0,j=holiday.event.length;i<j;i++){
             if(holiday.event[i].year===y && holiday.event[i].month===m){
@@ -76,41 +76,21 @@ function calendar(_OVER_MONTH_,_MEMO_LIMIT_,_IS_SMART_PHONE_,_ATTRIBUTE_,_myErro
         for(var i=0,i2=holiday.habit.length;i<i2;i++){
             res.push.apply(res,execSelectors(holiday.habit[i].selector,y,m,res));
         }
-        if(substitute===undefined||substitute===true){
-            res=res.concat(getSubstituteHolidays(y,m,res));
-            res.sort();
-        }
-        if(national===undefined||national===true){
-            res=res.concat(getNationalHolidays(y,m));
-            res.sort();
-        }
-        return res;
-    };//}}}
-    function getSubstituteHolidays(y,m,holidays){//{{{
-        var res=[];
-        holidays=holidays||getHolidays(y,m,false,false);
         if(!(y<1973||y===1973&&m<4)){
             //振替休日が制定されたあと
-            var sundayHoliday=_.intersection(holidays,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
+            var sundayHoliday=_.intersection(res,execSelectors('day:sun',y,m,[]));//日曜かつ祝日
             res.push.apply(res,_.map(sundayHoliday,function(n){
                 var k=1;
-                while(_.indexOf(holidays,n+k,true)!==-1) k+=1;//振替先が祝日でなくなるまで進める
+                while(_.indexOf(res,n+k,true)!==-1) k+=1;//振替先が祝日でなくなるまで進める
                 return n+k;
             }));
             res.sort();
         }
-        return res;
-    };//}}}
-    function getNationalHolidays(y,m){//{{{
-        var res=[];
         if(y>=1985||y===1985&&m===12&&d>=27){
             //国民の休日が制定されたあと
             var beforeDay=0;
-            var sunday=execSelectors('day:sun',y,m,[]);
-            var holidays=getHolidays(y,m,true,false);
-            if(y===1987) console.log(holidays);
-            _.each(holidays,function(n){
-                if(n-beforeDay===2&&_.indexOf(sunday,n-1,true)===-1) res.push(n-1);//日曜でない かつ 振替休日でない日(n-1は祝日に含まれてないためその判定は必要なし)
+            _.each(res,function(n){
+                if(n-beforeDay===2) res.push(n-1);
                 beforeDay=n;
             });
             res.sort();
@@ -624,9 +604,6 @@ function calendar(_OVER_MONTH_,_MEMO_LIMIT_,_IS_SMART_PHONE_,_ATTRIBUTE_,_myErro
             else return ['日','月','火','水','木','金','土'][new Date(this.year,this.month,this.selected).getDay()];
         },
         holiday:holiday,
-        getHolidays:getHolidays,
-        getNationalHolidays:getNationalHolidays,
-        getSubstituteHolidays:getSubstituteHolidays,
         disableHoverEvent:IS_SMART_PHONE,
         splitSelector:splitSelector,
         execSelectors:execSelectors

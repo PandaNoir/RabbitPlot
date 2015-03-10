@@ -1,5 +1,5 @@
 angular.module(appName)
-.factory('user',function(_,$rootScope,group,localStorageService){//{{{
+.factory('user',function(_,$rootScope,$mdDialog,group,localStorageService){//{{{
     var user={
         following:[],
         'private':{
@@ -41,7 +41,7 @@ angular.module(appName)
         user.permission=mes;
     });
 })//}}}
-.run(function(user,localStorageService,db,_,$mdToast,$mdDialog){//{{{
+.run(function(user,localStorageService,db,_,$mdToast){//{{{
     if(localStorageService.get('private')){
         _.extend(user,angular.fromJson(localStorageService.get('private')));
         if(user.isLoggedIn){
@@ -170,12 +170,32 @@ angular.module(appName)
         }
         if(groupID!==0) return res;
         //振替休日の選定
-        _.each(calendar.getSubstituteHolidays(y,m),function(date){
-            res.push({year:y,month:m,date:date,name:'[mes]振替休日',group:0,id:-1,type:'habit'});
-        });
-        _.each(calendar.getNationalHolidays(y,m),function(date){
-            res.push({year:y,month:m,date:date,name:'[mes]国民の休日',group:0,id:-2,type:'habit'});
-        });
+        if(!(y<1973||y===1973&&m<4)){
+            //振替休日が制定されたあと
+            var holidays=_.map(res,function(n){return n.date});
+            var sundayHoliday=_.intersection(holidays,calendar.execSelectors('day:sun',y,m,[]));//日曜かつ祝日
+            res.concat(_.map(sundayHoliday,function(n){
+                var k=1;
+                while(_.indexOf(holidays,n+k,true)!==-1){
+                    //振替先が祝日
+                    k+=1;
+                }
+                return {year:y,month:m,date:n+k,name:'[mes]振替休日',group:0,id:-1,type:'habit'};
+            }));
+            res.sort();
+        }
+        if(y>=1985||y===1985&&m===12&&d>=27){
+            //国民の休日が制定されたあと
+            var holidays=_.map(res,function(n){return n.date});
+            var beforeDay=0;
+            _.each(holidays,function(n){
+                if(n-beforeDay===2){
+                    res.push({year:y,month:m,date:n-1,name:'[mes]国民の休日',group:0,id:-2,type:'habit'});
+                }
+                beforeDay=n;
+            });
+            res.sort();
+        }
         return res;
     };//}}}
     function getEventList(arr,y,m,groupID){//{{{
@@ -214,8 +234,7 @@ angular.module(appName)
         return res;
     }//}}}
     return {
-        eventCalendar:eventCalendar,
-        getEvents:getEvents
+        eventCalendar:eventCalendar
     };
 })//}}}
 .factory('eventListToEdit',function(){//{{{
