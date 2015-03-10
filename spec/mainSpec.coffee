@@ -15,10 +15,10 @@ describe 'test', ->
     return
   )# }}}
   describe 'execSelector()', -># {{{
-    year = month = f = calendar = OVER_MONTH = execSelectors = "unknown"
+    year = month = f = calendar = OVER_MONTH = execSelectors = _ = "unknown"
 
-    beforeEach inject((_calendar_, _OVER_MONTH_) ->
-      [ calendar, OVER_MONTH ] = [ _calendar_, _OVER_MONTH_ ]
+    beforeEach inject((_calendar_, _OVER_MONTH_,___) ->
+      [ calendar, OVER_MONTH, _ ] = [ _calendar_, _OVER_MONTH_ , ___]
       execSelectors = calendar.execSelectors
       # selectors list:'date', 'day', 'is', 'month', 'not', 'range', 'year', 'yesterday'
       year = 2012
@@ -63,7 +63,15 @@ describe 'test', ->
     it 'yesterday selector', ->
       expect(execSelectors('yesterday:date:4', year, month)).toEqual [ 5 ]
       return
-    return# }}}
+    it 'national holiday', inject((_eventCal_)->
+      eventCal=_eventCal_
+      expect(_.map eventCal.getEvents(0,1986,5-1),(item)->item.name).not.toContain('[mes]国民の休日')
+      expect(_.map eventCal.getEvents(0,1987,5-1),(item)->item.name).not.toContain('[mes]国民の休日')
+      years= [1988,1989,1990,1991,1993,1994,1995,1996,1999,2000,2001,2002,2004,2005,2006]
+      for val in years
+        expect(_.map eventCal.getEvents(0,val,5-1),(item)->item.name).toContain('[mes]国民の休日')
+      return
+    )# }}}
   describe 'splitSelector()', -># {{{
     OPERATOR = OTHERS = LPARENTHESES = RPARENTHESES = calendar= "unknown"
 
