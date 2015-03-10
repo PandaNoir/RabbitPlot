@@ -10,3 +10,4 @@ app/components
 *.gz
 *.map
 main.test.js
+DBLink
