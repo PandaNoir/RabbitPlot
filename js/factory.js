@@ -1,35 +1,33 @@
 angular.module(appName)
 .factory('user',function(_,$rootScope,$mdDialog,group,localStorageService){//{{{
-    if(localStorageService.get('private')){
-        var user=angular.fromJson(localStorageService.get('private'));
-        if(!user.id){
-            user.id=uuid();
-        }
-        user.updated=true;
-    }else{
-        var user={
-            following:[],
-            'private':{
-                event:[],
-                habit:[],
-                name:'プライベート'
-            },
-            permission:[],
-            hiddenGroup:[],
-            id:uuid()
-        };
-        $mdDialog.show(
-            $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
-            .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
-            .ok('ok')
-        );
-    }
-    user.isHiddenGroup=function(id){
-        return _.indexOf(this.hiddenGroup,id,true)!==-1;
+    var user={
+        following:[],
+        'private':{
+            event:[],
+            habit:[],
+            name:'プライベート'
+        },
+        permission:[],
+        hiddenGroup:[],
+        isLoggedIn:false,
+        updated:true,
+        id:uuid()
+    };
+    $mdDialog.show(
+        $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+        .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+        .ok('ok')
+    );
+    user.isHiddenGroup=function(groupID){
+        return _.indexOf(this.hiddenGroup,groupID,true)!==-1;
     };
     user.save=function(){
+        var copiedUser=_.clone(user);
+        delete copiedUser.permission;
+        delete copiedUser.updated;
+
         $rootScope.$broadcast('updated');
-        localStorageService.set('private',angular.toJson(this));
+        localStorageService.set('private',angular.toJson(copiedUser));
     };
     user.hasPermission=function(groupID){
         return groupID==='private'||_.indexOf(user.permission,groupID)!==-1;
@@ -40,7 +38,6 @@ angular.module(appName)
         user.save();
         db.updateUser();
     };
-    user.save();
     return user;
 })//}}}
 .run(function(user,db){//{{{
@@ -48,6 +45,28 @@ angular.module(appName)
         var mes=_mes_.data;
         user.permission=mes;
     });
+})//}}}
+.run(function(user,localStorageService,db,_){//{{{
+    if(localStorageService.get('private')){
+        _.extend(user,angular.fromJson(localStorageService.get('private')));
+        if(user.isLoggedIn){
+            db.login({'username':localStorageService.get('username'),'password':localStorageService.get('password')}).then(function(mes){
+                mes=mes.data;
+                if(mes==='failed'){
+                    $mdToast.show($mdToast.simple().content('ログインに失敗しました').position('top right').hideDelay(3000));
+                    return;
+                }
+                $mdToast.show($mdToast.simple().content('ログインに成功しました').position('top right').hideDelay(3000));
+                for(var key in mes){
+                    user[key]=angular.fromJson(mes[key]);
+                }
+                localStorageService.set('username',$scope.username);
+                localStorageService.set('password',getHash($scope.password));
+                user.isLoggedIn=true;
+            });
+        }
+    }
+    user.save();
 })//}}}
 .factory('eventForm',function(){//{{{
     return {
@@ -286,7 +305,7 @@ angular.module(appName)
         switchToEdit:switchToEdit
     };
 })//}}}
-.factory('db',function(_,user,group,$http,$rootScope,$log,localStorageService){//{{{
+.factory('db',function(_,user,group,$rootScope,$http,$log,localStorageService){//{{{
     var database='http://www40.atpages.jp/chatblanc/genderC/';
     function post(group,id,type){
         //データベースにpostする汎用メソッド
@@ -356,7 +375,11 @@ angular.module(appName)
         return $http.post(database+'login.php',opt).success(success).error(error);
     };
     function updateUser(){
-        return $http.post(database+'database.php',{type:'updateUser',user:user}).success(success).error(error);
+        var copiedUser=_.clone(user);
+        delete copiedUser.isLoggedIn;
+        delete copiedUser.permission;
+        delete copiedUser.updated;
+        return $http.post(database+'database.php',{type:'updateUser',user:copiedUser}).success(success).error(error);
     };
     function success(data){
         return data;
@@ -364,9 +387,6 @@ angular.module(appName)
     function error(mes){
         $log.log(mes);
     };
-    $rootScope.$watch('user.following',function(){
-        list();
-    });
     return {
         post:post,
         list:list,

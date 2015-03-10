@@ -5,18 +5,22 @@
     var $httpBackend;
     $httpBackend = "unknown";
     beforeEach(module('rabbit'));
-    beforeEach(inject(function(_$httpBackend_, _user_) {
-      var database, ref, user;
-      ref = [_user_, _$httpBackend_], user = ref[0], $httpBackend = ref[1];
+    beforeEach(inject(function(_$httpBackend_, _user_, _localStorageService_) {
+      var database, localStorageService, ref, user;
+      ref = [_user_, _$httpBackend_, _localStorageService_], user = ref[0], $httpBackend = ref[1], localStorageService = ref[2];
       database = 'http://www40.atpages.jp/chatblanc/genderC/database.php';
+      localStorageService.clearAll();
       $httpBackend.whenPOST(database, "type=permission&groupID=&userID=" + user.id).respond('[]');
+      $httpBackend.whenPOST(database, 'type=namelist').respond('[["\\"test group\\"","\\"test group2\\""]]');
       $httpBackend.whenPOST(database, function(s) {
         return s.indexOf('type=list') !== -1;
       }).respond('[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]');
       $httpBackend.whenPOST(database, function(s) {
         return s.indexOf('id=2') !== -1;
       }).respond(201, '');
-      $httpBackend.whenPOST(database, 'type=namelist').respond('[["\\"test group\\"","\\"test group2\\""]]');
+      $httpBackend.whenPOST(database, function(s) {
+        return s.indexOf('type=updateUser') !== -1;
+      }).respond('');
     }));
     describe('execSelector()', function() {
       var OVER_MONTH, calendar, execSelectors, f, month, year;
@@ -216,6 +220,37 @@
           element.triggerHandler('click');
           expect(element.attr('class').split(' ')).toContain('selected');
         });
+      });
+    });
+    describe('user', function() {
+      var localStorageService, user;
+      user = localStorageService = "unknown";
+      beforeEach(inject(function(_user_, _localStorageService_) {
+        var ref;
+        ref = [_user_, _localStorageService_], user = ref[0], localStorageService = ref[1];
+      }));
+      it('initialize', function() {
+        expect(user.following).toEqual([]);
+        expect(user['private'].event).toEqual([]);
+        expect(user['private'].habit).toEqual([]);
+        expect(user['private'].name).toBe('プライベート');
+        expect(user.permission).toEqual([]);
+        expect(user.hiddenGroup).toEqual([]);
+        expect(user.isLoggedIn).toBe(false);
+        expect(user.updated).toBe(true);
+      });
+      it('cache should save user data.', function() {
+        var cachedUser, copiedUser;
+        user.save();
+        cachedUser = localStorageService.get('private');
+        copiedUser = _.clone(user);
+        delete copiedUser.permission;
+        delete copiedUser.updated;
+        delete copiedUser.isHiddenGroup;
+        delete copiedUser.save;
+        delete copiedUser.hasPermission;
+        delete copiedUser.follow;
+        expect(cachedUser).toEqual(copiedUser);
       });
     });
   });

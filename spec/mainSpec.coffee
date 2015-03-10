@@ -2,17 +2,16 @@
 describe 'test', ->
   $httpBackend = "unknown"
   beforeEach module('rabbit')
-  beforeEach inject((_$httpBackend_, _user_) -># {{{
-    [ user, $httpBackend  ] = [ _user_, _$httpBackend_ ]
+  beforeEach inject((_$httpBackend_, _user_,_localStorageService_) -># {{{
+    [ user, $httpBackend, localStorageService ] = [ _user_, _$httpBackend_, _localStorageService_ ]
     database = 'http://www40.atpages.jp/chatblanc/genderC/database.php'
+    localStorageService.clearAll()
+
     $httpBackend.whenPOST(database, "type=permission&groupID=&userID=#{user.id}").respond '[]'
-    $httpBackend.whenPOST(database, (s) ->
-      s.indexOf('type=list') != -1
-    ).respond '[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]'
-    $httpBackend.whenPOST(database, (s) ->
-      s.indexOf('id=2') != -1
-    ).respond 201, ''
     $httpBackend.whenPOST(database, 'type=namelist').respond '[["\\"test group\\"","\\"test group2\\""]]'
+    $httpBackend.whenPOST(database, (s) -> s.indexOf('type=list') != -1).respond '[{"name":"\\"test group\\"","event":"[]","habit":"[]","id":"1"}]'
+    $httpBackend.whenPOST(database, (s) -> s.indexOf('id=2') != -1).respond 201, ''
+    $httpBackend.whenPOST(database, (s) -> s.indexOf('type=updateUser') != -1).respond ''
     return
   )# }}}
   describe 'execSelector()', -># {{{
@@ -209,6 +208,36 @@ describe 'test', ->
         element.triggerHandler 'click'
         expect(element.attr('class').split(' ')).toContain 'selected'
         return
+      return
+    return# }}}
+  describe 'user', -># {{{
+    user = localStorageService = "unknown"
+    beforeEach inject((_user_,_localStorageService_) ->
+      [ user, localStorageService ] = [ _user_, _localStorageService_ ]
+      return
+    )
+    it 'initialize',->
+      expect(user.following).toEqual []
+      expect(user['private'].event).toEqual []
+      expect(user['private'].habit).toEqual []
+      expect(user['private'].name).toBe 'プライベート'
+      expect(user.permission).toEqual []
+      expect(user.hiddenGroup).toEqual []
+      expect(user.isLoggedIn).toBe false
+      expect(user.updated).toBe true
+      return
+    it 'cache should save user data.', ->
+      user.save()
+      cachedUser = localStorageService.get('private')
+      copiedUser = _.clone user
+      delete copiedUser.permission
+      delete copiedUser.updated
+      delete copiedUser.isHiddenGroup
+      delete copiedUser.save
+      delete copiedUser.hasPermission
+      delete copiedUser.follow
+
+      expect(cachedUser).toEqual copiedUser
       return
     return# }}}
   return
