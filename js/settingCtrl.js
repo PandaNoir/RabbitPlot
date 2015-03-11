@@ -18,7 +18,7 @@ angular.module(appName)
     };//}}}
     $scope.followsParent=function followsParent(groupID){//{{{
         var parents=parentsList(groupID);
-        for(var i=0,j=parents.length;i<j;i++){
+        for(var i=0,_i=parents.length;i<_i;i++){
             if(!follows(parents[i])){
                 return parents[i];
             }
@@ -39,7 +39,7 @@ angular.module(appName)
         //フォロー解除する。親グループが解除されそうになったら、確認取る。確認取れたら子グループも解除する。確認取れなかったら親の解除もキャンセル
         var unfollowList=[];
         unfollowList[unfollowList.length]=user.following.indexOf(id);
-        for(var i=0,j=user.following.length;i<j;i++){
+        for(var i=0,_i=user.following.length;i<_i;i++){
             //フォローしているものを回す
             if(group[user.following[i]].parents){
                 //親要素がある
@@ -53,7 +53,7 @@ angular.module(appName)
             }
         }
         unfollowList.sort(function(a,b){return (b-a);});
-        for(var i=0,j=unfollowList.length;i<j;i++){
+        for(var i=0,_i=unfollowList.length;i<_i;i++){
             user.following.splice(unfollowList[i],1);
         }
         user.save();
@@ -66,7 +66,7 @@ angular.module(appName)
     function parentsList(groupID){
         if(!group[groupID].parents) return [];
         var res=group[groupID].parents;
-        for(var i=0,j=group[groupID].parents.length;i<j;i++){
+        for(var i=0,_i=group[groupID].parents.length;i<_i;i++){
             res=parentsList(group[groupID].parents[i]).concat(res);
         }
         return res;
@@ -85,7 +85,7 @@ angular.module(appName)
             return res;
         }
         var keyword=toHiragana($scope.search_keyword);
-        for(var i=0,j=group.length;i<j;i++){
+        for(var i=0,_i=group.length;i<_i;i++){
             if(res.length>30) break;
             if(group[i] && (group[i].name && toHiragana(group[i].name).indexOf(keyword)!==-1 || group[i].description && toHiragana(group[i].description).indexOf(keyword)!==-1)){
                 res[res.length]=i;

@@ -4,7 +4,6 @@ $(function(){
         e.stopPropagation();
         $('#waiting').show();
         $.post(database+'confirm.php',{'username':$('#username').val()},function(mes){
-            console.log(mes);
             if(mes==='OK'){
                 $('#canUse').text('使えます');
             }else{
@@ -19,7 +18,6 @@ $(function(){
             'password':(new jsSHA($('#password').val(),'TEXT')).getHash('SHA-384','HEX'),
             'id':JSON.stringify(uuid())
         },function(mes){
-            console.log(mes);
             if(mes==='OK'){
                 alert('登録完了しました.');
                 location.href='http://pandanoir.web.fc2.com/RabbitPlot';

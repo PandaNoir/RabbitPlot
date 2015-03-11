@@ -120,7 +120,7 @@ angular.module(appName)
             ECMemo=[];
             beforeGroups=groups.join(',');
         }
-        for(var i=0,i2=groups.length;i<i2;i++){
+        for(var i=0,_i=groups.length;i<_i;i++){
             events[events.length]=getEvents(groups[i],calendar.year,calendar.month);
         }
         if(!user.isHiddenGroup(-1)){
@@ -128,8 +128,8 @@ angular.module(appName)
             events[events.length]=getEvents('private',calendar.year,calendar.month);
         }
         //events=[{year,month,date,name,id,group,type}, ..];
-        for(var i=0,i2=events.length;i<i2;i++){
-            for(var j=0,j2=events[i].length;j<j2;j++){
+        for(var i=0,_i=events.length;i<_i;i++){
+            for(var j=0,_j=events[i].length;j<_j;j++){
                 var d=events[i][j].date;
                 if(!res[d]) res[d]=[];
                 //eventsをeventCalendarへ変換
@@ -182,7 +182,7 @@ angular.module(appName)
         //y=year,m=month
         var res=[];
         if(!arr) return res;
-        for(var i=0,j=arr.length;i<j;i++){
+        for(var i=0,_i=arr.length;i<_i;i++){
             if(arr[i].year!==y || arr[i].month!==m){
                 continue;
             }
@@ -201,7 +201,7 @@ angular.module(appName)
         //返り値は指定された月の具体的な日付がくっついた配列
         if(!arr) return [];
         var res=[];
-        for(var i=0,i2=arr.length;i<i2;i++){
+        for(var i=0,_i=arr.length;i<_i;i++){
             arr[i].type='habit';
             arr[i].group=groupID;
             var tmpRes=calendar.execSelectors(arr[i].selector,year,month,eventListRes);
@@ -310,7 +310,7 @@ angular.module(appName)
         //データベースから指定idのデータを取得する
         return $http.post(database+'database.php',{type:'list',groupID:list}).success(success).error(error).then(function(mes){
         mes=mes.data;
-        for(var i=0,i2=mes.length;i<i2;i++){
+        for(var i=0,_i=mes.length;i<_i;i++){
             for(var key in mes[i]){
                 mes[i][key]=angular.fromJson(mes[i][key]||'""');
             }
@@ -318,14 +318,14 @@ angular.module(appName)
         }
         mes.sort(function(a,b){return a.id-b.id});
         group.length=0;
-        for(var i=0,i2=mes.length;i<i2;i++){
+        for(var i=0,_i=mes.length;i<_i;i++){
             group[mes[i].id]=mes[i];
         }
         group[0]=_.clone(o);
         $rootScope.$broadcast('updated');
         localStorageService.set('group',angular.toJson(group));
         getNameList().then(function(mes){
-            for(var i=0,i2=mes.data[0].length;i<i2;i++){
+            for(var i=0,_i=mes.data[0].length;i<_i;i++){
                 if(group[i]){
                     continue;
                 }

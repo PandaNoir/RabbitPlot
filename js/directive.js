@@ -12,7 +12,7 @@ angular.module(appName)
             var countEvents=function(date){
                 var tmpCalendar=eventCal.eventCalendar(date);
                 var len=0;
-                for(var i=0,i2=tmpCalendar.length;i<i2;i++){
+                for(var i=0,_i=tmpCalendar.length;i<_i;i++){
                     if($filter('format')(tmpCalendar[i],false).indexOf('[mes]')!==0){
                         len++;
                     }

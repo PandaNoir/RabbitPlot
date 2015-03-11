@@ -64,7 +64,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
     function last(arr){return arr[arr.length-1];};
     function getHolidays(y,m,substitute,national){//{{{
         var res=[];
-        for(var i=0,j=holiday.event.length;i<j;i++){
+        for(var i=0,_i=holiday.event.length;i<_i;i++){
             if(holiday.event[i].year===y && holiday.event[i].month===m){
                 res[res.length]=holiday.event[i].date;
             }
@@ -104,7 +104,6 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             var beforeDay=0;
             var sunday=execSelectors('day:sun',y,m,[]);
             var holidays=getHolidays(y,m,true,false);
-            if(y===1987) console.log(holidays);
             _.each(holidays,function(n){
                 if(n-beforeDay===2&&_.indexOf(sunday,n-1,true)===-1) res.push(n-1);//日曜でない かつ 振替休日でない日(n-1は祝日に含まれてないためその判定は必要なし)
                 beforeDay=n;
@@ -529,7 +528,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         var res=[];
         var isInString=false;
         var start=0;
-        for(var i=0,j=selector.length;i<j;i++){
+        for(var i=0,_i=selector.length;i<_i;i++){
             var nowChar=selector.charAt(i);
             if(isInString){
                 if(nowChar==='"'){
@@ -568,7 +567,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             '||':0,
             '&&':1
         };
-        for(var i=0,j=formula.length;i<j;i++){
+        for(var i=0,_i=formula.length;i<_i;i++){
             if(formula[i][1]===OTHERS){
                 output[output.length]=formula[i].concat();
             }else if(formula[i][1]===OPERATOR){
