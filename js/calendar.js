@@ -1,4 +1,5 @@
 function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
+    //default value//{{{
     if(OVER_MONTH===undefined) OVER_MONTH=64;
     if(MEMO_LIMIT===undefined) MEMO_LIMIT=1950;
     if(IS_SMART_PHONE===undefined) IS_SMART_PHONE=false;
@@ -20,7 +21,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
     }
     if(toInt===undefined) var toInt=function(n){return parseInt(n,10)};
     if(isLeapYear===undefined) var isLeapYear=function(year){return year%400===0||year%4===0&&year%100!==0;};
-    if(isValidDate===undefined) var isValidDate=function(y,m,d){var date=new Date(y,m,d);return date.getFullYear()===toInt(y)&&date.getMonth()===toInt(m)&&date.getDate()===toInt(d);};
+    if(isValidDate===undefined) var isValidDate=function(y,m,d){var date=new Date(y,m,d);return date.getFullYear()===toInt(y)&&date.getMonth()===toInt(m)&&date.getDate()===toInt(d);};//}}}
     var holiday={//{{{
         event:[],
         habit:[
@@ -181,9 +182,6 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }
         });//}}}
         function execSelector(nowSelector,year,month,eventListRes){//{{{
-            var allDays=function(){
-                return calendar(year,month,true);
-            };
             var meansPublicHoliday=function(s){
                 //sが祝日を表しているか判定
                 // publicHoliday || public-holiday || 祝日を想定
@@ -234,19 +232,15 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             var key=nowSelector.split(':')[0];
             var val=nowSelector.split(':').slice(1).join(':');
             var tmpRes=[];
-            var fromRes=[],toRes=[];
-            var fromReses=[];
-            var from,to;
-            var top4,top5,froms=[];//month/dateを処理するときにfromが2つでてくるから使用
             if(key==='not'){//{{{
-                tmpRes=allDays();
+                tmpRes=calendar(year,month,true);
                 if(meansPublicHoliday(val)){
                     //祝日を除くフィルタ
                     tmpRes=_.difference(tmpRes,getHolidays(year,month));
                 }else if(val.indexOf('year')===0||val.indexOf('month')===0||val.indexOf('date')===0||val.indexOf('day')===0){
                     //not:month=3 もしくは not:month:3
                     val=val.replace(/=/,':');//not:month=3をnot:month:3に揃える
-                    tmpRes=_.difference(allDays(),execSelector(val,year,month));//month:3を実行してその結果を返す
+                    tmpRes=_.difference(calendar(year,month,true),execSelector(val,year,month));//month:3を実行してその結果を返す
                 }else{
                     var nameKey=val.split('=')[0];//not:name='なんとか'みたいにしてるから
                     var nameVal=val.replace(/^.+?=/,'');//not:name='なんとか'みたいにしてるから
@@ -262,7 +256,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }else if(key==='is'){//{{{
                 // is:public-holidayと言った感じ
                 if(meansPublicHoliday(val)){
-                    tmpRes=_.intersection(allDays(),getHolidays(year,month));
+                    tmpRes=_.intersection(calendar(year,month,true),getHolidays(year,month));
                 }else if(val==='last'){
                     //======================
                     var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];
@@ -275,7 +269,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 }
                 //}}}
             }else if(key==='yesterday'){//{{{
-                tmpRes=allDays();
+                tmpRes=calendar(year,month,true);
                 var key2=val.split(':')[0];
                 var val2=val.split(':').slice(1).join(':');
                 if(meansPublicHoliday(val)){
@@ -283,12 +277,16 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                     // 12/32日みたいな日があるかもしれないからこういう処理
                 }else if(key2==='day'||key2==='date'){
                     //この辺は代用できる気がするし、いらないとおもう。一応つけるけど
-                    tmpRes=_.intersection(allDays(),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
+                    tmpRes=_.intersection(calendar(year,month,true),_.map(execSelector(val,year,month),function(n){return n+1;}));//month:3を実行してその結果を返す
                 }else{
                     throw myError('unexpected a value of a yesterday selector.'+val);
                 }
                 //}}}
             }else if(key==='range'){//{{{
+                var fromRes=[],toRes=[];
+                var fromReses=[];
+                var from,to;
+                var top4,top5,froms=[];//month/dateを処理するときにfromが2つでてくるから使用
                 if(val.slice(0,2)==='..'){//{{{
                     //..20xx/xx/xxという形式、つまりtoのみ指定
                     //必ずyear/month/date という形。year,month,dateはいづれも省略不可。month/dateとはとれない
@@ -309,9 +307,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                         tmpRes=[];
                     }else if(to.getFullYear()===year && to.getMonth()===month){
                         //toがかぶっているであろう時
-                        tmpRes=allDays();
+                        tmpRes=calendar(year,month,true);
                         tmpRes=tmpRes.slice(0,_.lastIndexOf(tmpRes,to.getDate(),true)+1);
-                    }else tmpRes=allDays();//}}}
+                    }else tmpRes=calendar(year,month,true);//}}}
                 }else if(val.slice(-2)==='..'){//{{{
                     //20xx/xx/xx..という形式、つまりfromのみ指定
                     //必ずyear/month/date という形。year,month,dateはいづれも省略不可。month/dateとはとれない
@@ -330,9 +328,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                         tmpRes=[];
                     }else if(from.getFullYear()===year && from.getMonth()===month){
                         //fromの境目あたり。
-                        tmpRes=allDays();
+                        tmpRes=calendar(year,month,true);
                         tmpRes=tmpRes.slice(_.indexOf(tmpRes,from.getDate(),true));
-                    }else tmpRes=allDays();//}}}
+                    }else tmpRes=calendar(year,month,true);//}}}
                 }else if(val.indexOf('..')!==-1){//{{{
                     //20xx/xx/xx..20xx/xx/xxという形式
                     //month/date..month/dateも可能(例:12/29..1/3)
@@ -365,10 +363,10 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                             fromRes=[];
                         }else if(fromItem.getFullYear()===year&&fromItem.getMonth()===month){
                             //fromの境目あたり。
-                            fromRes=allDays();
+                            fromRes=calendar(year,month,true);
                             fromRes=fromRes.slice(_.indexOf(fromRes,fromItem.getDate(),true));
 
-                        }else fromRes=allDays();
+                        }else fromRes=calendar(year,month,true);
                         fromReses.push(fromRes);
                     });
                     froms=_.zip(froms,fromReses);// [[from,fromRes],[from,fromRes], ...]
@@ -409,9 +407,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                             toRes=[];
                         }else if(nowTo.getFullYear()===year && nowTo.getMonth()===month){
                             //toがかぶっているであろう時
-                            toRes=allDays();
+                            toRes=calendar(year,month,true);
                             toRes=toRes.slice(0,_.lastIndexOf(toRes,nowTo.getDate(),true)+1);//toより前
-                        }else toRes=allDays();
+                        }else toRes=calendar(year,month,true);
                         if(!_.isEmpty(_.intersection(fromRes,toRes))){
                             tmpRes=_.intersection(fromRes,toRes);
                         }
@@ -477,7 +475,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 if(!monthDic[val.toLowerCase()] && toInt(val)!==month+1 || monthDic[val.toLowerCase()] && monthDic[val.toLowerCase()]!==month)
                     tmpRes=[];//違う月の時
                 else
-                    tmpRes=allDays();//同じ月の時//}}}
+                    tmpRes=calendar(year,month,true);//同じ月の時//}}}
             }else if(key==='day'){//{{{
                 if(val.match(/^\d/)){
                     // day:3rd-wed
@@ -505,14 +503,14 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
                     //year: leap-year
                     if(isLeapYear(year)){
-                        tmpRes=allDays();
+                        tmpRes=calendar(year,month,true);
                     }else{
                         tmpRes=[];
                     }
                 }else if(toInt(val)!==year){
                     // year:Int
                     tmpRes=[];//違う年
-                }else tmpRes=allDays();//}}}
+                }else tmpRes=calendar(year,month,true);//}}}
             }else{
                 throw myError('undefined key "'+key+'".');
             }
