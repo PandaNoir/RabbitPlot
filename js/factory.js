@@ -36,9 +36,8 @@ angular.module(appName)
     return user;
 })//}}}
 .run(function(user,db){//{{{
-    db.permission().then(function(_mes_){
-        var mes=_mes_.data;
-        user.permission=mes;
+    db.permission().then(function(mes){
+        user.permission=mes.data;
     });
 })//}}}
 .run(function(user,localStorageService,db,_,$mdToast,$mdDialog){//{{{
@@ -305,13 +304,12 @@ angular.module(appName)
             $log.log(mes);
         }).error(error);
     };
-    function list(_list_){
+    function list(list){
         var o=_.clone(group)[0];
-        var list=_list_;
         list=list||user.following.join(',');
         //データベースから指定idのデータを取得する
-        return $http.post(database+'database.php',{type:'list',groupID:list}).success(success).error(error).then(function(_mes_){
-        var mes=_mes_.data;
+        return $http.post(database+'database.php',{type:'list',groupID:list}).success(success).error(error).then(function(mes){
+        mes=mes.data;
         for(var i=0,i2=mes.length;i<i2;i++){
             for(var key in mes[i]){
                 mes[i][key]=angular.fromJson(mes[i][key]||'""');
