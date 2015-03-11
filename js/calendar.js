@@ -69,7 +69,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 res[res.length]=holiday.event[i].date;
             }
         }
-        for(var i=0,i2=holiday.habit.length;i<i2;i++){
+        for(var i=0,_i=holiday.habit.length;i<_i;i++){
             res.push.apply(res,execSelectors(holiday.habit[i].selector,y,m,res));
         }
         if(substitute===undefined||substitute===true){
@@ -445,6 +445,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 }else{
                     // day:mon,tue,...
                     var valDay=dayDic[val.toLowerCase()];
+                    if(valDay===undefined){
+                        throw myError('unexpected selector. '+key+':'+val);
+                    }
                     var dayCount=0;
                     _.some(calendar(year,month),function(week){
                         if(week[valDay]!==''){
@@ -455,10 +458,9 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             }else if(key==='year'){//{{{
                 if(val==='leap-year'||val==='leap_year'||val==='うるう年'||val==='閏年'){
                     //year: leap-year
+                    tmpRes=[];
                     if(isLeapYear(year)){
                         tmpRes=calendar(year,month,true);
-                    }else{
-                        tmpRes=[];
                     }
                 }else if(toInt(val)!==year){
                     // year:Int
