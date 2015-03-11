@@ -122,19 +122,19 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         selectors=shuntingYard(splitSelector(selectors));//文字列として渡されたselectorsを分解する
         eventListRes=eventListRes||[];
         var stack=[];
-        _.each(selectors,function(nowSelector){//{{{
+        _.each(selectors,function(nowSelector){
             //遅延評価に変えてもいいが処理が面倒になる
             //遅延評価するべきノードとするべきでないノードに分かれるため
             if(nowSelector[1]===OTHERS){
                 //セレクタの時
                 stack[stack.length]=execSelector(nowSelector[0],year,month,eventListRes);
-            }else if(nowSelector[1]===OPERATOR){
+            }else{ //nowSelector[1]===OPERATOR
                 //演算子の時
                 if(nowSelector[0]==='&&') stack.push(_.intersection(stack.pop(),stack.pop()));//[重要]stack.pop()しているため、stack.pushを直してはいけない
                 else if(nowSelector[0]==='||') stack.push(_.union(stack.pop(),stack.pop()));//同上
                 else throw myError('undefined operator '+nowSelector[0]);
             }
-        });//}}}
+        });
         function execSelector(nowSelector,year,month,eventListRes){//{{{
             var meansPublicHoliday=function(s){
                 //sが祝日を表しているか判定
@@ -157,7 +157,6 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                 s=s.toLowerCase();
                 return s==='full-moon-night'||s==='fullmoonnight'||s==='十五夜'||s==='中秋の名月';
             };
-            var cal=calendar(year,month);
             var dayDic={
                 'sunday':0,'sun':0,'日曜日':0,'日':0,
                 'monday':1,'mon':1,'月曜日':1,'月':1,
@@ -447,7 +446,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
                     // day:mon,tue,...
                     var valDay=dayDic[val.toLowerCase()];
                     var dayCount=0;
-                    _.some(cal,function(week){
+                    _.some(calendar(year,month),function(week){
                         if(week[valDay]!==''){
                             tmpRes[tmpRes.length]=week[valDay];
                         }
