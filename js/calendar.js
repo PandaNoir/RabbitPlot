@@ -112,53 +112,6 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         }
         return res;
     };//}}}
-    function calendar(year,month,isFlatten){//{{{
-        isFlatten=isFlatten||false;
-        //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
-        if(!isFlatten){
-            if(memo[year-MEMO_LIMIT]){
-                if(memo[year-MEMO_LIMIT][month]) return memo[year-MEMO_LIMIT][month];
-            }else{
-                memo[year-MEMO_LIMIT]=[];
-            }
-        }
-        var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
-        if(month===1 && isLeapYear(year)){
-            //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
-            lastDate=29;//うるう年だから
-        }
-
-        var res=[];//カレンダー用配列
-        var i=0;
-        var day=(new Date(year,month,1)).getDay();
-        var row=[];
-        if(isFlatten){
-            for(var i=1;i<=lastDate;i++){
-                res[res.length]=i;
-            }
-            return res;
-        }
-
-        //!isFlatten
-        for(var i=day;i>0;i--){
-            row[row.length]=0;
-        }
-        for(var i=1;i<=lastDate;i++){
-            if(day>6){
-                day=0;
-                res[res.length]=row;
-                row=[];
-            }
-            row[row.length]=i;//日付が今月の範囲に収まっている
-            day++;
-        }
-        for(var i=day;i<7;i++){
-            row[row.length]=OVER_MONTH;
-        }
-        if(row.length>0) res[res.length]=row;
-        row=null;
-        return memo[year-MEMO_LIMIT][month]=res;
-    };//}}}
     function execSelectors(selectors,year,month,eventListRes){//{{{
         //セレクタを適応させて返す
         //year,monthはexecSelectorをメモ化するため
@@ -170,6 +123,8 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         eventListRes=eventListRes||[];
         var stack=[];
         _.each(selectors,function(nowSelector){//{{{
+            //遅延評価に変えてもいいが処理が面倒になる
+            //遅延評価するべきノードとするべきでないノードに分かれるため
             if(nowSelector[1]===OTHERS){
                 //セレクタの時
                 stack[stack.length]=execSelector(nowSelector[0],year,month,eventListRes);
@@ -521,6 +476,53 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         }
         return stack.pop();
     }//}}}
+    function calendar(year,month,isFlatten){//{{{
+        isFlatten=isFlatten||false;
+        //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
+        if(!isFlatten){
+            if(memo[year-MEMO_LIMIT]){
+                if(memo[year-MEMO_LIMIT][month]) return memo[year-MEMO_LIMIT][month];
+            }else{
+                memo[year-MEMO_LIMIT]=[];
+            }
+        }
+        var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
+        if(month===1 && isLeapYear(year)){
+            //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
+            lastDate=29;//うるう年だから
+        }
+
+        var res=[];//カレンダー用配列
+        var i=0;
+        var day=(new Date(year,month,1)).getDay();
+        var row=[];
+        if(isFlatten){
+            for(var i=1;i<=lastDate;i++){
+                res[res.length]=i;
+            }
+            return res;
+        }
+
+        //!isFlatten
+        for(var i=day;i>0;i--){
+            row[row.length]=0;
+        }
+        for(var i=1;i<=lastDate;i++){
+            if(day>6){
+                day=0;
+                res[res.length]=row;
+                row=[];
+            }
+            row[row.length]=i;//日付が今月の範囲に収まっている
+            day++;
+        }
+        for(var i=day;i<7;i++){
+            row[row.length]=OVER_MONTH;
+        }
+        if(row.length>0) res[res.length]=row;
+        row=null;
+        return memo[year-MEMO_LIMIT][month]=res;
+    };//}}}
     function splitSelector(selector){//{{{
         //演算子はand or && || かつ または スペース(アンド区切り)
         if(SSMemo[selector]) return SSMemo[selector];
