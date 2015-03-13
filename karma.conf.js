@@ -16,12 +16,13 @@ module.exports = function(config) {
         // list of files / patterns to load in the browser
         files: [
             './lib/js/angular.min.js',
-            './lib/js/angular-aria.min.js',
-            './lib/js/angular-animate.min.js',
-            './lib/js/angular-touch.min.js',
-            './lib/js/angular-messages.min.js',
-            './lib/js/angular-local-storage.min.js',
             './js/angular-material.min.js',
+            './lib/js/angular-animate.min.js',
+            './lib/js/angular-aria.min.js',
+            './lib/js/angular-local-storage.min.js',
+            './lib/js/angular-messages.min.js',
+            './lib/js/angular-route.min.js',
+            './lib/js/angular-touch.min.js',
             './lib/js/angular-mocks.js',
             './js/sha512.js',
             './lib/js/lodash.min.js',

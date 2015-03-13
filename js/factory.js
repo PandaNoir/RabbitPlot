@@ -40,52 +40,55 @@ angular.module(appName)
         user.permission=mes.data;
     });
 })//}}}
-.run(function(user,mode,localStorageService,db,_,$mdToast,$mdDialog){//{{{
-    if(localStorageService.get('private')){
-        _.extend(user,angular.fromJson(localStorageService.get('private')));
-        if(user.isLoggedIn){
-            db.login({'username':localStorageService.get('username'),'password':localStorageService.get('password')}).then(function(mes){
-                mes=mes.data;
-                if(mes==='failed'){
-                    $mdToast.show($mdToast.simple().content('ログインに失敗しました').position('top right').hideDelay(3000));
-                    return;
-                }
-                $mdToast.show($mdToast.simple().content('ログインに成功しました').position('top right').hideDelay(3000));
-                for(var key in mes){
-                    user[key]=angular.fromJson(mes[key]);
-                }
-                user.isLoggedIn=true;
-            });
-        }
-    }else{
-        $mdDialog.show(
-            $mdDialog.confirm()
-            .title('データがありません')
-            .content('ログインしますか?ログインせずに使いますか?それともユーザー登録しますか?')
-            .ok('ログインする')
-            .cancel('ログインしない/登録する')
-        ).then(function() {
-            mode.switchToLogin();
-        }, function() {
-            //ログインしない
+.run(function(user,mode,localStorageService,db,_,$mdToast,$mdDialog,$location){//{{{
+    if($location.path()==='/'){
+        if(localStorageService.get('private')){
+            _.extend(user,angular.fromJson(localStorageService.get('private')));
+            if(user.isLoggedIn){
+                db.login({'username':localStorageService.get('username'),'password':localStorageService.get('password')}).then(function(mes){
+                    mes=mes.data;
+                    if(mes==='failed'){
+                        $mdToast.show($mdToast.simple().content('ログインに失敗しました').position('top right').hideDelay(3000));
+                        return;
+                    }
+                    $mdToast.show($mdToast.simple().content('ログインに成功しました').position('top right').hideDelay(3000));
+                    for(var key in mes){
+                        user[key]=angular.fromJson(mes[key]);
+                    }
+                    user.isLoggedIn=true;
+                });
+            }
+        }else{
             $mdDialog.show(
                 $mdDialog.confirm()
-                .content('ユーザー登録しますか?')
-                .ok('する')
-                .cancel('しない')
+                .title('データがありません')
+                .content('ログインしますか?ログインせずに使いますか?それともユーザー登録しますか?')
+                .ok('ログインする')
+                .cancel('ログインしない/登録する')
             ).then(function() {
-                //ユーザー登録する
+                mode.switchToLogin();
             }, function() {
-                //ユーザー登録しない
+                //ログインしない
                 $mdDialog.show(
-                    $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
-                    .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
-                    .ok('ok')
-                );
+                    $mdDialog.confirm()
+                    .content('ユーザー登録しますか?')
+                    .ok('する')
+                    .cancel('しない')
+                ).then(function() {
+                    //ユーザー登録する
+                    $location.path('/signup');
+                }, function() {
+                    //ユーザー登録しない
+                    $mdDialog.show(
+                        $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+                        .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+                        .ok('ok')
+                    );
+                });
             });
-        });
+        }
+        user.save();
     }
-    user.save();
 })//}}}
 .factory('eventForm',function(){//{{{
     return {

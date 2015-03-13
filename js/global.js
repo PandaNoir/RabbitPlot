@@ -55,7 +55,7 @@ angular.module('lodash',[])
     return _;
 });
 
-angular.module(appName,['ngTouch','ngAnimate','ngMaterial','ngMessages','LocalStorageModule','lodash'])
+angular.module(appName,['ngTouch','ngAnimate','ngRoute','ngMaterial','ngMessages','LocalStorageModule','lodash'])
 .constant('OVER_MONTH',64)//calendar.calendar()で来月の範囲に入った時に代入される値
 .constant('MEMO_LIMIT',1950)//メモを高速化するために添字から引く値。2015よりも65を添え字としたほうが高速。
 .constant('IS_SMART_PHONE',

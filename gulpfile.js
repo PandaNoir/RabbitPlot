@@ -15,8 +15,10 @@ var path = {//{{{
     js: [
         './js/calendar.js',
         './js/global.js',
+        './js/routing.js',
         './js/mainCtrl.js',
         './js/loginCtrl.js',
+        './js/signupCtrl.js',
         './js/calendarCtrl.js',
         './js/eventEditorCtrl.js',
         './js/groupEditorCtrl.js',
@@ -28,12 +30,13 @@ var path = {//{{{
     ],
     lib: [
         './lib/js/angular.min.js',
-        './lib/js/angular-aria.min.js',
-        './lib/js/angular-animate.min.js',
-        './lib/js/angular-touch.min.js',
-        './lib/js/angular-messages.min.js',
-        './lib/js/angular-local-storage.min.js',
         './js/angular-material.min.js',
+        './lib/js/angular-animate.min.js',
+        './lib/js/angular-aria.min.js',
+        './lib/js/angular-local-storage.min.js',
+        './lib/js/angular-messages.min.js',
+        './lib/js/angular-route.min.js',
+        './lib/js/angular-touch.min.js',
         './js/sha512.js',
         './lib/js/lodash.min.js'
     ],
@@ -84,7 +87,7 @@ gulp.task('minify',['concat'],function(cb){//{{{
     .pipe(gulp.dest('./lib/js'));
 });//}}}
 gulp.task('dev',function(){//{{{
-    gulp.src('templateIndex.html')
+    gulp.src('templateRoute.html')
     .pipe(replace(/<!--liblist-->/,_.map(path.lib,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--scriptlist-->/,_.map(path.js,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--css-->/,'<link rel="stylesheet" href="css/style.css">'))
@@ -93,7 +96,7 @@ gulp.task('dev',function(){//{{{
     .pipe(gulp.dest('./'));
 });//}}}
 gulp.task('release',function(){//{{{
-    gulp.src(['templateIndex.html'])
+    gulp.src(['templateRoute.html'])
     .pipe(replace(/<!--liblist-->/,_.map(path.lib,function(s){return '<script src="'+s+'" defer></script>'}).join('')))
     .pipe(replace(/<!--scriptlist-->/,'<script src="js/'+mainJS+'" defer></script>'))
     .pipe(replace(/<!--css-->/,'<link rel="stylesheet" href="css/style.min.css">'))
