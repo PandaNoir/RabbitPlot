@@ -138,10 +138,7 @@ angular.module(appName)
            user.save();
        });
     };//}}}
-    $scope.loginMode=function(){
-        mode.login=true;
-        $mdSidenav('left').close();
-    };
+    $scope.loginMode=_.bind(mode.switchToLogin,mode);
     $scope.exportSetting=function(){
         $mdDialog.show($mdDialog.alert().title('').content('これをコピーして移行先で貼り付けてください。'+angular.toJson(user)).ok('ok'))
     };

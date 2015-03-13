@@ -40,7 +40,7 @@ angular.module(appName)
         user.permission=mes.data;
     });
 })//}}}
-.run(function(user,localStorageService,db,_,$mdToast,$mdDialog){//{{{
+.run(function(user,mode,localStorageService,db,_,$mdToast,$mdDialog){//{{{
     if(localStorageService.get('private')){
         _.extend(user,angular.fromJson(localStorageService.get('private')));
         if(user.isLoggedIn){
@@ -59,10 +59,31 @@ angular.module(appName)
         }
     }else{
         $mdDialog.show(
-            $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
-            .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
-            .ok('ok')
-        );
+            $mdDialog.confirm()
+            .title('データがありません')
+            .content('ログインしますか?ログインせずに使いますか?それともユーザー登録しますか?')
+            .ok('ログインする')
+            .cancel('ログインしない/登録する')
+        ).then(function() {
+            mode.switchToLogin();
+        }, function() {
+            //ログインしない
+            $mdDialog.show(
+                $mdDialog.confirm()
+                .content('ユーザー登録しますか?')
+                .ok('する')
+                .cancel('しない')
+            ).then(function() {
+                //ユーザー登録する
+            }, function() {
+                //ユーザー登録しない
+                $mdDialog.show(
+                    $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+                    .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+                    .ok('ok')
+                );
+            });
+        });
     }
     user.save();
 })//}}}
@@ -281,7 +302,11 @@ angular.module(appName)
         editsEvent:false,
         editsGroup:false,
         showsEventList:false,
-        switchToEdit:switchToEdit
+        switchToEdit:switchToEdit,
+        switchToLogin:function(){
+            this.login=true;
+            $mdSidenav('left').close();
+        }
     };
 })//}}}
 .factory('db',function(_,user,group,$rootScope,$http,$log,localStorageService){//{{{
