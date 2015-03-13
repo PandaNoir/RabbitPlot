@@ -41,7 +41,7 @@ angular.module(appName)
     });
 })//}}}
 .run(function(user,mode,localStorageService,db,_,$mdToast,$mdDialog,$location){//{{{
-    if($location.path()==='/'){
+    if($location.path()==='/RabbitPlot/'){
         if(localStorageService.get('private')){
             _.extend(user,angular.fromJson(localStorageService.get('private')));
             if(user.isLoggedIn){
@@ -76,7 +76,7 @@ angular.module(appName)
                     .cancel('しない')
                 ).then(function() {
                     //ユーザー登録する
-                    $location.path('/signup');
+                    $location.path('/RabbitPlot/signup');
                 }, function() {
                     //ユーザー登録しない
                     $mdDialog.show(

@@ -1,10 +1,11 @@
+console.log('hoge');
 angular.module(appName)
 .config(function($routeProvider) {
-    $routeProvider.when('/', {
-        templateUrl:'/tempindex.html',
+    $routeProvider.when('/RabbitPlot/', {
+        templateUrl:'/RabbitPlot/tempindex.html',
         controller: 'mainCtrl' 
-    }).when('/signup', {
-        templateUrl: '/signup.html',
+    }).when('/RabbitPlot/signup', {
+        templateUrl: '/RabbitPlot/signup.html',
         controller: 'signupCtrl'
-    }).otherwise({redirectTo:'./'})
+    });
 });

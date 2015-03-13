@@ -8,7 +8,7 @@
 ユーザ名:<input type="text" ng-model="username"><md-button ng-click="confirmUsername()">使えるか確認する</md-button>
 <span>{{canUse}}</span><img src="image/loading.gif" ng-show="waiting"><br>
 パスワード:<input type="password" ng-model="password"><br>
-<md-button ng-click="signup()">登録</md-button><md-button ng-href="/">トップに戻る</md-button><br>
+<md-button ng-click="signup()">登録</md-button><md-button ng-href="/#/RabbitPlot/">トップに戻る</md-button><br>
 本サービスではメールアドレスを使った登録はしません。だから、パスワードの再発行は基本的にできません。<br>
 また、本サービスでは暗号化通信を行っておりませんが、パスワードは暗号化して送信するため情報が漏洩したとしても漏洩するのは暗号化されたデータのためパスワードは守られます。<br>
 暗号化にはSHA-384というアルゴリズムを使っています。
