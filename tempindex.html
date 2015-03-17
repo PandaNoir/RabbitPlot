@@ -1,9 +1,9 @@
 <md-toolbar class="ng-cloak" ng-cloak>
 <div class="md-toolbar-tools" layout="row">
-  <md-button class="md-left" ng-click="openNav()"><md-icon icon="image/ic_menu_24px.svg"></md-icon></md-button>
+  <md-button class="md-left" ng-click="openNav()"><md-icon md-svg-src="image/ic_menu_24px.svg"></md-icon></md-button>
   <div flex class="">Rabbit Plot</div>
-  <md-button><md-icon icon="image/ic_add_24px.svg"></md-icon></md-button>
-  <a href="how-to-use.html"><md-icon icon="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></a>
+  <md-button><md-icon md-svg-src="image/ic_add_24px.svg"></md-icon></md-button>
+  <a href="how-to-use.html"><md-icon md-svg-src="image/ic_help_24px.svg" style="width:24px; height:24px;"></md-icon></a>
 </div>
 </md-toolbar>
 <md-sidenav class="md-sidenav-left md-whiteframe-z2 ng-cloak" ng-cloak md-component-id="left"><!--{{{-->
@@ -13,8 +13,6 @@
 <div id="setting" ng-controller="settingCtrl" ng-if="!mode.showsEventList"><!--{{{-->
   <md-button class="md-raised" ng-click="loginMode()">ログイン</md-button>
   <md-button class="md-raised" ng-href="/#/RabbitPlot/signup">登録</md-button><br>
-  <md-button class="md-raised" ng-click="exportSetting()">設定を保存</md-button>
-  <md-button class="md-raised" ng-click="importSetting()">設定を読み込み</md-button><br>
   <md-button class="md-raised md-primary" ng-click="hideAll()">すべてのグループを非表示にする</md-button>
   <md-button class="md-raised md-primary" ng-click="showAll()">すべてのグループを表示する</md-button><br>
   <md-button class="md-raised md-primary" ng-click="makeGroup()">グループを作る</md-button><br>

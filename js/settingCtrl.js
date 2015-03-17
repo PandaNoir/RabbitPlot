@@ -121,25 +121,5 @@ angular.module(appName)
         user.save();
         db.updateUser();
     };//}}}
-    $scope.importSetting=function(){//{{{
-       $mdDialog.show({
-           controller:function($scope,$mdDialog){
-               $scope.text='';
-               $scope.answer=function(answer){
-                   $mdDialog.hide(answer);
-               };
-           },
-           template:'<md-dialog><md-content>コピーしたデータを貼り付けてください。<br><input ng-model="text"><md-button ng-click="answer(text)">ok</md-button></md-content></md-dialog>'
-       }).then(function(value){
-           value=JSON.parse(value);
-           for(var key in value){
-               user[key]=value[key];
-           }
-           user.save();
-       });
-    };//}}}
     $scope.loginMode=_.bind(mode.switchToLogin,mode);
-    $scope.exportSetting=function(){
-        $mdDialog.show($mdDialog.alert().title('').content('これをコピーして移行先で貼り付けてください。'+angular.toJson(user)).ok('ok'))
-    };
 });//}}}

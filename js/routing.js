@@ -4,7 +4,12 @@ angular.module(appName)
     $routeProvider.when('/RabbitPlot/', {
         templateUrl:'/RabbitPlot/tempindex.html',
         controller: 'mainCtrl' 
-    }).when('/RabbitPlot/signup', {
+    })
+    .when('/RabbitPlot/index.html', {
+        templateUrl:'/RabbitPlot/tempindex.html',
+        controller: 'mainCtrl' 
+    })
+    .when('/RabbitPlot/signup', {
         templateUrl: '/RabbitPlot/signup.html',
         controller: 'signupCtrl'
     });
