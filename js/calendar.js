@@ -1,27 +1,8 @@
-function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
-    //default value//{{{
-    if(OVER_MONTH===undefined) OVER_MONTH=64;
-    if(MEMO_LIMIT===undefined) MEMO_LIMIT=1950;
-    if(IS_SMART_PHONE===undefined) IS_SMART_PHONE=false;
-    if(ATTRIBUTE===undefined){
-        ATTRIBUTE={
-            OPERATOR:0,
-            OTHERS:1,
-            LPARENTHESES:2,
-            RPARENTHESES:3
-        };
-    }
-    if(myError===undefined){
-        myError=(function(){
-            var ErrorConstructor = ErrorConstructor || Error;
-            return function(mes){
-                return new ErrorConstructor(mes);
-            };
-        });
-    }
-    if(toInt===undefined) var toInt=function(n){return parseInt(n,10)};
-    if(isLeapYear===undefined) var isLeapYear=function(year){return year%400===0||year%4===0&&year%100!==0;};
-    if(isValidDate===undefined) var isValidDate=function(y,m,d){var date=new Date(y,m,d);return date.getFullYear()===toInt(y)&&date.getMonth()===toInt(m)&&date.getDate()===toInt(d);};//}}}
+if(typeof _==='undefined'){_=require('lodash')}
+function _calendar_(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
+    var toInt=function(n){return parseInt(n,10)};
+    var isLeapYear=function(year){return year%400===0||year%4===0&&year%100!==0;};
+    var isValidDate=function(y,m,d){var date=new Date(y,m,d);return date.getFullYear()===toInt(y)&&date.getMonth()===toInt(m)&&date.getDate()===toInt(d);};
     var holiday={//{{{
         event:[],
         habit:[
@@ -51,17 +32,19 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         ]
     };//}}}
     var today=new Date();
-    var memo=[];
     var constDic=[];
     var SSMemo={};//splitSelectorMemo;
-    for(var key in ATTRIBUTE){
-        constDic[ATTRIBUTE[key]]=key;
-    }
+    constDic[ATTRIBUTE['OPERATOR']]='OPERATOR';
+    constDic[ATTRIBUTE['OTHERS']]='OTHERS';
+    constDic[ATTRIBUTE['LPARENTHESES']]='LPARENTHESES';
+    constDic[ATTRIBUTE['RPARENTHESES']]='RPARENTHESES';
     var OPERATOR=ATTRIBUTE.OPERATOR;
     var OTHERS=ATTRIBUTE.OTHERS;
     var LPARENTHESES=ATTRIBUTE.LPARENTHESES;
     var RPARENTHESES=ATTRIBUTE.RPARENTHESES;
-    function last(arr){return arr[arr.length-1];};
+    var memo=[];
+    var memoYear,memoMonth;
+    function last(arr){return arr[arr.length-1]};
     function getHolidays(y,m,substitute,national){//{{{
         var res=[];
         for(var i=0,_i=holiday.event.length;i<_i;i++){
@@ -478,18 +461,17 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         return stack.pop();
     }//}}}
     function calendar(year,month,isFlatten){//{{{
+        if(year===memoYear&&month===memoMonth){
+            return memo;
+        }else{
+            memoYear=year;
+            memoMonth=month;
+            memo=[];
+        }
         isFlatten=isFlatten||false;
         //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
-        if(!isFlatten){
-            if(memo[year-MEMO_LIMIT]){
-                if(memo[year-MEMO_LIMIT][month]) return memo[year-MEMO_LIMIT][month];
-            }else{
-                memo[year-MEMO_LIMIT]=[];
-            }
-        }
         var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
-        if(month===1 && isLeapYear(year)){
-            //month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
+        if(month===1 && isLeapYear(year)){//month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
             lastDate=29;//うるう年だから
         }
 
@@ -497,17 +479,11 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         var i=0;
         var day=(new Date(year,month,1)).getDay();
         var row=[];
-        if(isFlatten){
-            for(var i=1;i<=lastDate;i++){
-                res[res.length]=i;
-            }
-            return res;
-        }
+        if(isFlatten)
+            return _.range(1,lastDate+1);//==[1,2,3,...,lastDate];
 
         //!isFlatten
-        for(var i=day;i>0;i--){
-            row[row.length]=0;
-        }
+        var row=_.fill(Array(day),0);
         for(var i=1;i<=lastDate;i++){
             if(day>6){
                 day=0;
@@ -517,12 +493,43 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
             row[row.length]=i;//日付が今月の範囲に収まっている
             day++;
         }
-        for(var i=day;i<7;i++){
-            row[row.length]=OVER_MONTH;
-        }
+        row=row.concat(_.fill(Array(7-day),64));
+
         if(row.length>0) res[res.length]=row;
         row=null;
-        return memo[year-MEMO_LIMIT][month]=res;
+        return memo=res;
+    };//}}}
+    function calendar2(year,month,isFlatten){//{{{
+        isFlatten=isFlatten||false;
+        //ここでのmonthはnew Dateを使用するため実際-1されている(=0月から始まっている)
+        var lastDate=[31,28,31,30,31,30,31,31,30,31,30,31][month];//来月の1日の1日前という算出方法をとる
+        if(month===1 && isLeapYear(year)){//month===1は、monthが(実際の数字-1)月だから2月の判定部分となっている
+            lastDate=29;//うるう年だから
+        }
+
+        var res=[];//カレンダー用配列
+        var i=0;
+        var day=(new Date(year,month,1)).getDay();
+        var row=[];
+        if(isFlatten)
+            return _.range(1,lastDate+1);//==[1,2,3,...,lastDate];
+
+        //!isFlatten
+        var row=_.fill(Array(day),0);
+        for(var i=1;i<=lastDate;i++){
+            if(day>6){
+                day=0;
+                res[res.length]=row;
+                row=[];
+            }
+            row[row.length]=i;//日付が今月の範囲に収まっている
+            day++;
+        }
+        row=row.concat(_.fill(Array(7-day),64));
+
+        if(row.length>0) res[res.length]=row;
+        row=null;
+        return res;
     };//}}}
     function splitSelector(selector){//{{{
         //演算子はand or && || かつ または スペース(アンド区切り)
@@ -608,6 +615,7 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
         month:today.getMonth(),
         date:today.getDate(),
         calendar:calendar,
+        calendar2:calendar2,
         today:{
             year:today.getFullYear(),
             month:today.getMonth(),
@@ -628,3 +636,4 @@ function calendar(OVER_MONTH,MEMO_LIMIT,IS_SMART_PHONE,ATTRIBUTE,myError){
     };
     return res;
 };
+// calendar=_calendar_(64,1950,false,{OPERATOR:0,OTHERS:1,LPARENTHESES:2,RPARENTHESES:3},function(){var ErrorConstructor=ErrorConstructor||Error;return function(mes){return new ErrorConstructor(mes)}});
