@@ -41,54 +41,53 @@ angular.module(appName)
     });
 })//}}}
 .run(function(user,mode,localStorageService,db,_,$mdToast,$mdDialog,$location){//{{{
-    if($location.path()==='/RabbitPlot/'){
-        if(localStorageService.get('private')){
-            _.extend(user,angular.fromJson(localStorageService.get('private')));
-            if(user.isLoggedIn){
-                db.login({'username':localStorageService.get('username'),'password':localStorageService.get('password')}).then(function(mes){
-                    mes=mes.data;
-                    if(mes==='failed'){
-                        $mdToast.show($mdToast.simple().content('ログインに失敗しました').position('top right').hideDelay(3000));
-                        return;
-                    }
-                    $mdToast.show($mdToast.simple().content('ログインに成功しました').position('top right').hideDelay(3000));
-                    for(var key in mes){
-                        user[key]=angular.fromJson(mes[key]);
-                    }
-                    user.isLoggedIn=true;
-                });
-            }
-        }else{
-            $mdDialog.show(
-                $mdDialog.confirm()
-                .title('データがありません')
-                .content('ログインしますか?ログインせずに使いますか?それともユーザー登録しますか?')
-                .ok('ログインする')
-                .cancel('ログインしない/登録する')
-            ).then(function() {
-                mode.switchToLogin();
-            }, function() {
-                //ログインしない
-                $mdDialog.show(
-                    $mdDialog.confirm()
-                    .content('ユーザー登録しますか?')
-                    .ok('する')
-                    .cancel('しない')
-                ).then(function() {
-                    //ユーザー登録する
-                    $location.path('/RabbitPlot/signup');
-                }, function() {
-                    //ユーザー登録しない
-                    $mdDialog.show(
-                        $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
-                        .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
-                        .ok('ok')
-                    );
-                });
+    if($location.path()!=='/RabbitPlot/') return;
+
+    if(localStorageService.get('private')){
+        _.extend(user,angular.fromJson(localStorageService.get('private')));
+        if(user.isLoggedIn){
+            db.login({'username':localStorageService.get('username'),'password':localStorageService.get('password')}).then(function(mes){
+                mes=mes.data;
+                if(mes==='failed'){
+                    $mdToast.show($mdToast.simple().content('ログインに失敗しました').position('top right').hideDelay(3000));
+                    return;
+                }
+                $mdToast.show($mdToast.simple().content('ログインに成功しました').position('top right').hideDelay(3000));
+                for(var key in mes){
+                    user[key]=angular.fromJson(mes[key]);
+                }
+                user.isLoggedIn=true;
             });
         }
-        user.save();
+    }else{
+        $mdDialog.show(
+            $mdDialog.confirm()
+            .title('データがありません')
+            .content('ログインしますか?ログインせずに使いますか?それともユーザー登録しますか?')
+            .ok('ログインする')
+            .cancel('ログインしない/登録する')
+        ).then(mode.switchToLogin,
+        function() {
+            //ログインしない
+            $mdDialog.show(
+                $mdDialog.confirm()
+                .content('ユーザー登録しますか?')
+                .ok('する')
+                .cancel('しない')
+            ).then(function() {
+                //ユーザー登録する
+                $location.path('/RabbitPlot/signup');
+            }, function() {
+                //ユーザー登録しない
+                $mdDialog.show(
+                    $mdDialog.alert().title('[重要]ユーザー情報を生成しました。')
+                    .content('これはあなたのIDです。大切なのでメモしておいてください。'+angular.toJson(user)+' これは設定画面の設定を保存からも見ることができます。')
+                    .ok('ok')
+                );
+            });
+        });
     }
+    user.save();
 })//}}}
 .factory('eventForm',function(){//{{{
     return {
@@ -122,7 +121,7 @@ angular.module(appName)
     }
     db.list();
 })//}}}
-.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',calendar])
+.factory('calendar',['OVER_MONTH','MEMO_LIMIT','IS_SMART_PHONE','ATTRIBUTE','error',_calendar_])
 .factory('eventCal',function(_,group,user,calendar){//{{{
     var ECMemo=[];//eventCalendarMemo;
     var beforeGroups='';//非表示表示切り替えに対応するため
